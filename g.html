@@ -1,79 +1,274 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>문법 해설</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>문법사항 - 한림청소년문화의집 방과후영어</title>
+
+<!-- 1. 라이브러리 (Tailwind CSS & Fonts) -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- ★★★ 스마트폰 인앱 환경 통합 처리 ★★★ -->
+<script type="text/javascript">
+(function() {
+    var ua = navigator.userAgent.toLowerCase();
+    var isInApp = /kakaotalk|naver|line|fbav|instagram/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var isiOS = /iphone|ipad|ipod/i.test(ua);
+    
+    // iOS 인앱 브라우저에서만 알림 (선택 사항)
+    if (isInApp && isiOS) {
+       // alert("⚠️ 원활한 학습을 위해 Safari 브라우저 사용을 권장합니다.");
+    }
+})();
+</script>
 
 <style>
-:root{
-  --brand:#1f4fb6;
-  --brand-2:#2b5aa6;
-  --ink:#0e2247;
-  --bg:#f6f8fc;
-  --card:#ffffff;
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans KR",sans-serif;color:var(--ink)}
-.wrap{max-width:840px;margin:48px auto;padding:0 20px}
-.topbar{display:flex;gap:10px;align-items:center;margin-bottom:18px}
-.back{
-  text-decoration:none;background:#e9efff;border:1px solid #cfdcff;color:var(--brand);
-  padding:10px 14px;border-radius:10px;display:inline-flex;gap:8px;align-items:center;font-weight:600;
-}
-.back:hover{background:#dfe8ff}
-.card{
-  background:var(--card);border:1px solid #e6ecff;border-radius:18px;
-  box-shadow:0 6px 20px rgba(24,46,90,.08);padding:26px 24px;
-}
-.section-title{text-align:center;font-size:1.6rem;font-weight:800;margin:8px 0 22px 0;letter-spacing:-.3px}
-.list{display:grid;gap:16px;margin-top:6px}
-.pill{
-  display:block;text-decoration:none;color:#fff;font-weight:700;
-  padding:16px 20px;border-radius:999px;text-align:center;
-  background:linear-gradient(135deg,var(--brand),#3f73ff);
-  border:1px solid #17439a;
-  box-shadow:0 6px 14px rgba(47,86,170,.18);
-}
-.pill:hover{transform:translateY(-1px);box-shadow:0 10px 18px rgba(47,86,170,.22)}
-@media (max-width:520px){
-  .wrap{margin:28px auto}
-  .pill{padding:14px 16px}
-}
-</style>
+  /* === Color System (index.html과 동일) === */
+  :root{ 
+    --brand-dark:#1f3556; 
+    --brand:#2b5aa6; 
+    --brand-hover:#234b8b; 
+    --accent:#7b1fa2;
+    --card-bg:#ffffff; 
+    --page-bg:#f0f4f8; 
+    --text:#111827; 
+    --muted:#6b7280; 
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ 
+      --card-bg:#1f2937; 
+      --page-bg:#111827; 
+      --text:#f3f4f6; 
+      --muted:#9ca3af;
+      --brand-dark:#101e33; 
+      --brand:#3b82f6; 
+      --brand-hover:#2563eb; 
+    }
+  }
 
+  body{ font-family:'Noto Sans KR', 'Inter', sans-serif; background:var(--page-bg); color:var(--text); }
+
+  /* === Header Design (공통 배너) === */
+  .header-container {
+    position: relative;
+    height: 300px;
+    background-image: url('https://raw.githubusercontent.com/tonykks/hallim-youth-english/main/images/%EC%A0%84%EA%B2%BD%EC%82%AC%EC%A7%84.jpg');
+    background-size: cover;
+    background-position: center;
+    border-bottom: 4px solid var(--brand);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+  }
+  .header-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45); 
+    backdrop-filter: blur(2px);
+    z-index: 1;
+  }
+  .header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    width: 100%;
+    height: 100%;
+  }
+  .main-title {
+    font-size: 2.6rem;
+    font-weight: 900;
+    text-shadow: 2px 2px 12px rgba(0,0,0,0.9);
+    margin: 0;
+    line-height: 1.3;
+    word-break: keep-all;
+    letter-spacing: -0.02em;
+  }
+
+  /* === Navigation Bar (공통 메뉴) === */
+  .navbar { background: var(--brand-dark); position: sticky; top: 0; z-index: 50; }
+  .nav-btn {
+    background: transparent;
+    color: rgba(255,255,255,0.9);
+    padding: 12px 18px;
+    font-weight: 600;
+    transition: all 0.2s;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
+  .nav-btn.active { background: var(--brand); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+  /* === Main Content === */
+  .content-container {
+    max-width: 900px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--brand-dark);
+    margin-bottom: 0.5rem;
+  }
+  .page-desc {
+    color: var(--muted);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  /* === Quiz Button Grid === */
+  .quiz-list { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* 반응형 그리드 */
+    gap: 16px; 
+  }
+  
+  .quiz-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none; 
+    background: #ffffff; 
+    color: var(--text);
+    padding: 18px 24px; 
+    border-radius: 12px; 
+    font-weight: 700;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    transition: all 0.2s;
+    font-size: 1rem;
+    text-align: left; /* 문법 제목은 왼쪽 정렬이 더 보기 좋을 수 있음 */
+  }
+  .quiz-btn:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 15px rgba(43, 90, 166, 0.15); 
+    border-color: var(--brand);
+    color: var(--brand);
+    background: #f8fafc;
+  }
+  .quiz-btn span.arrow { font-size: 1.2rem; opacity: 0.3; transition: opacity 0.2s; }
+  .quiz-btn:hover span.arrow { opacity: 1; transform: translateX(3px); }
+
+  /* Mobile Tweaks */
+  @media (max-width: 768px) {
+    .header-container { height: 220px; }
+    .main-title { font-size: 1.8rem; }
+    .nav-btn { padding: 10px 12px; font-size: 0.9rem; }
+    .quiz-list { grid-template-columns: 1fr; }
+    .content-container { margin: 2rem auto; }
+  }
+
+  /* Contact Modal */
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
+  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:400px; text-align:center; }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <a class="back" href="index.html">← Home으로</a>
-    </div>
 
-    <div class="card">
-      
-      <div class="section-title">
+  <!-- 1. Header (Banner) -->
+  <header class="header-container">
+    <div class="header-overlay"></div>
+    <div class="header-content">
+      <h1 class="main-title">한림청소년문화의집 방과후영어</h1>
+    </div>
+  </header>
+
+  <!-- 2. Navigation Bar -->
+  <nav class="navbar flex justify-center flex-wrap shadow-md">
+    <a href="index.html" class="nav-btn">Home</a>
+    <a href="e.html" class="nav-btn">초등학생</a>
+    <a href="m.html" class="nav-btn">중학생</a>
+    <a href="g.html" class="nav-btn active">문법사항</a>
+    <a href="#" class="nav-btn" id="contact-btn">Contact</a>
+  </nav>
+
+  <!-- 3. Main Content -->
+  <main class="content-container">
+    <h2 class="page-title">
         <a href="https://tonys-skyview-portfolio.netlify.app/2025-11-29_carotid_summary" 
            target="_blank"
-           style="text-decoration: none; color: inherit; cursor: default;">
+           style="text-decoration: none; color: inherit; cursor: pointer;">
            문법 해설
         </a>
+    </h2>
+    <p class="page-desc">Tony쌤의 영어 말하기를 위한 기초 문법 사항</p>
+
+    <div class="quiz-list">
+        <a class="quiz-btn" target="_blank" href="./grammar/be동사.html">
+            <span>be동사의 매칭</span> <span class="arrow">➜</span>
+        </a>
+        <a class="quiz-btn" target="_blank" href="./grammar/기초문법(중등)_0.html">
+            <span>주어–동사 핵심 가이드 (인칭대명사·Be/Do/Have·일반동사)</span> <span class="arrow">➜</span>
+        </a>
+        <a class="quiz-btn" target="_blank" href="./grammar/기초문법(중등)_1.html">
+            <span>동사의 분류에 따른 평서문, 부정문, 긍정문 만들기</span> <span class="arrow">➜</span>
+        </a>
+        <a class="quiz-btn" target="_blank" href="./grammar/기초문법(중등)_2.html">
+            <span>동사의 분류에 따른 진행형 만들기(현재, 과거)</span> <span class="arrow">➜</span>
+        </a>
+        <a class="quiz-btn" target="_blank" href="./grammar/기초문법(중등)_3.html">
+            <span>Yes/No Question</span> <span class="arrow">➜</span>
+        </a>
+        <a class="quiz-btn" target="_blank" href="./grammar/기초문법(중등)_4.html">
+            <span>Wh-Question</span> <span class="arrow">➜</span>
+        </a>
+        <a class="quiz-btn" target="_blank" href="./grammar/필수암기사항.html">
+            <span>영문법 필수암기사항</span> <span class="arrow">➜</span>
+        </a>
+        <a class="quiz-btn" target="_blank" href="./grammar/문장의형식1.html">
+            <span>문장의구조이해-I</span> <span class="arrow">➜</span>
+        </a>
+    </div>
+
+  </main>
+
+  <!-- Contact Modal -->
+  <div id="contact-modal" class="modal" aria-hidden="true">
+    <div class="modal-content shadow-xl">
+      <h3 class="text-2xl font-bold mb-2">Contact Me</h3>
+      <p class="text-gray-500 mb-6">Tony (Retired Engineer & Educator)</p>
+      <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
+        <p class="mb-2"><strong>📧 Email:</strong> smile21c@korea.com</p>
+        <p class="text-xs text-gray-500 mt-2">* 문의 사항은 이메일로 보내주시면 확인 후 답변 드리겠습니다.</p>
       </div>
-      <div class="list">
-        <!-- <a class="pill" target="_blank" href="https://gemini.google.com/share/69bd81be4b9a">행맨게임 제작 가이드-1 (문장구조 습득)</a>
-        <a class="pill" target="_blank" href="https://gemini.google.com/share/482ad13cc285">행맨게임 제작 가이드-2 (문장구조 습득)</a>
-        <a class="pill" target="_blank" href="https://gemini.google.com/share/352c1fbc7bc8">행맨게임 제작 가이드-3 (문장구조 습득)</a>
-        <a class="pill" target="_blank" href="VibeCoding.html">바이브코딩이란?</a> -->
-        <a class="pill" target="_blank" href="./grammar/be동사.html">be동사의 매칭</a>
-        <a class="pill" target="_blank" href="./grammar/기초문법(중등)_0.html">주어–동사 핵심 가이드 (인칭대명사·Be/Do/Have·일반동사)</a>
-        <a class="pill" target="_blank" href="./grammar/기초문법(중등)_1.html">동사의 분류에 따른 평서문, 부정문, 긍정문 만들기</a>
-        <a class="pill" target="_blank" href="./grammar/기초문법(중등)_2.html">동사의 분류에 따른 진행형 만들기(현재, 과거)</a>
-        <a class="pill" target="_blank" href="./grammar/기초문법(중등)_3.html">Yes/No Question</a>
-        <a class="pill" target="_blank" href="./grammar/기초문법(중등)_4.html">Wh-Question</a>
-        <a class="pill" target="_blank" href="./grammar/필수암기사항.html">영문법 필수암기사항</a>
-        <a class="pill" target="_blank" href="./grammar/문장의형식1.html">문장의구조이해-I</a>
-      </div>
-      
+      <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">닫기 (Close)</button>
     </div>
   </div>
+
+<script>
+  const contactBtn = document.getElementById('contact-btn');
+  const contactModal = document.getElementById('contact-modal');
+  const closeBtn = document.getElementById('close-modal-btn');
+
+  function openModal(e) {
+    e.preventDefault();
+    contactModal.style.display = 'flex';
+    contactModal.setAttribute('aria-hidden', 'false');
+  }
+  function closeModal() {
+    contactModal.style.display = 'none';
+    contactModal.setAttribute('aria-hidden', 'true');
+  }
+
+  if(contactBtn) contactBtn.addEventListener('click', openModal);
+  if(closeBtn) closeBtn.addEventListener('click', closeModal);
+  
+  window.addEventListener('click', (e) => {
+    if (e.target === contactModal) closeModal();
+  });
+</script>
+
 </body>
 </html>
