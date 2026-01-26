@@ -126,7 +126,7 @@
   .welcome-container {
     text-align: center;
     padding: 3rem 1.5rem;
-    max-width: 900px;
+    max-width: 1100px; /* 카드가 한 줄에 잘 들어가도록 너비 확장 */
     margin: 0 auto;
   }
   .welcome-title {
@@ -157,15 +157,16 @@
   /* === Selection Cards (Big Buttons) === */
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
+    /* 데스크탑에서 3개를 한 줄에 강제 배치 (1fr 1fr 1fr) */
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 1.5rem;
     margin-top: 3rem;
     padding: 0 1rem;
   }
   .selection-card {
     background: var(--card-bg);
     border-radius: 20px;
-    padding: 2.5rem 1.5rem;
+    padding: 1.5rem 1rem; /* 패딩 축소하여 크기 줄임 */
     text-align: center;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -175,24 +176,40 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* 상단 정렬 */
+    height: 100%;
   }
   .selection-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15);
     border-color: var(--brand);
   }
-  .card-icon { font-size: 4rem; margin-bottom: 1rem; }
-  .card-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--brand); }
-  .card-desc { color: var(--muted); font-size: 0.95rem; }
+  .card-icon { 
+    font-size: 3rem; /* 아이콘 크기 축소 */
+    margin-bottom: 1rem; 
+  }
+  .card-title { 
+    font-size: 1.35rem; /* 제목 크기 약간 축소 */
+    font-weight: 700; 
+    margin-bottom: 0.5rem; 
+    color: var(--brand); 
+  }
+  .card-desc { 
+    color: var(--muted); 
+    font-size: 0.95rem; 
+    line-height: 1.5;
+    word-break: keep-all; /* 단어 단위 줄바꿈 */
+  }
 
   /* === Mobile Tweaks === */
   @media (max-width: 768px) {
     .header-container { height: 260px; }
-    .main-title { font-size: 2.0rem; } /* 모바일에서도 타이틀 크기 확보 */
+    .main-title { font-size: 2.0rem; }
     .nav-btn { padding: 10px 12px; font-size: 0.9rem; }
     .welcome-title { font-size: 1.4rem; }
-    .card-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    /* 모바일에서는 세로로 쌓이되, 간격 조정 */
+    .card-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+    .card-icon { font-size: 2.5rem; }
   }
 
   /* Modal */
@@ -246,21 +263,21 @@
       <a href="e.html" class="selection-card">
         <div class="card-icon">🌱</div>
         <h3 class="card-title">초등학생</h3>
-        <p class="card-desc">기초 단어 카드 및<br>필수 표현 퀴즈</p>
+        <p class="card-desc">Grammar, ZAP! 입문1,2<br><span class="text-sm opacity-80">(기초 단어 및 표현)</span></p>
       </a>
 
       <!-- 중학생 카드 -->
       <a href="m.html" class="selection-card">
         <div class="card-icon">🌲</div>
         <h3 class="card-title">중학생</h3>
-        <p class="card-desc">교과서 핵심 단어 및<br>심화 문법 학습</p>
+        <p class="card-desc">중학영어 1-A<br><span class="text-sm opacity-80">(교과서 핵심 단어)</span></p>
       </a>
 
       <!-- 문법사항 카드 -->
       <a href="g.html" class="selection-card">
         <div class="card-icon">📚</div>
         <h3 class="card-title">문법사항</h3>
-        <p class="card-desc">핵심 영문법 정리 및<br>활용 예제</p>
+        <p class="card-desc">Tony쌤의 영어 말하기를<br>위한 기초 문법 사항</p>
       </a>
     </div>
 
