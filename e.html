@@ -5,27 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>초등용 - 한림청소년문화의집 방과후영어</title>
 
-<!-- 1. 라이브러리 (Tailwind CSS & Fonts) -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
-<!-- ★★★ 스마트폰 인앱 환경 통합 처리 ★★★ -->
 <script type="text/javascript">
 (function() {
     var ua = navigator.userAgent.toLowerCase();
     var isInApp = /kakaotalk|naver|line|fbav|instagram/i.test(ua);
-    var isAndroid = /android/i.test(ua);
     var isiOS = /iphone|ipad|ipod/i.test(ua);
-    
-    // iOS 인앱 브라우저에서만 알림 (선택 사항)
-    if (isInApp && isiOS) {
-       // alert("⚠️ 원활한 학습을 위해 Safari 브라우저 사용을 권장합니다.");
-    }
+    if (isInApp && isiOS) {}
 })();
 </script>
 
 <style>
-  /* === Color System (index.html과 동일) === */
   :root{ 
     --brand-dark:#1f3556; 
     --brand:#2b5aa6; 
@@ -50,7 +42,6 @@
 
   body{ font-family:'Noto Sans KR', 'Inter', sans-serif; background:var(--page-bg); color:var(--text); }
 
-  /* === Header Design (공통 배너) === */
   .header-container {
     position: relative;
     height: 300px;
@@ -93,7 +84,6 @@
     letter-spacing: -0.02em;
   }
 
-  /* === Navigation Bar (공통 메뉴) === */
   .navbar { background: var(--brand-dark); position: sticky; top: 0; z-index: 50; }
   .nav-btn {
     background: transparent;
@@ -108,7 +98,6 @@
   .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
   .nav-btn.active { background: var(--brand); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-  /* === Main Content === */
   .content-container {
     max-width: 900px;
     margin: 3rem auto;
@@ -119,19 +108,23 @@
   .page-title {
     font-size: 2rem;
     font-weight: 800;
-    color: var(--brand-dark);
+    color: var(--brand-dark); /* 기본(라이트모드) 색상 */
     margin-bottom: 0.5rem;
   }
+  /* [수정 1] 다크모드에서 제목을 밝은 색으로 변경 */
+  @media (prefers-color-scheme: dark){
+    .page-title { color: var(--text); }
+  }
+
   .page-desc {
     color: var(--muted);
     font-size: 1.1rem;
     margin-bottom: 2rem;
   }
 
-  /* === Quiz Button Grid === */
   .quiz-list { 
     display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* 반응형 그리드 */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 16px; 
   }
   
@@ -140,7 +133,8 @@
     align-items: center;
     justify-content: space-between;
     text-decoration: none; 
-    background: #ffffff; 
+    /* [수정 2] 배경을 고정 흰색(#fff)이 아닌 테마 변수(var)로 변경 */
+    background: var(--card-bg); 
     color: var(--text);
     padding: 18px 24px; 
     border-radius: 12px; 
@@ -155,12 +149,12 @@
     box-shadow: 0 8px 15px rgba(43, 90, 166, 0.15); 
     border-color: var(--brand);
     color: var(--brand);
-    background: #f8fafc;
+    /* [수정 3] 호버 배경도 테마에 맞게 조정 */
+    background: var(--page-bg);
   }
   .quiz-btn span.arrow { font-size: 1.2rem; opacity: 0.3; transition: opacity 0.2s; }
   .quiz-btn:hover span.arrow { opacity: 1; transform: translateX(3px); }
 
-  /* Mobile Tweaks */
   @media (max-width: 768px) {
     .header-container { height: 220px; }
     .main-title { font-size: 1.8rem; }
@@ -169,14 +163,12 @@
     .content-container { margin: 2rem auto; }
   }
 
-  /* Contact Modal */
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
   .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:400px; text-align:center; }
 </style>
 </head>
 <body>
 
-  <!-- 1. Header (Banner) -->
   <header class="header-container">
     <div class="header-overlay"></div>
     <div class="header-content">
@@ -184,7 +176,6 @@
     </div>
   </header>
 
-  <!-- 2. Navigation Bar -->
   <nav class="navbar flex justify-center flex-wrap shadow-md">
     <a href="index.html" class="nav-btn">Home</a>
     <a href="e.html" class="nav-btn active">초등학생</a>
@@ -193,13 +184,11 @@
     <a href="#" class="nav-btn" id="contact-btn">Contact</a>
   </nav>
 
-  <!-- 3. Main Content -->
   <main class="content-container">
     <h2 class="page-title">초등용 (Elementary)</h2>
     <p class="page-desc">Grammar, ZAP! 입문 1, 2 과정</p>
 
     <div class="quiz-list">
-        <!-- 퀴즈 리스트 -->
         <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_1">
             <span>초등 단어장 (1과_퀴즈)</span> <span class="arrow">➜</span>
         </a>
@@ -291,7 +280,6 @@
 
   </main>
 
-  <!-- Contact Modal -->
   <div id="contact-modal" class="modal" aria-hidden="true">
     <div class="modal-content shadow-xl">
       <h3 class="text-2xl font-bold mb-2">Contact Me</h3>
