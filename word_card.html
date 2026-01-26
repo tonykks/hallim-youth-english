@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<!-- ★★★ 스마트폰 인앱 환경 통합 처리 코드는 여기부터 ★★★ -->
+<script type="text/javascript">
+(function() {
+    var ua = navigator.userAgent.toLowerCase();
+    var isInApp = /kakaotalk|naver|line|fbav|instagram/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var isiOS = /iphone|ipad|ipod/i.test(ua);
+    var targetUrl = location.href;
+
+    // 1) Android 인앱 → Chrome으로 자동 이동
+    if (isInApp && isAndroid) {
+        location.href =
+            'intent://' +
+            targetUrl.replace(/https?:\/\//i, '') +
+            '#Intent;scheme=https;package=com.android.chrome;end';
+        return;
+    }
+
+    // 2) iOS 인앱 → Safari 안내문
+    if (isInApp && isiOS) {
+        alert(
+            "⚠️ iPhone에서는 카카오톡/네이버/라인 등 앱 안에서 열리면\n" +
+            "단어카드가 정상 표시되지 않을 수 있어요.\n\n" +
+            "📌 해결 방법:\n" +
+            "1) 화면 오른쪽 위의 ⋯ 점 3개를 누르고,\n" +
+            "2) 'Safari에서 열기'를 선택해주세요.\n\n" +
+            "Safari에서 열면 모든 기능이 정상적으로 작동합니다. 😊"
+        );
+    }
+})();
+</script>
+<!-- ★★★ 스마트폰 인앱 환경 통합 처리 코드는 여기까지 ★★★ -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tony's SkyView Portfolio - Word Card</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --brand-dark:#1f3556; --brand:#2b5aa6; --brand-hover:#234b8b; --accent:#7b1fa2;
+         --card-bg:#ffffff; --page-bg:#f2f2f2; --text:#111827; --muted:#6b7280; }
+  @media (prefers-color-scheme: dark){
+    :root{ --card-bg:#111827; --page-bg:#0b1220; --text:#e5e7eb; --muted:#9ca3af;
+           --brand-dark:#162640; --brand:#2b5aa6; --brand-hover:#234b8b; --accent:#8b5cf6; }
+  }
+  body{ font-family:'Inter',sans-serif; background:var(--page-bg); color:var(--text); }
+  .header{
+    background-image:url('https://yt3.googleusercontent.com/JHTHRsm3_keOY7f6dLzgDkG7e_olnUvd9Nd0hNfcCbGDScdnOyKDFmuaARWFX05zWaPjwjsAJw=w1707-fcrop64=1,00005a57ffffa5a8-k-c0xffffffff-no-nd-rj');
+    background-size:cover;
+    background-position:center;
+    height:250px;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:48px;
+    font-weight:900;
+    text-align:center;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+  }
+  .navbar{ background:var(--brand-dark); }
+  .nav-btn{
+    background:var(--brand); 
+    color:#fff; 
+    border:none; 
+    padding:10px 20px; 
+    margin:0 5px; 
+    border-radius:8px;
+    text-decoration:none; 
+    font-size:14px; 
+    transition:background .25s ease;
+    min-width:110px;
+    text-align:center;
+    display:inline-block;
+  }
+  .nav-btn:hover{ background:var(--brand-hover); }
+    .intro{
+    background: linear-gradient(90deg, var(--brand), var(--accent));
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.8;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+    text-align: center;
+    max-width: 70%;
+    margin: 2rem auto;
+    border: 0;
+  }
+  .content-container{
+    display:flex;
+    justify-content:center;
+    gap:2rem;
+    padding:2rem;
+    flex-wrap:wrap;
+  }
+  .content-section{
+    background-color: var(--card-bg);
+    border-radius:12px;
+    padding:2rem;
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+    flex:1;
+    min-width:300px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .section-title{
+    font-size:1.5rem;
+    font-weight:700;
+    margin-bottom:1rem;
+    color:var(--brand-dark);
+  }
+  @media (prefers-color-scheme: dark){ .section-title{ color: #e5e7eb; } }
+  .link-button{
+    display:block;
+    width:100%;
+    /* 수정: 버튼 텍스트가 잘리는 것을 방지하기 위해 최대 너비를 400px로 증가 */
+    max-width: 400px;
+    background-color: var(--brand);
+    color:white;
+    padding:0.75rem 1.5rem;
+    border-radius:9999px;
+    font-weight:bold;
+    text-align:center;
+    text-decoration:none;
+    margin-bottom:1rem;
+    transition:background-color 0.2s;
+    /* 텍스트 한 줄 유지 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .link-button:hover{
+    background-color:var(--brand-hover);
+  }
+  .divider{
+    width:2px;
+    background-color:var(--muted);
+  }
+  
+  .help-button {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: #f59e0b; /* amber-500 */
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: background-color 0.2s;
+  }
+  .help-button:hover {
+    background-color: #d97706; /* amber-600 */
+  }
+
+  /* 연락 모달 */
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:1000; }
+  .modal-content{ background:var(--card-bg); color:var(--text); padding:2rem; border-radius:.75rem; width:min(92vw,420px); text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+  .btn{ background:var(--brand); color:#fff; padding:.6rem 1rem; border-radius:.6rem; }
+  .btn:hover{ background:var(--brand-hover); }
+
+  /* 스마트폰 화면을 위한 미디어 쿼리 */
+  @media (max-width:768px){
+    .header{ font-size:28px; height:200px;}
+    .intro{ width:90%; padding:16px;}
+    /* [수정] index.html과 동일하게 버튼 레이아웃 수정 */
+    .navbar{ flex-wrap:wrap; padding:10px;}
+    .nav-btn{ margin:5px; padding:8px 12px;}
+    .divider{
+      height:2px;
+      width:80%;
+      margin: 0 auto 2rem auto;
+    }
+    .content-container{
+      flex-direction:column;
+      padding: 1rem;
+    }
+    /* 수정: 모바일에서 텍스트가 잘리는 것을 방지하기 위해 버튼 글꼴 크기 축소 */
+    .link-button {
+      font-size: 0.8rem; 
+    }
+  }
+
+/* ─── English 드롭다운 ───────────────────────────── */
+.dropdown { position: relative; display: inline-block; }
+
+/* 기본: 숨김, 데스크톱은 hover로 표시 */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--brand, #2b5aa6);
+  border-radius: 12px;
+  min-width: 180px;
+  padding: 6px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+  z-index: 50;
+}
+.dropdown:hover .dropdown-content { display: block; }
+
+/* 서브 버튼(드롭다운 내부 링크) */
+.nav-subbtn {
+  display: block;
+  margin: 6px;
+  padding: 10px 14px;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  background: var(--brand, #2b5aa6);
+  text-align: center;
+  white-space: nowrap;
+}
+.nav-subbtn:hover { background: var(--brand-hover, #4e7bd9); }
+
+/* 모바일/터치: 클릭 토글 보조 */
+@media (hover: none) {
+  .dropdown:hover .dropdown-content { display: none; }
+}
+
+
+/* ─── Override: English dropdown centered under button, horizontal layout ─── */
+.dropdown { position: relative; display: inline-block; }
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;              /* directly under the English button */
+  left: 50%;              /* center align to the button */
+  transform: translateX(-50%);
+  background: var(--brand, #2b5aa6);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+  z-index: 50;
+  gap: 8px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: flex;          /* show horizontally on hover for pointer devices */
+  flex-direction: row;
+  justify-content: center;
+}
+
+.nav-subbtn {
+  display: inline-block;
+  padding: 10px 16px;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  background: var(--brand, #2b5aa6);
+  text-align: center;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+.nav-subbtn:hover { background: var(--brand-hover, #4e7bd9); }
+
+@media (hover: none) {
+  .dropdown:hover .dropdown-content { display: none; }
+}
+
+
+/* Ensure dropdown overlays and captures clicks */
+.dropdown-content { z-index: 9999; pointer-events: auto; }
+
+/* == 모바일 전용: English 버튼 폭과 동일한 세로 드롭다운 == */
+@media (max-width: 640px) {
+  #english-menu {
+    position: relative;
+  }
+
+  #english-menu .dropdown-content {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;             /* English 버튼 폭과 동일하게 설정 */
+    transform: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;                /* 버튼 간격 절반으로 줄임 */
+    border-radius: 10px;
+    padding: 3px;
+  }
+
+  #english-menu .nav-subbtn {
+    width: 100%;
+    text-align: left;
+    padding: 8px 10px;        /* 버튼 높이도 살짝 줄임 */
+    font-size: 0.9rem;
+  }
+}
+
+
+</style>
+</head>
+<body>
+  <div class="header">Tony's SkyView Portfolio</div>
+
+  <!-- Nav -->
+  <div class="navbar flex justify-center py-2 shadow-md">
+    <a href="index.html" class="nav-btn">Home</a>
+    <a href="videos.html" class="nav-btn">Videos</a>
+    <a href="shorts.html" class="nav-btn">Shorts</a>
+    
+<div class="dropdown" id="english-menu">
+  <a href="#" class="nav-btn dropdown-toggle" aria-expanded="false">English ▾</a>
+  <div class="dropdown-content" role="menu" aria-label="English submenu">
+    <a href="e.html" class="nav-subbtn" role="menuitem">초 등 용</a>
+    <a href="m.html" class="nav-subbtn" role="menuitem">중 등 용</a>
+    <a href="g.html" class="nav-subbtn" role="menuitem">문법해설</a>
+  </div>
+</div>
+
+    <a href="https://smile21c.notion.site/my-profile" class="nav-btn" target="_blank" rel="noopener">About Me</a>
+    <a href="#" class="nav-btn" id="contact-btn">Contact Me</a>
+  </div>
+
+  <div class="intro mx-auto my-8 p-6 rounded-xl shadow-lg w-3/5 text-center">
+    학습 레벨에 맞는 단어 카드를 선택하여 퀴즈를 풀어보세요.
+    <br>
+    <a href="word_card/tts_setup_guide.html" class="help-button" target="_blank" rel="noopener">🔊 원어민 발음이 안 나오나요? (설정 안내)</a>
+  </div>
+
+  <hr class="border-t-2 border-gray-300 my-8 w-4/5 mx-auto">
+
+  <div class="content-container">
+    <!-- 초등용 섹션 -->
+    <div class="content-section">
+      <h2 class="section-title">초등용</h2>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_1" class="link-button" target="_blank" rel="noopener">초등 단어장 (1과_Be동사 퀴즈)</a>
+      <a href="https://gemini.google.com/share/074f37328060" class="link-button" target="_blank" rel="noopener">초등 단어장 (2과_Be동사 퀴즈)</a>
+      <!-- <a href="https://g.co/gemini/share/dbe046b254cd" class="link-button" target="_blank" rel="noopener">초등 단어장 (3과_Be동사 퀴즈)</a> -->
+      <!-- <a href="https://gemini.google.com/share/6749473bde72" class="link-button" target="_blank" rel="noopener">초등 단어장 (4과_동사 퀴즈)</a> -->
+      <!-- <a href="https://gemini.google.com/share/374adf304475" class="link-button" target="_blank" rel="noopener">초등 단어장 (5과_Be동사 퀴즈)</a> -->
+      <!-- <a href="https://g.co/gemini/share/80b03334af61" class="link-button" target="_blank" rel="noopener">초등 단어장 (6과_Be동사 퀴즈)</a> -->
+      <!-- <a href="https://gemini.google.com/share/c69079c5f3f3" class="link-button" target="_blank" rel="noopener">초등 단어장 (7과_Be동사 퀴즈)</a> -->
+      <!-- <a href="https://gemini.google.com/share/09bcedef6715" class="link-button" target="_blank" rel="noopener">초등 단어장 (7과_소유격 퀴즈)</a> -->
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_8_1" class="link-button" target="_blank" rel="noopener">초등 단어장 (8과_Be동사 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_8_2" class="link-button" target="_blank" rel="noopener">초등 단어장 (8과_소유격 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_9_1" class="link-button" target="_blank" rel="noopener">초등 단어장 (9과_Be동사 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_9_2" class="link-button" target="_blank" rel="noopener">초등 단어장 (9과_소유격 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_10_1" class="link-button" target="_blank" rel="noopener">초등 단어장 (10과_Be동사 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_10_2" class="link-button" target="_blank" rel="noopener">초등 단어장 (10과_소유격 퀴즈)</a>
+      <!-- <a href="https://gemini.google.com/share/849525420472" class="link-button" target="_blank" rel="noopener">초등 단어장 (10과_Be동사 퀴즈)</a>
+      <a href="https://gemini.google.com/share/4f69549179ab" class="link-button" target="_blank" rel="noopener">초등 단어장 (10과_소유격 퀴즈)</a> -->
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_11_1" class="link-button" target="_blank" rel="noopener">초등 단어장 (11과_Be동사 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_11_2" class="link-button" target="_blank" rel="noopener">초등 단어장 (11과_일반동사 퀴즈)</a>
+      <!-- <a href="https://gemini.google.com/share/6d74220eba2f" class="link-button" target="_blank" rel="noopener">초등 단어장 (11과_be동사 퀴즈1)</a>
+      <a href="https://gemini.google.com/share/83e81a5fbedd" class="link-button" target="_blank" rel="noopener">초등 단어장 (11과_일반동사 퀴즈2)</a> -->
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_12_1" class="link-button" target="_blank" rel="noopener">초등 단어장 (12과_부정문 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_12_2" class="link-button" target="_blank" rel="noopener">초등 단어장 (12과_의문문 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_13" class="link-button" target="_blank" rel="noopener">초등 단어장 (13과_형용사 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_14" class="link-button" target="_blank" rel="noopener">초등 단어장 (14과_부사/전치사 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_15" class="link-button" target="_blank" rel="noopener">초등 단어장 (15과_의문사1 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_16" class="link-button" target="_blank" rel="noopener">초등 단어장 (16과_의문사2 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_17" class="link-button" target="_blank" rel="noopener">초등 단어장 (17과_현재진행형 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_18_1" class="link-button" target="_blank" rel="noopener">초등 단어장 (18_1과_현재진행 부정문 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_18_2" class="link-button" target="_blank" rel="noopener">초등 단어장 (18_2과_현재진행 의문문 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_1" class="link-button" target="_blank" rel="noopener">초등 단어장 (19_1과_조동사의 위치 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_2" class="link-button" target="_blank" rel="noopener">초등 단어장 (19_2과_조동사 부정문 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_3" class="link-button" target="_blank" rel="noopener">초등 단어장 (19_3과_조동사 의문문 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycbxLEqYuI2BY6pSx1QQcD0jMWRslSNvwOnyJcdpK9Zaod511WaUuJRV3Zvnne2Rk3vyjbw/exec?page=quiz_19_4" class="link-button" target="_blank" rel="noopener">초등 단어장 (19_4과_조동사 의문문 대답 퀴즈)</a>
+    </div>
+
+    <!-- 가운데 선 -->
+    <div class="divider"></div>
+    <!-- 중등용 섹션 -->
+    <div class="content-section">
+      <h2 class="section-title">중등용</h2>
+      <!-- <a href="https://g.co/gemini/share/4b17d785dfa8" class="link-button" target="_blank" rel="noopener">중등 단어장 (1과_일반동사 퀴즈)</a>
+      <a href="https://gemini.google.com/share/e52486e4c604" class="link-button" target="_blank" rel="noopener">중등 단어장 (2과_일반동사 퀴즈)</a>
+      <a href="https://g.co/gemini/share/92f20741430d" class="link-button" target="_blank" rel="noopener">중등 단어장 (3과_일반동사 퀴즈)</a>
+      <a href="https://g.co/gemini/share/22961293a841" class="link-button" target="_blank" rel="noopener">중등 단어장 (4과_일반동사 퀴즈)</a>
+      <a href="https://g.co/gemini/share/927f63573506" class="link-button" target="_blank" rel="noopener">중등 단어장 (5과_일반동사 퀴즈)</a>
+      <a href="https://g.co/gemini/share/09a59a0c12aa" class="link-button" target="_blank" rel="noopener">중등 단어장 (6과_일반동사 퀴즈)</a> -->
+      <!-- <a href="https://gemini.google.com/share/a43df68baa2c" class="link-button" target="_blank" rel="noopener">중등 단어장 (1과_대명사격변화 퀴즈)</a>
+      <a href="https://gemini.google.com/share/75bc798946bd" class="link-button" target="_blank" rel="noopener">중등 단어장 (2과_동사변화 퀴즈)</a> -->
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_3" class="link-button" target="_blank" rel="noopener">중등 단어장 (3과_대명사격변화 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_4" class="link-button" target="_blank" rel="noopener">중등 단어장 (4과_대명사격변화 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_5" class="link-button" target="_blank" rel="noopener">중등 단어장 (5과_대명사격변화 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_6" class="link-button" target="_blank" rel="noopener">중등 단어장 (6과_대명사격변화 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_7" class="link-button" target="_blank" rel="noopener">중등 단어장 (1과_동사변화 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_8" class="link-button" target="_blank" rel="noopener">중등 단어장 (2과_동사활용 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_9" class="link-button" target="_blank" rel="noopener">중등 단어장 (3과_동사활용 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_10" class="link-button" target="_blank" rel="noopener">중등 단어장 (4과_동사활용 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_11" class="link-button" target="_blank" rel="noopener">중등 단어장 (5과_동사활용 퀴즈)</a>
+      <a href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_12" class="link-button" target="_blank" rel="noopener">중등 단어장 (6과_동사활용 퀴즈)</a>
+      <a href="hangman.html?sheet=lesson_1" class="link-button" target="_blank" rel="noopener">어순감각익히기(1과_행맨게임)</a>
+      <a href="hangman.html?sheet=lesson_2" class="link-button" target="_blank" rel="noopener">어순감각익히기(2과_행맨게임)</a>
+      <a href="hangman.html?sheet=lesson_3" class="link-button" target="_blank" rel="noopener">어순감각익히기(3과_행맨게임)</a>
+      <a href="hangman.html?sheet=lesson_4" class="link-button" target="_blank" rel="noopener">어순감각익히기(4과_행맨게임)</a>
+      <a href="hangman.html?sheet=lesson_5" class="link-button" target="_blank" rel="noopener">어순감각익히기(5과_행맨게임)</a>
+      <a href="hangman.html?sheet=lesson_6" class="link-button" target="_blank" rel="noopener">어순감각익히기(6과_행맨게임)</a>
+
+    </div>
+  </div>
+
+  <!-- Contact Modal -->
+  <div id="contact-modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+      <p class="text-gray-700 mb-6" style="color:var(--muted)">Email: smile21c@korea.com</p>
+      <button id="close-modal-btn" class="btn">Close</button>
+    </div>
+  </div>
+
+<script>
+  // 연락 모달
+  const contactBtn=document.getElementById('contact-btn');
+  const contactModal=document.getElementById('contact-modal');
+  const closeModalBtn=document.getElementById('close-modal-btn');
+  if(contactBtn && contactModal && closeModalBtn){
+    contactBtn.addEventListener('click',e=>{ e.preventDefault(); contactModal.style.display='flex'; contactModal.setAttribute('aria-hidden','false');});
+    closeModalBtn.addEventListener('click',()=>{ contactModal.style.display='none'; contactModal.setAttribute('aria-hidden','true');});
+    contactModal.addEventListener('click',e=>{ if(e.target===contactModal){ contactModal.style.display='none'; contactModal.setAttribute('aria-hidden','true');}});
+  }
+</script>
+
+<script>
+  // English 드롭다운: 터치/클릭 토글
+  (function () {
+    var root = document.getElementById('english-menu');
+    if (!root) return;
+    var btn  = root.querySelector('.dropdown-toggle');
+    var menu = root.querySelector('.dropdown-content');
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      var open = menu.style.display === 'flex';
+      menu.style.display = open ? 'none' : 'flex';
+      btn.setAttribute('aria-expanded', (!open).toString());
+    });
+    document.addEventListener('click', function(e) {
+      if (!root.contains(e.target)) {
+        menu.style.display = 'none';
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
