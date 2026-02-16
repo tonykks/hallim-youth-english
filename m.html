@@ -5,43 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>중등용 - 한림청소년문화의집 방과후영어</title>
 
+<!-- External Resources -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
-<script type="text/javascript">
-(function() {
-    var ua = navigator.userAgent.toLowerCase();
-    var isInApp = /kakaotalk|naver|line|fbav|instagram/i.test(ua);
-    var isiOS = /iphone|ipad|ipod/i.test(ua);
-    if (isInApp && isiOS) {}
-})();
-</script>
-
 <style>
-  :root{ 
-    --brand-dark:#1f3556; 
-    --brand:#2b5aa6; 
-    --brand-hover:#234b8b; 
-    --accent:#7b1fa2;
-    --card-bg:#ffffff; 
-    --page-bg:#f0f4f8; 
-    --text:#111827; 
-    --muted:#6b7280; 
+  :root { 
+    --brand-dark: #1f3556; 
+    --brand: #2b5aa6; 
+    --brand-hover: #234b8b; 
+    --accent: #7b1fa2;
+    --card-bg: #ffffff; 
+    --page-bg: #f0f4f8; 
+    --text: #111827; 
+    --muted: #6b7280; 
   }
-  @media (prefers-color-scheme: dark){
-    :root{ 
-      --card-bg:#1f2937; 
-      --page-bg:#111827; 
-      --text:#f3f4f6; 
-      --muted:#9ca3af;
-      --brand-dark:#101e33; 
-      --brand:#3b82f6; 
-      --brand-hover:#2563eb; 
+  
+  @media (prefers-color-scheme: dark) {
+    :root { 
+      --card-bg: #1f2937; 
+      --page-bg: #111827; 
+      --text: #f3f4f6; 
+      --muted: #9ca3af;
+      --brand-dark: #101e33; 
+      --brand: #3b82f6; 
+      --brand-hover: #2563eb; 
     }
   }
 
-  body{ font-family:'Noto Sans KR', 'Inter', sans-serif; background:var(--page-bg); color:var(--text); }
+  body { font-family: 'Noto Sans KR', 'Inter', sans-serif; background: var(--page-bg); color: var(--text); overflow-x: hidden; }
 
+  /* Header Image Styling */
   .header-container {
     position: relative;
     height: 300px;
@@ -50,7 +44,6 @@
     background-position: center;
     border-bottom: 4px solid var(--brand);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -66,65 +59,51 @@
   .header-content {
     position: relative;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     padding: 0 1rem;
-    width: 100%;
-    height: 100%;
   }
   .main-title {
     font-size: 2.6rem;
     font-weight: 900;
     text-shadow: 2px 2px 12px rgba(0,0,0,0.9);
-    margin: 0;
     line-height: 1.3;
-    word-break: keep-all;
     letter-spacing: -0.02em;
   }
 
+  /* Navigation Bar */
   .navbar { background: var(--brand-dark); position: sticky; top: 0; z-index: 50; }
   .nav-btn {
-    background: transparent;
     color: rgba(255,255,255,0.9);
     padding: 12px 18px;
     font-weight: 600;
     transition: all 0.2s;
     border-radius: 6px;
-    text-decoration: none;
     font-size: 1rem;
   }
   .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
-  .nav-btn.active { background: var(--brand); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  .nav-btn.active { background: var(--brand); color: #fff; }
 
+  /* Content Layout */
   .content-container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 3rem auto;
     padding: 0 1.5rem;
-    text-align: center;
   }
 
-  .page-title {
-    font-size: 2rem;
+  .section-title {
+    font-size: 1.75rem;
     font-weight: 800;
     color: var(--brand-dark);
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
-  /* [수정 1] 다크모드 제목 색상 */
-  @media (prefers-color-scheme: dark){
-    .page-title { color: var(--text); }
-  }
+  @media (prefers-color-scheme: dark) { .section-title { color: var(--text); } }
 
-  .page-desc {
-    color: var(--muted);
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-  }
-
+  /* Quiz Buttons */
   .quiz-list { 
     display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
     gap: 16px; 
   }
   
@@ -132,51 +111,62 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    text-decoration: none; 
-    /* [수정 2] 배경을 변수로 */
     background: var(--card-bg); 
     color: var(--text);
     padding: 18px 24px; 
     border-radius: 12px; 
     font-weight: 700;
-    border: 1px solid #e5e7eb;
+    border: 1px solid rgba(0,0,0,0.05);
     box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-    transition: all 0.2s;
-    font-size: 1rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
   }
   .quiz-btn:hover { 
-    transform: translateY(-3px); 
-    box-shadow: 0 8px 15px rgba(43, 90, 166, 0.15); 
+    transform: translateY(-3px) scale(1.01); 
+    box-shadow: 0 12px 20px rgba(0,0,0,0.1); 
     border-color: var(--brand);
     color: var(--brand);
-    /* [수정 3] 호버 배경 */
-    background: var(--page-bg);
   }
-  .quiz-btn span.arrow { font-size: 1.2rem; opacity: 0.3; transition: opacity 0.2s; }
-  .quiz-btn:hover span.arrow { opacity: 1; transform: translateX(3px); }
+
+  /* Ranking Special Buttons */
+  .rank-btn-quiz {
+    background: #fffbeb;
+    border: 2px solid #fbbf24;
+    color: #92400e;
+  }
+  .rank-btn-quiz:hover { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
+  
+  .rank-btn-hangman {
+    background: #f0fdf4;
+    border: 2px solid #4ade80;
+    color: #166534;
+  }
+  .rank-btn-hangman:hover { background: #dcfce7; border-color: #22c55e; color: #14532d; }
+
+  /* Footer Modal */
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(4px); }
+  .modal-content { background: var(--card-bg); padding: 2rem; border-radius: 1.5rem; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
 
   @media (max-width: 768px) {
-    .header-container { height: 220px; }
-    .main-title { font-size: 1.8rem; }
-    .nav-btn { padding: 10px 12px; font-size: 0.9rem; }
+    .header-container { height: 200px; }
+    .main-title { font-size: 1.6rem; }
     .quiz-list { grid-template-columns: 1fr; }
-    .content-container { margin: 2rem auto; }
   }
-
-  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
-  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:400px; text-align:center; }
 </style>
 </head>
 <body>
 
+  <!-- Header -->
   <header class="header-container">
     <div class="header-overlay"></div>
     <div class="header-content">
       <h1 class="main-title">한림청소년문화의집 방과후영어</h1>
+      <p class="text-lg mt-2 opacity-90 font-medium">Middle School English Hub</p>
     </div>
   </header>
 
-  <nav class="navbar flex justify-center flex-wrap shadow-md">
+  <!-- Navigation -->
+  <nav class="navbar flex justify-center flex-wrap shadow-lg">
     <a href="index.html" class="nav-btn">Home</a>
     <a href="e.html" class="nav-btn">초등학생</a>
     <a href="m.html" class="nav-btn active">중학생</a>
@@ -184,119 +174,124 @@
     <a href="#" class="nav-btn" id="contact-btn">Contact</a>
   </nav>
 
+  <!-- Main Content -->
   <main class="content-container">
-    <h2 class="page-title">중등용 (Middle School)</h2>
-    <p class="page-desc">중학영어 1-A (교과서 핵심 단어)</p>
-
-    <!-- [추가된 실시간 리더보드 섹션] -->
-    <div class="mb-8">
-        <a class="quiz-btn border-2 border-yellow-400 bg-yellow-50 hover:bg-yellow-100" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=leaderboard">
-            <span class="flex items-center">
-                <span class="mr-2 text-2xl">🔥</span>
-                <span class="text-yellow-800 font-black">실시간 우리반 랭킹 확인하기 (RANKING)</span>
-            </span>
-            <span class="arrow text-yellow-600">🏆</span>
-        </a>
+    
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-black text-brand-dark mb-2">중등용 (Middle School)</h2>
+        <p class="text-muted text-lg">중학영어 1-A (교과서 핵심 단어 퀴즈 및 행맨)</p>
     </div>
 
-    <div class="quiz-list">
-        <!-- 대명사 격변화 -->
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_1">
-            <span>중등 단어장 (1과_대명사격변화 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_2">
-            <span>중등 단어장 (2과_대명사격변화 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_3">
-            <span>중등 단어장 (3과_대명사격변화 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_4">
-            <span>중등 단어장 (4과_대명사격변화 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_5">
-            <span>중등 단어장 (5과_대명사격변화 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_6">
-            <span>중등 단어장 (6과_대명사격변화 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
+    <!-- [SECTION 1] 단어 퀴즈 센터 -->
+    <section class="mb-16">
+        <h3 class="section-title">
+            <span>📚 단어 암기 퀴즈 센터</span>
+        </h3>
         
-        <!-- 동사 변화 -->
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_7">
-            <span>중등 단어장 (1과_문장활용종합 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_8">
-            <span>중등 단어장 (2과_문장활용종합 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_9">
-            <span>중등 단어장 (3과_문장활용종합 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_10">
-            <span>중등 단어장 (4과_문장활용종합 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_11">
-            <span>중등 단어장 (5과_동사변화 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_12">
-            <span>중등 단어장 (6과_동사변화 퀴즈)</span> <span class="arrow">➜</span>
-        </a>
+        <!-- 단어 퀴즈 랭킹 버튼 (섹션 상단 배치) -->
+        <div class="mb-6">
+            <a class="quiz-btn rank-btn-quiz w-full" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=leaderboard">
+                <span class="flex items-center">
+                    <span class="mr-3 text-2xl">🔥</span>
+                    <span class="font-black text-xl">실시간 단어 퀴즈 랭킹 확인 (QUIZ RANK)</span>
+                </span>
+                <span class="text-2xl">🏆</span>
+            </a>
+        </div>
 
-        <!-- 어순 감각 (행맨) -->
-        <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_1">
-            <span>어순감각익히기(1과_행맨게임)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_2">
-            <span>어순감각익히기(2과_행맨게임)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_3">
-            <span>어순감각익히기(3과_행맨게임)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_4">
-            <span>어순감각익히기(4과_행맨게임)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_5">
-            <span>어순감각익히기(5과_행맨게임)</span> <span class="arrow">➜</span>
-        </a>
-        <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_6">
-            <span>어순감각익히기(6과_행맨게임)</span> <span class="arrow">➜</span>
-        </a>
-    </div>
+        <div class="quiz-list">
+            <!-- 1과 ~ 6과 (대명사 격변화) -->
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_1"><span>중등 단어장 (1과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_2"><span>중등 단어장 (2과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_3"><span>중등 단어장 (3과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_4"><span>중등 단어장 (4과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_5"><span>중등 단어장 (5과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_6"><span>중등 단어장 (6과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
+            
+            <!-- 7과 ~ 12과 (문장 및 동사변화) -->
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_7"><span>중등 단어장 (1과_문장활용종합)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_8"><span>중등 단어장 (2과_문장활용종합)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_9"><span>중등 단어장 (3과_문장활용종합)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_10"><span>중등 단어장 (4과_문장활용종합)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_11"><span>중등 단어장 (5과_동사변화 퀴즈)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_12"><span>중등 단어장 (6과_동사변화 퀴즈)</span> <span class="text-xl opacity-40">➜</span></a>
+        </div>
+    </section>
+
+    <!-- [SECTION 2] 행맨 게임 센터 -->
+    <section class="mb-16 border-t pt-12 border-gray-200 dark:border-gray-700">
+        <h3 class="section-title">
+            <span>🎮 어순 감각 익히기 (Hangman)</span>
+        </h3>
+
+        <!-- 행맨 실시간 랭킹 버튼 (게임 시작 전 바로 확인 가능하도록 배치) -->
+        <div class="mb-6">
+            <a class="quiz-btn rank-btn-hangman w-full" target="_blank" href="https://script.google.com/macros/s/AKfycbzQ7z6mH29f9G0lC0u1G8oO2m_C6z8tI6p3o4y5z6a7b8c9d/exec?page=leaderboard">
+                <span class="flex items-center">
+                    <span class="mr-3 text-2xl">🏅</span>
+                    <span class="font-black text-xl text-green-800">행맨 실시간 랭킹 확인 (HANGMAN RANK)</span>
+                </span>
+                <span class="text-2xl">🏆</span>
+            </a>
+        </div>
+
+        <div class="quiz-list">
+            <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_1"><span>어순감각익히기 (1과_행맨게임)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_2"><span>어순감각익히기 (2과_행맨게임)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_3"><span>어순감각익히기 (3과_행맨게임)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_4"><span>어순감각익히기 (4과_행맨게임)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_5"><span>어순감각익히기 (5과_행맨게임)</span> <span class="text-xl opacity-40">➜</span></a>
+            <a class="quiz-btn" target="_blank" href="hangman.html?sheet=lesson_6"><span>어순감각익히기 (6과_행맨게임)</span> <span class="text-xl opacity-40">➜</span></a>
+        </div>
+    </section>
 
   </main>
 
+  <!-- Contact Modal -->
   <div id="contact-modal" class="modal" aria-hidden="true">
-    <div class="modal-content shadow-xl">
-      <h3 class="text-2xl font-bold mb-2">Contact Me</h3>
-      <p class="text-gray-500 mb-6">Tony (Retired Engineer & Educator)</p>
-      <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
-        <p class="mb-2"><strong>📧 Email:</strong> smile21c@korea.com</p>
-        <p class="text-xs text-gray-500 mt-2">* 문의 사항은 이메일로 보내주시면 확인 후 답변 드리겠습니다.</p>
+    <div class="modal-content">
+      <h3 class="text-2xl font-black text-brand-dark mb-2">Contact Tony</h3>
+      <p class="text-gray-500 mb-6 font-medium">Retired Engineer & Educator</p>
+      <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl mb-6 text-left border border-gray-100 dark:border-gray-700">
+        <p class="mb-3 flex items-center gap-2"><strong>📧 Email:</strong> <span class="text-blue-600 dark:text-blue-400">smile21c@korea.com</span></p>
+        <p class="text-xs text-muted leading-relaxed">* 학습 자료나 시스템 오류 문의 사항은 이메일로 보내주시면 확인 후 답변 드리겠습니다.</p>
       </div>
-      <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">닫기 (Close)</button>
+      <button id="close-modal-btn" class="w-full bg-brand text-white py-3 rounded-xl font-bold hover:bg-brand-hover transition shadow-lg">닫기 (Close)</button>
     </div>
   </div>
 
-<script>
-  const contactBtn = document.getElementById('contact-btn');
-  const contactModal = document.getElementById('contact-modal');
-  const closeBtn = document.getElementById('close-modal-btn');
+  <script>
+    const contactBtn = document.getElementById('contact-btn');
+    const contactModal = document.getElementById('contact-modal');
+    const closeBtn = document.getElementById('close-modal-btn');
 
-  function openModal(e) {
-    e.preventDefault();
-    contactModal.style.display = 'flex';
-    contactModal.setAttribute('aria-hidden', 'false');
-  }
-  function closeModal() {
-    contactModal.style.display = 'none';
-    contactModal.setAttribute('aria-hidden', 'true');
-  }
+    function openModal(e) {
+      e.preventDefault();
+      contactModal.style.display = 'flex';
+      contactModal.setAttribute('aria-hidden', 'false');
+    }
+    
+    function closeModal() {
+      contactModal.style.display = 'none';
+      contactModal.setAttribute('aria-hidden', 'true');
+    }
 
-  if(contactBtn) contactBtn.addEventListener('click', openModal);
-  if(closeBtn) closeBtn.addEventListener('click', closeModal);
-  
-  window.addEventListener('click', (e) => {
-    if (e.target === contactModal) closeModal();
-  });
-</script>
+    if(contactBtn) contactBtn.addEventListener('click', openModal);
+    if(closeBtn) closeBtn.addEventListener('click', closeModal);
+    
+    window.addEventListener('click', (e) => {
+      if (e.target === contactModal) closeModal();
+    });
+
+    // In-app browser handling (preventing link issues on iOS)
+    (function() {
+        var ua = navigator.userAgent.toLowerCase();
+        var isInApp = /kakaotalk|naver|line|fbav|instagram/i.test(ua);
+        if (isInApp && /iphone|ipad|ipod/i.test(ua)) {
+            console.log("In-app browser detected on iOS");
+        }
+    })();
+  </script>
 
 </body>
 </html>
