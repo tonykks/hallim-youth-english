@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 07: 인칭대명사의 소유격과 소유대명사 - 누구의 것일까?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Nunito', 'Noto Sans KR', sans-serif; background-color: #FFFBF0; color: #4A4A4A; overflow-x: hidden; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto; height: 250px; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .card-shadow:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .highlight-text { color: #FF9F1C; font-weight: 900; text-decoration: underline; text-underline-offset: 4px; }
+        .hanja-box { display: inline-flex; flex-direction: column; align-items: center; background: white; padding: 8px 12px; border-radius: 12px; border: 1px solid #e2e8f0; margin: 0 4px; }
+        .btn-quiz { transition: all 0.2s; border-width: 2px; }
+        .btn-quiz:active { transform: scale(0.95); }
+        .second-person-row { background-color: #f0f9ff; } /* Light blue for 2nd person emphasis */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FFFBF0; }
+        ::-webkit-scrollbar-thumb { background: #FF9F1C; border-radius: 4px; }
+        
+        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .moving-pos { animation: bounce-subtle 3s ease-in-out infinite; display: inline-block; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Progress -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm py-4">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-black text-orange-500 tracking-tight">Grammar Zap! <span class="text-gray-600 text-lg font-bold">Unit 07</span></h1>
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <nav class="hidden md:flex gap-4 text-sm font-bold text-gray-500">
+                    <a href="#intro" class="hover:text-orange-500 transition">개념</a>
+                    <a href="#table-summary" class="hover:text-orange-500 transition">대명사표</a>
+                    <a href="#quiz-lab" class="hover:text-orange-500 transition font-black text-orange-600 underline text-lg">소유연구소</a>
+                    <a href="#words" class="hover:text-orange-500 transition">단어</a>
+                </nav>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetLearning()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-lg font-bold text-gray-500 mr-2 transition">처음부터 다시하기 🔄</button>
+                    <div class="w-24 h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                        <div id="progressBar" class="h-full bg-teal-400 transition-all duration-500 w-0"></div>
+                    </div>
+                    <span id="progressText" class="text-sm font-bold text-teal-600">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 space-y-16">
+
+        <!-- INTRO SECTION: Deductive Approach with Updated Hanja Meaning -->
+        <section id="intro" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border border-orange-50">
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-black text-gray-800 tracking-tight flex items-center gap-3">
+                        내 것이라고 말하는 <span class="text-orange-500">소유</span> <span class="moving-pos text-3xl">🎒</span>
+                    </h2>
+                    <div class="space-y-4 text-gray-600 text-lg leading-relaxed">
+                        <p>명사가 누구의 것인지 말해주는 <strong>소유</strong>라는 말은 이런 뜻을 가지고 있어요.</p>
+                        
+                        <div class="flex items-center gap-1 my-4">
+                            <div class="hanja-box shadow-sm">
+                                <span class="text-2xl font-black text-orange-500">所</span>
+                                <span class="text-[10px] text-gray-400">~하는 것 소</span>
+                            </div>
+                            <div class="hanja-box shadow-sm">
+                                <span class="text-2xl font-black text-orange-500">有</span>
+                                <span class="text-[10px] text-gray-400">가지다 유</span>
+                            </div>
+                            <span class="font-bold text-gray-700 ml-2">= 무언가를 '가지는 것'</span>
+                        </div>
+                        <p class="text-sm">여기서 '소(所)'는 장소가 아니라, 뒤의 동작을 명사로 만들어주는 <strong>~하는 것</strong>이라는 의미예요. 즉, 소유는 <strong>가지는 것</strong>을 말한답니다!</p>
+
+                        <div class="bg-teal-50 p-6 rounded-2xl border-l-4 border-teal-400">
+                            <h4 class="font-black text-teal-800 text-xl mb-2 italic">💡 Tony's Logic: 명사의 범위를 확 줄여줘요!</h4>
+                            <p class="text-sm leading-relaxed">
+                                관사(a/the)가 명사 앞에 붙듯이, 소유격도 명사 앞에 붙어서 수많은 것 중에 "누구의 것"인지 범위를 딱 정해주는 <strong>한정사</strong> 역할을 해요!
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 pt-4 border-t border-gray-100">
+                        <div class="flex-1 text-center">
+                            <span id="learnedCount" class="block text-3xl font-black text-orange-500">0</span>
+                            <span class="text-xs text-gray-400 font-bold uppercase tracking-widest text-center">배운 표현</span>
+                        </div>
+                        <div class="flex-1 text-center">
+                            <span id="remainingCount" class="block text-3xl font-black text-teal-500">20</span>
+                            <span class="text-xs text-gray-400 font-bold uppercase tracking-widest text-center">남은 과제</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="chart-container">
+                        <canvas id="learningChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONCEPT EXPLORATION: 3rd Person Focus -->
+        <section class="grid md:grid-cols-2 gap-8">
+            <div class="bg-orange-50 p-8 rounded-3xl border-2 border-orange-100 shadow-sm relative overflow-hidden">
+                <div class="absolute top-2 right-4 text-4xl opacity-10">👨‍👩‍👧</div>
+                <h3 class="text-2xl font-black text-orange-700 mb-4 italic">My mom은 1인칭일까요?</h3>
+                <p class="text-gray-600 leading-relaxed text-sm">
+                    많은 친구들이 "My가 있으니 1인칭!"이라고 착각해요. 하지만 주인공인 <strong>나(I)</strong>도 아니고, 듣는 <strong>너(You)</strong>도 아니면 무조건 <span class="text-orange-600 font-black">3인칭</span>이에요! <br><br>
+                    나의 엄마(My mom), 너의 아빠(Your dad)는 우리가 대화로 나누는 <strong>'그 대상'</strong>일 뿐이므로 3인칭이라는 사실을 꼭 기억해야 해요.
+                </p>
+            </div>
+            <div class="bg-indigo-50 p-8 rounded-3xl border-2 border-indigo-100 shadow-sm relative overflow-hidden">
+                <div class="absolute top-2 right-4 text-4xl opacity-10">✨</div>
+                <h3 class="text-2xl font-black text-indigo-700 mb-4 italic">소유격 + 명사 = 소유대명사</h3>
+                <p class="text-gray-600 leading-relaxed text-sm">
+                    이름을 대신하는 '대명사' 중에서도 소유의 의미를 가진 친구들이에요.<br><br>
+                    <span class="font-black text-indigo-600">my cat = mine (나의 것)</span> <br>
+                    <span class="font-black text-indigo-600">your dog = yours (너의 것)</span> <br>
+                    <span class="font-black text-indigo-600">his book = his (그의 것)</span> <br>
+                    단어 하나가 이미 물건과 주인을 모두 포함하고 있어요!
+                </p>
+            </div>
+        </section>
+
+        <!-- SUMMARY TABLE: Separated Singular and Plural with Color Coding -->
+        <section id="table-summary" class="scroll-mt-24">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-black text-gray-800 mb-2">📊 소유 표현 총정리 (단수 vs 복수)</h3>
+                <p class="text-gray-500 font-bold italic">2인칭(you)은 혼자일 때와 여럿일 때의 모양이 똑같아요!</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Singular Table -->
+                <div class="bg-white rounded-3xl shadow-xl border border-orange-100 overflow-hidden">
+                    <div class="bg-orange-500 text-white p-4 text-center font-black text-xl italic tracking-widest">Singular (단수 하나)</div>
+                    <table class="w-full text-center border-collapse">
+                        <thead>
+                            <tr class="bg-orange-50 text-gray-600 text-xs">
+                                <th class="p-3 border-b">구분</th>
+                                <th class="p-3 border-b">소유격 (~의)</th>
+                                <th class="p-3 border-b">소유대명사 (~의 것)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 font-bold">
+                            <tr class="border-b border-orange-50">
+                                <td class="p-4 bg-gray-50 text-xs">1인칭 (나)</td>
+                                <td class="p-4 text-orange-600 italic">my <span class="text-[10px] text-gray-400">[마이]</span></td>
+                                <td class="p-4 text-indigo-600 italic">mine <span class="text-[10px] text-gray-400">[마인]</span></td>
+                            </tr>
+                            <tr class="border-b border-blue-50 second-person-row">
+                                <td class="p-4 bg-blue-100/50 text-xs">2인칭 (너)</td>
+                                <td class="p-4 text-blue-600 italic">your <span class="text-[10px] text-gray-400">[유어]</span></td>
+                                <td class="p-4 text-blue-800 italic">yours <span class="text-[10px] text-gray-400">[유어즈]</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 bg-gray-50 text-xs">3인칭 (그/그녀/것)</td>
+                                <td class="p-4 text-orange-600 italic text-left pl-6">his / her / its</td>
+                                <td class="p-4 text-indigo-600 italic text-left pl-6">his / hers / x</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Plural Table -->
+                <div class="bg-white rounded-3xl shadow-xl border border-teal-100 overflow-hidden">
+                    <div class="bg-teal-500 text-white p-4 text-center font-black text-xl italic tracking-widest">Plural (복수 여럿)</div>
+                    <table class="w-full text-center border-collapse">
+                        <thead>
+                            <tr class="bg-teal-50 text-gray-600 text-xs">
+                                <th class="p-3 border-b">구분</th>
+                                <th class="p-3 border-b">소유격 (~의)</th>
+                                <th class="p-3 border-b">소유대명사 (~의 것)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-gray-700 font-bold">
+                            <tr class="border-b border-teal-50">
+                                <td class="p-4 bg-gray-50 text-xs">1인칭 (우리)</td>
+                                <td class="p-4 text-teal-600 italic">our <span class="text-[10px] text-gray-400">[아워]</span></td>
+                                <td class="p-4 text-indigo-600 italic">ours <span class="text-[10px] text-gray-400">[아워즈]</span></td>
+                            </tr>
+                            <tr class="border-b border-blue-50 second-person-row">
+                                <td class="p-4 bg-blue-100/50 text-xs">2인칭 (너희)</td>
+                                <td class="p-4 text-blue-600 italic">your <span class="text-[10px] text-gray-400">[유어]</span></td>
+                                <td class="p-4 text-blue-800 italic">yours <span class="text-[10px] text-gray-400">[유어즈]</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 bg-gray-50 text-xs">3인칭 (그들)</td>
+                                <td class="p-4 text-teal-600 italic">their <span class="text-[10px] text-gray-400">[데어]</span></td>
+                                <td class="p-4 text-indigo-600 italic">theirs <span class="text-[10px] text-gray-400">[데어즈]</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- POSSESSIVE LAB -->
+        <section id="quiz-lab" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border-4 border-orange-200">
+            <div id="quiz-container">
+                <div class="text-center mb-8">
+                    <h3 class="text-3xl font-black text-gray-800 mb-2 italic">🏆 소유 표현 연구소</h3>
+                    <p class="text-gray-500 font-bold">우리말 뜻에 알맞은 영어 왕관을 씌워주세요!</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-10">
+                    <div class="flex flex-col items-center">
+                        <div id="quiz-card" class="bg-orange-500 text-white p-10 rounded-3xl shadow-2xl transition-all duration-300 text-center min-w-[340px] cursor-pointer hover:scale-105" onclick="playQuizAudio()">
+                            <div id="quiz-icon" class="text-8xl mb-4">🦵</div>
+                            <div id="quiz-ko-sentence" class="text-xl font-bold mb-4 text-orange-100 italic">"내 다리는 길다."</div>
+                            <div id="quiz-en-display" class="text-4xl font-black tracking-widest italic lowercase">___ legs are long.</div>
+                            <div class="mt-4 text-xs opacity-60 font-bold italic">클릭하면 문장의 소리가 나요 🔊</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2">
+                        <button onclick="checkAnswer('my')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 italic">my</button>
+                        <button onclick="checkAnswer('mine')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-indigo-50 shadow-sm font-black text-indigo-600 italic">mine</button>
+                        <button onclick="checkAnswer('your')" class="btn-quiz p-3 rounded-xl border-blue-200 bg-white hover:bg-blue-50 shadow-sm font-black text-blue-600 italic">your</button>
+                        <button onclick="checkAnswer('yours')" class="btn-quiz p-3 rounded-xl border-blue-200 bg-white hover:bg-blue-50 shadow-sm font-black text-blue-700 italic">yours</button>
+                        <button onclick="checkAnswer('his')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 italic">his</button>
+                        <button onclick="checkAnswer('her')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 italic">her</button>
+                        <button onclick="checkAnswer('hers')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-indigo-50 shadow-sm font-black text-indigo-600 italic">hers</button>
+                        <button onclick="checkAnswer('its')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 italic">its</button>
+                        <button onclick="checkAnswer('our')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 italic">our</button>
+                        <button onclick="checkAnswer('ours')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-indigo-50 shadow-sm font-black text-indigo-600 italic">ours</button>
+                        <button onclick="checkAnswer('their')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 italic">their</button>
+                        <button onclick="checkAnswer('theirs')" class="btn-quiz p-3 rounded-xl border-gray-200 bg-white hover:bg-indigo-50 shadow-sm font-black text-indigo-600 italic">theirs</button>
+                    </div>
+
+                    <div id="quiz-msg" class="text-center min-h-[60px]">
+                        <p id="quiz-feedback-main" class="font-black text-xl"></p>
+                        <p id="quiz-feedback-sub" class="text-sm text-gray-500 font-bold mt-2"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="quiz-finished-view" class="hidden py-10 text-center space-y-6">
+                <div class="text-8xl">🎓</div>
+                <h3 class="text-4xl font-black text-teal-500 italic">소유의 달인 탄생!</h3>
+                <p class="text-gray-500 font-bold">단수와 복수, 소유격과 소유대명사를 모두 정복했습니다!</p>
+                <button onclick="resetLearning()" class="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition">다시 도전하기 🔄</button>
+            </div>
+        </section>
+
+        <!-- WORD BLOCKS: Paired logic explanation -->
+        <section id="words" class="scroll-mt-24">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-xl">📦</div>
+                <h3 class="text-2xl font-bold text-gray-800">소유의 짝궁 블록</h3>
+            </div>
+            <div id="wordBlocksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+        <!-- SENTENCE PRACTICE -->
+        <section id="sentences" class="scroll-mt-24 mb-20">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl">📝</div>
+                <h3 class="text-2xl font-bold text-gray-800 italic">소유 표현 문장 훈련 (20문장)</h3>
+            </div>
+            <div id="sentenceList" class="space-y-4">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-16 text-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h3 class="text-2xl font-black text-gray-800 mb-2 italic">Tony's Speaking English Grammar</h3>
+                <p class="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span class="underline">어순 감각</span>에 있습니다.</p>
+                <div class="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                <p class="text-gray-500 text-sm leading-relaxed italic font-bold">
+                    Tony's Speaking English Grammar helps you master the natural sense of English word order.<br>
+                    <span class="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA ---
+        const pairData = [
+            { id: 1, pos: 'my', ppro: 'mine', pro: '마이-마인', ko: '나의 것', desc: 'my book = mine', icon: '🙋' },
+            { id: 2, pos: 'your', ppro: 'yours', pro: '유어-유어즈', ko: '너의 것', desc: 'your bag = yours', icon: '👉' },
+            { id: 3, pos: 'his', ppro: 'his', pro: '히즈-히즈', ko: '그의 것', desc: 'his kite = his', icon: '👨' },
+            { id: 4, pos: 'her', ppro: 'hers', pro: '허-허즈', ko: '그녀의 것', desc: 'her cat = hers', icon: '👩' },
+            { id: 5, pos: 'our', ppro: 'ours', pro: '아워-아워즈', ko: '우리의 것', desc: 'our ball = ours', icon: '👨‍👩‍👧' },
+            { id: 6, pos: 'their', ppro: 'theirs', pro: '데어-데어즈', ko: '그들의 것', desc: 'their drum = theirs', icon: '👥' }
+        ];
+
+        const quizSource = [
+            { icon: '🦵', ko: '내 다리는 길다.', en: '___ legs are long.', ans: 'my', why: '"나의" 다리이므로 소유격 my를 써요.' },
+            { icon: '🦵', ko: '네 다리는 길다.', en: '___ legs are long.', ans: 'your', why: '"너의" 다리이므로 소유격 your를 써요.' },
+            { icon: '🦵', ko: '그것의 다리는 짧다.', en: '___ legs are short.', ans: 'its', why: '"그것의" 다리이므로 소유격 its를 써요.' },
+            { icon: '🦵', ko: '그들의 다리는 짧다.', en: '___ legs are short.', ans: 'their', why: '"그들의" 다리이므로 소유격 their를 써요.' },
+            { icon: '🐈', ko: '그의 고양이는 귀엽다.', en: '___ cat is cute.', ans: 'his', why: '"그의" 고양이이므로 소유격 his를 써요.' },
+            { icon: '🐈', ko: '그녀의 고양이는 귀엽다.', en: '___ cat is cute.', ans: 'her', why: '"그녀의" 고양이이므로 소유격 her를 써요.' },
+            { icon: '👨‍👧‍👦', ko: '그는 우리의 오빠이다.', en: 'He is ___ brother.', ans: 'our', why: '"우리의" 오빠이므로 소유격 our를 써요.' },
+            { icon: '👨‍👧‍👦', ko: '그녀는 그들의 언니이다.', en: 'She is ___ sister.', ans: 'their', why: '"그들의" 언니이므로 소유격 their를 써요.' },
+            { icon: '👬', ko: '그들은 너의 형제들이다.', en: 'They are ___ brothers.', ans: 'your', why: '"너의" 형제들이므로 소유격 your를 써요.' },
+            { icon: '👭', ko: '그들은 그녀의 자매들이다.', en: 'They are ___ sisters.', ans: 'her', why: '"그녀의" 자매들이므로 소유격 her를 써요.' },
+            { icon: '🎒', ko: '이것은 네 것이다.', en: 'This is ___.', ans: 'yours', why: '"너의 것"을 뜻하는 소유대명사 yours를 써요.' },
+            { icon: '🎒', ko: '저것은 내 것이다.', en: 'That is ___.', ans: 'mine', why: '"나의 것"을 뜻하는 소유대명사 mine을 써요.' },
+            { icon: '🪁', ko: '그 연은 그녀의 것이다.', en: 'The kite is ___.', ans: 'hers', why: '"그녀의 것"이므로 소유대명사 hers를 써요.' },
+            { icon: '🪁', ko: '그 연은 그의 것이다.', en: 'The kite is ___.', ans: 'his', why: '"그의 것"이므로 소유대명사 his를 써요.' },
+            { icon: '⚽', ko: '이 공은 우리의 것이다.', en: 'This ball is ___.', ans: 'ours', why: '"우리의 것"이므로 소유대명사 ours를 써요.' },
+            { icon: '⚽', ko: '저 공은 그들의 것이다.', en: 'That ball is ___.', ans: 'theirs', why: '"그들의 것"이므로 소유대명사 theirs를 써요.' },
+            { icon: '🥁', ko: '이 북들은 우리의 것이다.', en: 'These drums are ___.', ans: 'ours', why: '"우리의 것"이므로 소유대명사 ours를 써요.' },
+            { icon: '🥁', ko: '저 북들은 너희의 것이다.', en: 'Those drums are ___.', ans: 'yours', why: '"너희의 것"이므로 소유대명사 yours를 써요.' },
+            { icon: '🤖', ko: '이 로봇들은 내 것이다.', en: 'These robots are ___.', ans: 'mine', why: '"나의 것"이므로 소유대명사 mine을 써요.' },
+            { icon: '🤖', ko: '저 로봇들은 그녀의 것이다.', en: 'Those robots are ___.', ans: 'hers', why: '"그녀의 것"이므로 소유대명사 hers를 써요.' }
+        ];
+
+        const sentenceData = [
+            { en: '<span class="text-orange-600 font-black">My</span> legs are long.', pro: '마이 레그즈 아 롱', ko: '내 다리는 길다.' },
+            { en: '<span class="text-orange-600 font-black">Your</span> legs are long.', pro: '유어 레그즈 아 롱', ko: '네 다리는 길다.' },
+            { en: '<span class="text-orange-600 font-black">Its</span> legs are short.', pro: '잇츠 레그즈 아 쇼트', ko: '그것의 다리는 짧다.' },
+            { en: '<span class="text-orange-600 font-black">Their</span> legs are short.', pro: '데어 레그즈 아 쇼트', ko: '그들의 다리는 짧다.' },
+            { en: '<span class="text-orange-600 font-black">His</span> cat is cute.', pro: '히즈 캣 이즈 큐트', ko: '그의 고양이는 귀엽다.' },
+            { en: '<span class="text-orange-600 font-black">Her</span> cat is cute.', pro: '허 캣 이즈 큐트', ko: '그녀의 고양이는 귀엽다.' },
+            { en: 'He is <span class="text-orange-600 font-black">our</span> brother.', pro: '히 이즈 아워 브러더', ko: '그는 우리의 오빠이다.' },
+            { en: 'She is <span class="text-orange-600 font-black">their</span> sister.', pro: '쉬 이즈 데어 시스터', ko: '그녀는 그들의 언니이다.' },
+            { en: 'They are <span class="text-orange-600 font-black">your</span> brothers.', pro: '데이 아 유어 브러더즈', ko: '그들은 너의 형제들이다.' },
+            { en: 'They are <span class="text-orange-600 font-black">her</span> sisters.', pro: '데이 아 허 시스터즈', ko: '그들은 그녀의 자매들이다.' },
+            { en: 'This is <span class="text-indigo-600 font-black">yours</span>.', pro: '디스 이즈 유어즈', ko: '이것은 네 것이다.' },
+            { en: 'That is <span class="text-indigo-600 font-black">mine</span>.', pro: '댓 이즈 마인', ko: '저것은 내 것이다.' },
+            { en: 'The kite is <span class="text-indigo-600 font-black">hers</span>.', pro: '더 카이트 이즈 허즈', ko: '그 연은 그녀의 것이다.' },
+            { en: 'The kite is <span class="text-indigo-600 font-black">his</span>.', pro: '더 카이트 이즈 히즈', ko: '그 연은 그의 것이다.' },
+            { en: 'This ball is <span class="text-indigo-600 font-black">ours</span>.', pro: '디스 볼 이즈 아워즈', ko: '이 공은 우리의 것이다.' },
+            { en: 'That ball is <span class="text-indigo-600 font-black">theirs</span>.', pro: '댓 볼 이즈 데어즈', ko: '저 공은 그들의 것이다.' },
+            { en: 'These drums are <span class="text-indigo-600 font-black">ours</span>.', pro: '디즈 드럼즈 아 아워즈', ko: '이 북들은 우리의 것이다.' },
+            { en: 'Those drums are <span class="text-indigo-600 font-black">yours</span>.', pro: '도우즈 드럼즈 아 유어즈', ko: '저 북들은 너희의 것이다.' },
+            { en: 'These robots are <span class="text-indigo-600 font-black">mine</span>.', pro: '디즈 로봇츠 아 마인', ko: '이 로봇들은 내 것이다.' },
+            { en: 'Those robots are <span class="text-indigo-600 font-black">hers</span>.', pro: '도우즈 로봇츠 아 허즈', ko: '저 로봇들은 그녀의 것이다.' }
+        ];
+
+        // --- STATE & CORE ---
+        let currentQuizIndex = 0;
+        let learnedSet = new Set();
+        let myChart = null;
+        let quizQueue = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playQuizAudio() {
+            if (quizQueue[currentQuizIndex]) speak(quizQueue[currentQuizIndex].en.replace('___', quizQueue[currentQuizIndex].ans));
+        }
+
+        function updateUI() {
+            const learned = learnedSet.size;
+            const total = quizQueue.length;
+            const remaining = total - learned;
+            const percentage = total > 0 ? Math.round((learned / total) * 100) : 0;
+            document.getElementById('learnedCount').innerText = learned;
+            document.getElementById('remainingCount').innerText = remaining;
+            document.getElementById('progressText').innerText = percentage + '%';
+            document.getElementById('progressBar').style.width = percentage + '%';
+            if (myChart) {
+                myChart.data.datasets[0].data = [learned, remaining];
+                myChart.update();
+            }
+        }
+
+        function nextQuiz() {
+            currentQuizIndex++;
+            if (currentQuizIndex >= quizQueue.length) {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('quiz-finished-view').classList.remove('hidden');
+                return;
+            }
+            const q = quizQueue[currentQuizIndex];
+            document.getElementById('quiz-icon').innerText = q.icon;
+            document.getElementById('quiz-ko-sentence').innerText = `"${q.ko}"`;
+            document.getElementById('quiz-en-display').innerText = q.en;
+            document.getElementById('quiz-feedback-main').innerText = "";
+            document.getElementById('quiz-feedback-sub').innerText = "";
+        }
+
+        function checkAnswer(ans) {
+            const q = quizQueue[currentQuizIndex];
+            const mainMsg = document.getElementById('quiz-feedback-main');
+            const subMsg = document.getElementById('quiz-feedback-sub');
+            if (ans === q.ans) {
+                mainMsg.innerText = `정답! ✨ ${q.en.replace('___', ans)}`;
+                mainMsg.className = "font-black text-xl text-teal-500";
+                subMsg.innerText = q.why;
+                speak(q.en.replace('___', ans));
+                learnedSet.add(q.ko); 
+                updateUI();
+                setTimeout(nextQuiz, 2500);
+            } else {
+                mainMsg.innerText = "다시 한번 생각해봐요! 🤔";
+                mainMsg.className = "font-black text-xl text-red-500";
+                subMsg.innerText = "단어 뒤에 명사가 있는지, 아니면 단어 혼자 쓰였는지 확인해 보세요.";
+            }
+        }
+
+        function renderBlocks() {
+            const grid = document.getElementById('wordBlocksGrid');
+            grid.innerHTML = "";
+            pairData.forEach(w => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-6 rounded-3xl flex flex-col items-center gap-2 cursor-pointer hover:border-orange-300 border-2 border-transparent transition card-shadow text-center";
+                div.onclick = () => speak(`${w.pos}, ${w.ppro}`);
+                div.innerHTML = `
+                    <div class="text-4xl mb-2">${w.icon}</div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl font-black text-orange-500">${w.pos}</span>
+                        <span class="text-gray-300 font-bold">→</span>
+                        <span class="text-xl font-black text-indigo-600">${w.ppro}</span>
+                    </div>
+                    <div class="text-[10px] font-bold text-gray-400 italic font-black">${w.desc}</div>
+                    <div class="text-[14px] font-black text-gray-800 mt-2">${w.ko} [${w.pro}]</div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function renderSentences() {
+            const list = document.getElementById('sentenceList');
+            list.innerHTML = "";
+            sentenceData.forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-5 rounded-2xl border border-green-50 shadow-sm cursor-pointer hover:border-green-400 transition";
+                div.onclick = () => { speak(s.en.replace(/<[^>]*>/g, '')); div.querySelector('.trans-box').classList.toggle('hidden'); };
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-black">${i+1}</span>
+                            <p class="text-xl font-black text-gray-800 tracking-wide lowercase">${s.en}</p>
+                        </div>
+                        <p class="text-sm text-gray-400 font-bold italic font-black">[${s.pro}]</p>
+                    </div>
+                    <div class="trans-box hidden mt-4 bg-green-50 p-3 rounded-xl border border-green-100">
+                        <p class="text-green-700 font-bold text-sm">해석: ${s.ko}</p>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function resetLearning() {
+            learnedSet.clear();
+            currentQuizIndex = -1;
+            quizQueue = shuffle([...quizSource]);
+            updateUI();
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-finished-view').classList.add('hidden');
+            nextQuiz();
+            speak("Let's study possessives again!");
+        }
+
+        window.onload = () => {
+            renderBlocks();
+            renderSentences();
+            const canvas = document.getElementById('learningChart');
+            const ctx = canvas.getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['완료', '남음'],
+                    datasets: [{ data: [0, quizSource.length], backgroundColor: ['#FF9F1C', '#E2E8F0'], borderWidth: 0 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { display: false } } }
+            });
+            resetLearning();
+        };
+    </script>
+</body>
+</html>

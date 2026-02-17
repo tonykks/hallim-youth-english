@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 03: 명사 (2) - 복수형 (Plurals)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <!-- Chosen Palette: Warm Neutrals & Professional Accents -->
+    <style>
+        body { font-family: 'Nunito', 'Noto Sans KR', sans-serif; background-color: #FFFBF0; color: #4A4A4A; overflow-x: hidden; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto; height: 250px; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .card-shadow:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .noun-plural { color: #FF9F1C; font-weight: 900; text-decoration: underline; text-underline-offset: 4px; }
+        .hanja-box { display: inline-flex; flex-direction: column; align-items: center; background: white; padding: 8px 12px; border-radius: 12px; border: 1px solid #e2e8f0; margin: 0 4px; }
+        .btn-quiz { transition: all 0.2s; border-width: 2px; }
+        .btn-quiz:active { transform: scale(0.95); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FFFBF0; }
+        ::-webkit-scrollbar-thumb { background: #FF9F1C; border-radius: 4px; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Progress -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm py-4">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-black text-orange-500 tracking-tight">Grammar Zap! <span class="text-gray-600 text-lg font-bold">Unit 03</span></h1>
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <nav class="hidden md:flex gap-4 text-sm font-bold text-gray-500">
+                    <a href="#intro" class="hover:text-orange-500 transition">개념</a>
+                    <a href="#quiz-lab" class="hover:text-orange-500 transition font-black text-orange-600 underline text-lg">복수형연구소</a>
+                    <a href="#words" class="hover:text-orange-500 transition">단어</a>
+                    <a href="#sentences" class="hover:text-orange-500 transition">문장</a>
+                </nav>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetLearning()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-lg font-bold text-gray-500 mr-2 transition">처음부터 다시하기 🔄</button>
+                    <div class="w-24 h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                        <div id="progressBar" class="h-full bg-teal-400 transition-all duration-500 w-0"></div>
+                    </div>
+                    <span id="progressText" class="text-sm font-bold text-teal-600">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 space-y-16">
+
+        <!-- INTRO SECTION (Deductive Approach Restored) -->
+        <section id="intro" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border border-orange-50">
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-black text-gray-800 tracking-tight">여럿일 때의 약속, <span class="text-orange-500">복수형</span></h2>
+                    <div class="space-y-4 text-gray-600 text-lg leading-relaxed">
+                        <p>명사는 사람이나 사물의 이름을 나타내요. 그 중에는 <strong>셀 수 있는 명사</strong>와 <strong>없는 명사</strong>가 있죠.</p>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li><span class="text-teal-600 font-black">셀 수 없는 명사</span>: 모양 그대로 사용해요.</li>
+                            <li><span class="text-orange-500 font-black">셀 수 있는 명사</span>: 우리말의 '-들'처럼 영어도 <span class="underline decoration-orange-300 font-bold italic text-gray-800">둘 이상</span>일 때는 모양을 바꿔서 표현해야 해요.</li>
+                        </ul>
+                        <div class="flex items-center gap-1 mt-4">
+                            <div class="hanja-box shadow-sm">
+                                <span class="text-2xl font-black text-orange-500">複</span>
+                                <span class="text-[10px] text-gray-400">겹칠 복</span>
+                            </div>
+                            <div class="hanja-box shadow-sm">
+                                <span class="text-2xl font-black text-orange-500">數</span>
+                                <span class="text-[10px] text-gray-400">수 수</span>
+                            </div>
+                            <span class="font-bold text-gray-700 ml-2">= 숫자가 겹쳐있다 (둘 이상!)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 pt-4 border-t border-gray-100">
+                        <div class="flex-1 text-center">
+                            <span id="learnedCount" class="block text-3xl font-black text-orange-500">0</span>
+                            <span class="text-xs text-gray-400 font-bold uppercase tracking-widest text-center">배운 단어</span>
+                        </div>
+                        <div class="flex-1 text-center">
+                            <span id="remainingCount" class="block text-3xl font-black text-teal-500">14</span>
+                            <span class="text-xs text-gray-400 font-bold uppercase tracking-widest text-center">남은 단어</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="chart-container">
+                        <canvas id="learningChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEDUCTIVE OVERVIEW: Regular vs Irregular -->
+        <section class="grid md:grid-cols-2 gap-8">
+            <div class="bg-teal-50 p-8 rounded-3xl border-2 border-teal-100 shadow-sm relative overflow-hidden">
+                <div class="absolute top-2 right-4 text-4xl opacity-10">📖</div>
+                <h3 class="text-2xl font-black text-teal-700 mb-4">1. 규칙 변화 (Regular)</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">대부분의 명사는 끝에 <strong>-s</strong>나 <strong>-es</strong>를 붙여요. <span class="bg-teal-200 px-1">y를 i로</span> 바꾸거나 <span class="bg-teal-200 px-1">f를 v로</span> 바꾸고 -es를 붙이는 것도 모두 규칙적인 변화에 포함돼요!</p>
+                <div class="flex flex-wrap gap-2 font-bold">
+                    <span class="bg-white border border-teal-100 px-3 py-1 rounded-full text-sm">tree-trees</span>
+                    <span class="bg-white border border-teal-100 px-3 py-1 rounded-full text-sm">baby-babies</span>
+                    <span class="bg-white border border-teal-100 px-3 py-1 rounded-full text-sm">leaf-leaves</span>
+                </div>
+            </div>
+            <div class="bg-orange-50 p-8 rounded-3xl border-2 border-orange-100 shadow-sm relative overflow-hidden">
+                <div class="absolute top-2 right-4 text-4xl opacity-10">🌈</div>
+                <h3 class="text-2xl font-black text-orange-700 mb-4">2. 불규칙 변화 (Irregular)</h3>
+                <p class="text-gray-600 mb-6 leading-relaxed">-s나 -es로 끝나지 않는 모든 특별한 변화들이에요. 모양이 완전히 변하거나, 혹은 단수와 복수 모양이 신기하게도 똑같은 경우를 말해요.</p>
+                <div class="flex flex-wrap gap-2 font-bold">
+                    <span class="bg-white border border-orange-100 px-3 py-1 rounded-full text-sm">man-men</span>
+                    <span class="bg-white border border-orange-100 px-3 py-1 rounded-full text-sm">child-children</span>
+                    <span class="bg-white border border-orange-100 px-3 py-1 rounded-full text-sm">fish-fish</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOUN PLURAL LAB -->
+        <section id="quiz-lab" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border-4 border-orange-200">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-black text-gray-800 mb-2">🏆 복수형 분류 연구소</h3>
+                <p class="text-gray-500 font-bold"><span class="text-orange-500 font-black underline italic">둘 이상</span>일 때, 단어의 모양이 어떻게 변할까요?</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto space-y-10">
+                <!-- Word Card -->
+                <div class="flex flex-col items-center">
+                    <div id="quiz-card" class="bg-orange-500 text-white p-10 rounded-3xl shadow-2xl transition-all duration-300 text-center min-w-[320px] cursor-pointer hover:scale-105" onclick="playQuizAudio()">
+                        <div id="quiz-icon" class="text-8xl mb-4">🌳</div>
+                        <!-- Lowercase Display (No forced uppercase) -->
+                        <div id="quiz-en" class="text-4xl font-black tracking-widest italic lowercase">tree</div>
+                        <div id="quiz-ko" class="text-xl opacity-80 mt-2 font-bold">[트리] : 나무</div>
+                        <div class="mt-4 text-xs opacity-60">클릭하면 소리가 나요 🔊</div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <button onclick="checkAnswer('standard')" class="btn-quiz p-8 rounded-2xl border-gray-200 bg-white hover:bg-teal-50 flex flex-col items-center shadow-sm hover:border-teal-400">
+                        <span class="text-4xl mb-2">➕s / es</span>
+                        <span class="font-black text-teal-700 text-xl">규칙 변화</span>
+                        <span class="text-xs text-teal-600 opacity-60 mt-1">-s, -es, -ies, -ves 형태</span>
+                    </button>
+                    <button onclick="checkAnswer('irregular')" class="btn-quiz p-8 rounded-2xl border-gray-200 bg-white hover:bg-orange-50 flex flex-col items-center shadow-sm hover:border-orange-400">
+                        <span class="text-4xl mb-2">🔄</span>
+                        <span class="font-black text-orange-700 text-xl">불규칙 변화</span>
+                        <span class="text-xs text-orange-600 opacity-60 mt-1">모양이 완전히 변하거나 그대로!</span>
+                    </button>
+                </div>
+
+                <div id="quiz-msg" class="text-center h-10 font-black text-xl"></div>
+            </div>
+        </section>
+
+        <!-- WORD BLOCKS -->
+        <section id="words" class="scroll-mt-24">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-xl">📦</div>
+                <h3 class="text-2xl font-bold text-gray-800">복수형 단어 블록 (눈으로 익히기)</h3>
+            </div>
+            <div id="wordBlocksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+        <!-- TONY'S PHONICS STORY -->
+        <section class="bg-indigo-600 rounded-3xl p-10 text-white shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 opacity-10 text-9xl">🐑</div>
+            <div class="relative z-10 space-y-6">
+                <h3 class="text-3xl font-black italic tracking-tight">Tony's Phonics Story</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20">
+                        <h4 class="text-yellow-300 font-black text-lg mb-2 underline">왜 sheep과 fish는 모양이 안 변할까요?</h4>
+                        <p class="text-sm leading-relaxed opacity-90">
+                            옛날 사람들에게 이 동물들은 한 마리씩 사고파는 보물이 아니라, <span class="font-bold underline">언제나 무리 지어 다니는 존재</span>였어요. 그래서 굳이 "한 마리야, 여러 마리야"라고 이름을 바꿔 부를 필요가 없었답니다. 언어의 효율성 때문에 굳어진 아주 신기한 경우죠!
+                        </p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/20 flex flex-col justify-center text-center">
+                        <p class="text-sm leading-relaxed opacity-90 font-bold italic">
+                            "공식만 외우면 금방 잊어버려요! <br> 큰 소리로 읽고 문장 속에서 만나보세요. <br> 어느새 여러분의 진짜 친구가 될 거예요."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SENTENCE PRACTICE -->
+        <section id="sentences" class="scroll-mt-24 mb-20">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl">📝</div>
+                <h3 class="text-2xl font-bold text-gray-800">복수형 문장 읽기 연습</h3>
+            </div>
+            <p class="mb-6 text-gray-600">문장을 클릭하면 해석이 나오고 소리를 들을 수 있어요. <span class="text-orange-500 font-black">주황색</span> 복수형에 집중하세요!</p>
+            <div id="sentenceList" class="space-y-4">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-16 text-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h3 class="text-2xl font-black text-gray-800 mb-2">Tony's Speaking English Grammar</h3>
+                <p class="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span class="underline">어순 감각</span>에 있습니다.</p>
+                <div class="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                <p class="text-gray-500 text-sm leading-relaxed italic font-bold">
+                    Tony's Speaking English Grammar helps you master the natural sense of English word order.<br>
+                    <span class="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA (Fixed Lowercase & Pronunciation) ---
+        const wordData = [
+            { id:'p1', icon: '🌳', l: 'tree', pl: 'trees', pro: '트리즈', ko: '나무들', type: 'standard' },
+            { id:'p2', icon: '📦', l: 'box', pl: 'boxes', pro: '박시즈', ko: '상자들', type: 'standard' },
+            { id:'p3', icon: '👶', l: 'baby', pl: 'babies', pro: '베이비즈', ko: '아기들', type: 'standard' },
+            { id:'p4', icon: '🍂', l: 'leaf', pl: 'leaves', pro: '리브즈', ko: '나뭇잎들', type: 'standard' },
+            { id:'p5', icon: '🔪', l: 'knife', pl: 'knives', pro: '나이브즈', ko: '칼들', type: 'standard' },
+            { id:'p6', icon: '👨', l: 'man', pl: 'men', pro: '멘', ko: '남자들', type: 'irregular' },
+            { id:'p7', icon: '👩', l: 'woman', pl: 'women', pro: '위민', ko: '여자들', type: 'irregular' },
+            { id:'p8', icon: '🦷', l: 'tooth', pl: 'teeth', pro: '티쓰', ko: '치아들', type: 'irregular' },
+            { id:'p9', icon: '🦶', l: 'foot', pl: 'feet', pro: '피트', ko: '발들', type: 'irregular' },
+            { id:'p10', icon: '🧒', l: 'child', pl: 'children', pro: '칠드런', ko: '아이들', type: 'irregular' },
+            { id:'p11', icon: '🐭', l: 'mouse', pl: 'mice', pro: '마이스', ko: '쥐들', type: 'irregular' },
+            { id:'p12', icon: '🐑', l: 'sheep', pl: 'sheep', pro: '쉽', ko: '양들 (그대로!)', type: 'irregular' },
+            { id:'p13', icon: '🐟', l: 'fish', pl: 'fish', pro: '피시', ko: '물고기들 (그대로!)', type: 'irregular' },
+            { id:'p14', icon: '🦌', l: 'deer', pl: 'deer', pro: '디어', ko: '사슴들 (그대로!)', type: 'irregular' }
+        ];
+
+        const sentenceData = [
+            { en: 'I see two <span class="noun-plural">trees</span>.', pro: '아이 씨 투 트리즈', ko: '나는 나무 두 그루를 봐.' },
+            { en: 'He has three <span class="noun-plural">boxes</span>.', pro: '히 해즈 쓰리 박시즈', ko: '그는 상자 세 개를 가지고 있어.' },
+            { en: 'The <span class="noun-plural">babies</span> are cute.', pro: '더 베이비즈 아 큐트', ko: '그 아기들은 귀여워.' },
+            { en: 'Look at the green <span class="noun-plural">leaves</span>.', pro: '룩 앳 더 그린 리브즈', ko: '저 초록색 나뭇잎들을 봐.' },
+            { en: 'We are <span class="noun-plural">men</span>.', pro: '위 아 멘', ko: '우리는 남자들이야.' },
+            { en: 'Brush your <span class="noun-plural">teeth</span>.', pro: '브러시 유어 티쓰', ko: '너의 치아들을 닦으렴.' },
+            { en: 'Five <span class="noun-plural">children</span> play.', pro: '파이브 칠드런 플레이', ko: '아이들 다섯 명이 놀고 있어.' },
+            { en: 'There are ten <span class="noun-plural">sheep</span>.', pro: '데어 아 텐 쉽', ko: '양 열 마리가 있어.' },
+            { en: 'I have four <span class="noun-plural">fish</span>.', pro: '아이 해브 포어 피시', ko: '나는 물고기 네 마리를 가지고 있어.' },
+            { en: 'The <span class="noun-plural">women</span> are tall.', pro: '더 위민 아 톨', ko: '그 여자분들은 키가 커.' },
+            { en: 'Two <span class="noun-plural">mice</span> run away.', pro: '투 마이스 런 어웨이', ko: '쥐 두 마리가 도망가.' },
+            { en: 'My <span class="noun-plural">feet</span> are cold.', pro: '마이 피트 아 콜드', ko: '내 발이 차가워.' }
+        ];
+
+        // --- STATE ---
+        let quizQueue = [];
+        let currentWord = null;
+        let learnedSet = new Set();
+        let myChart = null;
+
+        // --- CORE FUNCTIONS ---
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playQuizAudio() {
+            if (currentWord) speak(currentWord.l);
+        }
+
+        function updateUI() {
+            const learned = learnedSet.size;
+            const total = wordData.length;
+            const remaining = total - learned;
+            const percentage = total > 0 ? Math.round((learned / total) * 100) : 0;
+            
+            const lEl = document.getElementById('learnedCount');
+            const rEl = document.getElementById('remainingCount');
+            const ptEl = document.getElementById('progressText');
+            const pbEl = document.getElementById('progressBar');
+
+            if (lEl) lEl.innerText = learned;
+            if (rEl) rEl.innerText = remaining;
+            if (ptEl) ptEl.innerText = percentage + '%';
+            if (pbEl) pbEl.style.width = percentage + '%';
+
+            if (myChart) {
+                myChart.data.datasets[0].data = [learned, remaining];
+                myChart.update();
+            }
+        }
+
+        function shuffleQueue() {
+            quizQueue = [...wordData].sort(() => Math.random() - 0.5);
+        }
+
+        function nextQuiz() {
+            const msg = document.getElementById('quiz-msg');
+            const icon = document.getElementById('quiz-icon');
+            const en = document.getElementById('quiz-en');
+            const ko = document.getElementById('quiz-ko');
+
+            if (learnedSet.size === wordData.length) {
+                if (msg) {
+                    msg.innerText = "와! 100% 달성! 복수형 박사가 되었어요! 🎉";
+                    msg.className = "text-center h-10 font-black text-xl text-teal-500";
+                }
+                return;
+            }
+
+            let next = quizQueue.find(w => !learnedSet.has(w.id));
+            if (!next) { shuffleQueue(); next = quizQueue.find(w => !learnedSet.has(w.id)); }
+            currentWord = next;
+            
+            if (icon) icon.innerText = currentWord.icon;
+            // Removed uppercase forced display
+            if (en) en.innerText = `${currentWord.l}`;
+            
+            // Clean pronunciation for quiz prompt
+            const cleanPro = currentWord.pro.replace(/즈|쓰|런|민|렌|트/g, '');
+            if (ko) ko.innerText = `[${cleanPro}] : ${currentWord.ko.split('(')[0].replace(/들/g, '').trim()}`;
+            if (msg) msg.innerText = "";
+        }
+
+        function checkAnswer(type) {
+            const msg = document.getElementById('quiz-msg');
+            if (!msg) return;
+
+            if (currentWord.type === type) {
+                msg.innerText = `정답! 복수형: ${currentWord.pl} [${currentWord.pro}] 👏`;
+                msg.className = "text-center h-10 font-black text-xl text-teal-500";
+                speak(currentWord.pl);
+                learnedSet.add(currentWord.id);
+                updateUI();
+                setTimeout(nextQuiz, 1800);
+            } else {
+                msg.innerText = "틀렸어요! 다시 한번 생각해보세요! 🤔";
+                msg.className = "text-center h-10 font-black text-xl text-red-500";
+            }
+        }
+
+        function resetLearning() {
+            learnedSet.clear();
+            shuffleQueue();
+            updateUI();
+            nextQuiz();
+            const msg = document.getElementById('quiz-msg');
+            if (msg) msg.innerText = "다시 시작합니다! 힘내세요! 🚀";
+            speak("Let's try again");
+        }
+
+        // --- RENDERERS ---
+        function renderBlocks() {
+            const grid = document.getElementById('wordBlocksGrid');
+            if (!grid) return;
+            grid.innerHTML = "";
+            wordData.forEach(w => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-6 rounded-3xl flex items-center gap-6 cursor-pointer hover:border-orange-300 border-2 border-transparent transition card-shadow";
+                div.onclick = () => speak(w.pl);
+                div.innerHTML = `
+                    <div class="text-7xl transform transition group-hover:scale-110">${w.icon}</div>
+                    <div class="flex-1">
+                        <div class="text-xs font-bold text-gray-300 italic tracking-wider lowercase">${w.l} →</div>
+                        <div class="text-2xl font-black text-orange-500 tracking-tighter lowercase">${w.pl}</div>
+                        <div class="text-sm font-bold text-gray-400">[${w.pro}] : ${w.ko}</div>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function renderSentences() {
+            const list = document.getElementById('sentenceList');
+            if (!list) return;
+            list.innerHTML = "";
+            sentenceData.forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-5 rounded-2xl border border-green-50 shadow-sm cursor-pointer hover:border-green-400 transition";
+                div.onclick = () => { 
+                    speak(s.en.replace(/<[^>]*>/g, '')); 
+                    div.querySelector('.trans-box').classList.toggle('hidden'); 
+                };
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-black">${i+1}</span>
+                            <p class="text-xl font-black text-gray-800 tracking-wide">${s.en}</p>
+                        </div>
+                        <p class="text-sm text-gray-400 font-bold italic">[${s.pro}]</p>
+                    </div>
+                    <div class="trans-box hidden mt-4 bg-green-50 p-3 rounded-xl border border-green-100">
+                        <p class="text-green-700 font-bold text-sm">${s.ko}</p>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function initChart() {
+            const canvas = document.getElementById('learningChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['완료', '남음'],
+                    datasets: [{ data: [0, wordData.length], backgroundColor: ['#FF9F1C', '#E2E8F0'], borderWidth: 0 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { display: false } } }
+            });
+        }
+
+        window.onload = () => {
+            shuffleQueue();
+            renderBlocks();
+            renderSentences();
+            initChart();
+            nextQuiz();
+            updateUI();
+        };
+    </script>
+</body>
+</html>
