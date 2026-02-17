@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 10: be동사의 부정문과 의문문 (2) - 이것저것 궁금할 땐?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Nunito', 'Noto Sans KR', sans-serif; background-color: #FFFBF0; color: #4A4A4A; overflow-x: hidden; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto; height: 250px; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .card-shadow:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .hanja-box { display: inline-flex; flex-direction: column; align-items: center; background: white; padding: 8px 12px; border-radius: 12px; border: 1px solid #e2e8f0; margin: 0 4px; }
+        .btn-quiz { transition: all 0.2s; border-width: 2px; }
+        .btn-quiz:active { transform: scale(0.95); }
+        
+        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .moving-pos { animation: bounce-subtle 3s ease-in-out infinite; display: inline-block; }
+        .highlight-red { color: #ef4444; font-weight: 900; }
+        .highlight-blue { color: #3b82f6; font-weight: 900; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Progress -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm py-4">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-black text-orange-500 tracking-tight">Grammar Zap! <span class="text-gray-600 text-lg font-bold">Unit 10</span></h1>
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <nav class="hidden md:flex gap-4 text-sm font-bold text-gray-500">
+                    <a href="#negation" class="hover:text-orange-500 transition">부정문</a>
+                    <a href="#question" class="hover:text-orange-500 transition">의문문</a>
+                    <a href="#logic" class="hover:text-orange-500 transition">지시대명사 대답</a>
+                    <a href="#quiz-lab" class="hover:text-orange-500 transition font-black text-orange-600 underline text-lg">실전연구소</a>
+                </nav>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetLearning()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-lg font-bold text-gray-500 mr-2 transition">다시하기 🔄</button>
+                    <div class="w-24 h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                        <div id="progressBar" class="h-full bg-teal-400 transition-all duration-500 w-0"></div>
+                    </div>
+                    <span id="progressText" class="text-sm font-bold text-teal-600">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 space-y-16">
+
+        <!-- SECTION 1: 부정문 (Negation) -->
+        <section id="negation" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border border-orange-50">
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-black text-gray-800 tracking-tight">
+                        이것도 저것도 아니야, <span class="text-red-500">부정문</span> <span class="moving-pos text-3xl">🚫</span>
+                    </h2>
+                    <div class="space-y-4 text-gray-600 text-lg leading-relaxed">
+                        <div class="flex items-center gap-1 my-4">
+                            <div class="hanja-box shadow-sm border-red-200">
+                                <span class="text-2xl font-black text-red-500">否</span>
+                                <span class="text-[10px] text-gray-400">아닐 부</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-red-200">
+                                <span class="text-2xl font-black text-red-500">定</span>
+                                <span class="text-[10px] text-gray-400">정할 정</span>
+                            </div>
+                            <span class="font-bold text-gray-700 ml-2">= "정해진 판단을 아니라고 하다"</span>
+                        </div>
+                        <p class="text-sm">가까이 있든 멀리 있든, be동사 뒤에 <strong>not</strong>만 붙이면 부정문이 돼요!</p>
+
+                        <div class="bg-red-50 p-6 rounded-2xl border-l-4 border-red-400 space-y-4">
+                            <h4 class="font-black text-red-800 text-xl italic">📌 지시대명사 부정의 예시</h4>
+                            <div class="space-y-4">
+                                <div class="flex flex-col gap-1">
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="bg-white px-2 py-1 rounded border font-bold text-gray-400">긍정</span>
+                                        <p>This is my ball. <span class="opacity-50">(이것은 내 공이다.)</span></p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="bg-red-500 px-2 py-1 rounded text-xs font-bold text-white shadow-sm">부정</span>
+                                        <p class="text-sm font-black text-red-600">This is <span class="underline">not</span> my ball. <span class="text-gray-400 font-normal italic text-xs">(이것은 내 공이 아니다.)</span></p>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1 text-sm border-t border-red-100 pt-2">
+                                    <div class="flex items-center gap-2 text-xs">
+                                        <span class="bg-white px-2 py-1 rounded border font-bold text-gray-400">긍정</span>
+                                        <p>Those are my balls.</p>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="bg-red-500 px-2 py-1 rounded text-xs font-bold text-white shadow-sm">부정</span>
+                                        <p class="text-sm font-black text-red-600">Those are <span class="underline">not</span> my balls.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="chart-container">
+                        <canvas id="learningChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 의문문 (Interrogative) -->
+        <section id="question" class="scroll-mt-24">
+            <div class="grid lg:grid-cols-2 gap-8 items-stretch">
+                <div class="bg-white rounded-3xl p-8 shadow-xl border border-blue-50 space-y-6 flex flex-col justify-center">
+                    <h2 class="text-4xl font-black text-gray-800 tracking-tight">
+                        궁금하면 물어봐, <span class="text-blue-500">의문문</span> <span class="moving-pos text-3xl">❓</span>
+                    </h2>
+                    <div class="space-y-4 text-gray-600 text-lg leading-relaxed">
+                        <div class="flex items-center gap-1 my-4">
+                            <div class="hanja-box shadow-sm border-blue-200">
+                                <span class="text-2xl font-black text-blue-500">疑</span>
+                                <span class="text-[10px] text-gray-400">의심할 의</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-blue-200">
+                                <span class="text-2xl font-black text-blue-500">問</span>
+                                <span class="text-[10px] text-gray-400">물을 문</span>
+                            </div>
+                            <span class="font-bold text-gray-700 ml-2">= "의심하고 물어보는 것"</span>
+                        </div>
+                        <p class="text-sm">be동사가 문장 맨 앞으로 튀어나오면 궁금한 것이 돼요! 역시 끝은 쓱 ⤴️</p>
+
+                        <div class="bg-blue-50 p-6 rounded-2xl border-l-4 border-blue-400 space-y-3">
+                            <div class="flex flex-col gap-2">
+                                <div class="flex items-center gap-2 text-xs">
+                                    <span class="bg-white px-2 py-1 rounded border font-bold text-gray-400">긍정</span>
+                                    <p>That is her umbrella.</p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="bg-blue-500 px-2 py-1 rounded text-xs font-bold text-white shadow-sm">의문</span>
+                                    <p class="text-sm font-black text-blue-600 tracking-wide"><span class="underline">Is that</span> her umbrella? ⤴️</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-blue-600 rounded-3xl p-8 text-white flex flex-col justify-center items-center text-center space-y-6 h-full">
+                    <div class="text-6xl">🗣️</div>
+                    <div>
+                        <h4 class="text-3xl font-black italic mb-4">상승 조(Rising Tone)</h4>
+                        <p class="text-lg font-bold leading-relaxed opacity-90">
+                            지시대명사로 물어볼 때도 <br>
+                            문장 끝의 음을 높여서 질문이라는 걸 알려주세요!
+                        </p>
+                    </div>
+                    <div class="text-3xl animate-bounce">⤴️</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 대답의 논리 (Logic of Response) -->
+        <section id="logic" class="scroll-mt-24 space-y-8">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-black text-gray-800 mb-2">💡 지시대명사의 대답이 바뀌는 이유!</h3>
+                <p class="text-gray-500 font-bold italic">영어가 중복을 싫어한다는 점을 기억하면 간단해요!</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg border-2 border-orange-100 flex flex-col items-center text-center">
+                    <div class="text-4xl mb-4">🤏 ➡️ 🔘</div>
+                    <h4 class="text-xl font-black text-orange-500 mb-4">단수: This / That ➡️ It</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed font-bold">
+                        질문: " <span class="text-blue-500">이것/저것</span>은 우산이니?" <br>
+                        대답: "응, <span class="text-orange-500">그것</span>은 우산이야." <br><br>
+                        이미 '손가락으로 가리킨 것'은 <br>
+                        대화 속에 들어왔으니 <strong>It(그것)</strong>으로 받는 게 자연스러워요!
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-lg border-2 border-teal-100 flex flex-col items-center text-center">
+                    <div class="text-4xl mb-4">👥 ➡️ 📦</div>
+                    <h4 class="text-xl font-black text-teal-500 mb-4">복수: These / Those ➡️ They</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed font-bold">
+                        질문: " <span class="text-blue-500">이것들/저것들</span>은 네 펜이니?" <br>
+                        대답: "응, <span class="text-teal-600">그것들</span>은 내 펜이야." <br><br>
+                        가리키는 물건이 여러 개일 때는 <br>
+                        당연히 복수형인 <strong>They(그것들)</strong>로 대답해야 중복을 피할 수 있어요!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: 짝꿍 표 -->
+        <section id="table-summary" class="scroll-mt-24">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-black text-gray-800 mb-2">📊 지시대명사 부정문 & 의문문 표</h3>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Negation Table -->
+                <div class="bg-white rounded-3xl shadow-xl border border-red-100 overflow-hidden text-center">
+                    <div class="bg-red-500 text-white p-4 font-black italic">부정문과 축약형</div>
+                    <table class="w-full border-collapse text-sm">
+                        <tbody class="text-gray-700 font-bold">
+                            <tr class="border-b border-red-50">
+                                <td class="p-4 bg-gray-50 border-r border-red-50 text-left pl-6">This is not <br><span class="text-[10px] text-gray-400 font-normal">(이것은 ~가 아니다)</span></td>
+                                <td class="p-4"><span class="text-red-400 italic font-black text-[10px]">(단축안함)</span></td>
+                            </tr>
+                            <tr class="border-b border-red-50">
+                                <td class="p-4 bg-gray-50 border-r border-red-50 text-left pl-6">That is not <br><span class="text-[10px] text-gray-400 font-normal">(저것은 ~가 아니다)</span></td>
+                                <td class="p-4 text-red-600 text-xl italic">isn't</td>
+                            </tr>
+                            <tr class="border-b border-red-50">
+                                <td class="p-4 bg-gray-50 border-r border-red-50 text-left pl-6">These are not <br><span class="text-[10px] text-gray-400 font-normal">(이것들은 ~가 아니다)</span></td>
+                                <td class="p-4 text-red-600 text-xl italic">aren't</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 bg-gray-50 border-r border-red-50 text-left pl-6">Those are not <br><span class="text-[10px] text-gray-400 font-normal">(저것들은 ~가 아니다)</span></td>
+                                <td class="p-4 text-red-600 text-xl italic">aren't</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Interrogative Table -->
+                <div class="bg-white rounded-3xl shadow-xl border border-blue-100 overflow-hidden text-center">
+                    <div class="bg-blue-500 text-white p-4 font-black italic">의문문과 논리적 대답</div>
+                    <table class="w-full border-collapse text-sm h-full">
+                        <tbody class="text-gray-700 font-bold">
+                            <tr class="border-b border-blue-50">
+                                <td class="p-5 bg-gray-50 border-r border-blue-50">Is this / that ~?</td>
+                                <td class="p-5 text-blue-600 italic">Yes, <span class="underline">it</span> is. <br> No, <span class="underline">it</span> isn't.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-5 bg-gray-50 border-r border-blue-50">Are these / those ~?</td>
+                                <td class="p-5 text-blue-600 italic">Yes, <span class="underline">they</span> are. <br> No, <span class="underline">they</span> aren't.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="p-4 bg-yellow-50 text-[11px] text-gray-500 font-bold border-t border-yellow-100">
+                        ⚠️ 주의: 대답할 때 This is... 나 These are... 를 반복하지 않아요! 
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: 실전 연구소 (Quiz) -->
+        <section id="quiz-lab" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border-4 border-orange-200">
+            <div id="quiz-container">
+                <div class="text-center mb-8">
+                    <h3 class="text-3xl font-black text-gray-800 mb-2 italic">🏆 지시대명사 실전 연구소</h3>
+                    <p class="text-gray-500 font-bold">부정문과 의문문의 알맞은 조각을 맞춰보세요!</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-10">
+                    <div class="flex flex-col items-center">
+                        <div id="quiz-card" class="bg-orange-500 text-white p-10 rounded-3xl shadow-2xl transition-all duration-300 text-center min-w-[340px] cursor-pointer hover:scale-105" onclick="playQuizAudio()">
+                            <div id="quiz-icon" class="text-8xl mb-4">🥚</div>
+                            <div id="quiz-ko-sentence" class="text-xl font-bold mb-4 text-orange-100 italic">"이것은 달걀이 아니다."</div>
+                            <div id="quiz-en-display" class="text-4xl font-black tracking-widest italic">This ___ an egg.</div>
+                            <div class="mt-4 text-xs opacity-60 font-bold italic">클릭하면 문장의 소리가 나요 🔊</div>
+                        </div>
+                    </div>
+
+                    <div id="quiz-options" class="flex flex-wrap justify-center gap-4">
+                        <!-- JS Dynamic Options -->
+                    </div>
+
+                    <div id="quiz-msg" class="text-center min-h-[60px]">
+                        <p id="quiz-feedback-main" class="font-black text-xl"></p>
+                        <p id="quiz-feedback-sub" class="text-sm text-gray-500 font-bold mt-2"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="quiz-finished-view" class="hidden py-10 text-center space-y-6">
+                <div class="text-8xl">🎓</div>
+                <h3 class="text-4xl font-black text-teal-500 italic">지시대명사 완전 정복!</h3>
+                <p class="text-gray-500 font-bold">이제 "이것저것"을 자유롭게 물어보고 부정할 수 있습니다.</p>
+                <button onclick="resetLearning()" class="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition">다시 도전하기 🔄</button>
+            </div>
+        </section>
+
+        <!-- SECTION 6: SENTENCE PRACTICE -->
+        <section id="sentences" class="scroll-mt-24 mb-20">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl">📝</div>
+                <h3 class="text-2xl font-bold text-gray-800 italic">교재 문장 Q&A 훈련 (20문장)</h3>
+            </div>
+            <div id="sentenceList" class="space-y-4">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-100 border-t border-gray-200 py-16 text-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h3 class="text-2xl font-black text-gray-800 mb-2 italic">Tony's Speaking English Grammar</h3>
+                <p class="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span class="underline">어순 감각</span>에 있습니다.</p>
+                <div class="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                <p class="text-gray-500 text-sm leading-relaxed italic font-bold">
+                    Tony's Speaking English Grammar helps you master the natural sense of English word order.<br>
+                    <span class="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA (Textbook p.152-155) ---
+        const quizSource = [
+            { id: 1, icon: '🥚', ko: '이것은 달걀이 아니다.', en: 'This ___ an egg.', ans: 'is not', options: ['is not', 'are not', 'am not'], why: '단수 This 뒤에는 is not을 써요.' },
+            { id: 2, icon: '🐦', ko: '저것은 새가 아니다.', en: 'That ___ a bird.', ans: 'is not', options: ['is not', 'are not', 'isn\'t'], why: '저것(That)도 단수이므로 is not!' },
+            { id: 3, icon: '🐅', ko: '이것들은 호랑이가 아니다.', en: 'These ___ tigers.', ans: 'are not', options: ['is not', 'are not', 'aren\'t'], why: '복수 These 뒤에는 are not을 써요.' },
+            { id: 4, icon: '🐇', ko: '저것들은 토끼가 아니다.', en: 'Those ___ rabbits.', ans: 'are not', options: ['is not', 'are not', 'isn\'t'], why: '복수 Those 뒤에는 are not!' },
+            { id: 5, icon: '🧽', ko: '이것은 지우개가 아니다.', en: 'This ___ an eraser.', ans: "isn't", options: ["isn't", "aren't", "am not"], why: 'This is not의 줄임말은 isn\'t예요.' },
+            { id: 6, icon: '🥔', ko: '저것은 감자가 아니다.', en: 'That ___ a potato.', ans: "isn't", options: ["isn't", "aren't", "is not"], why: 'That is not의 줄임말은 isn\'t!' },
+            { id: 7, icon: '🍅', ko: '이것들은 토마토가 아니다.', en: 'These ___ tomatoes.', ans: "aren't", options: ["isn't", "aren't", "are not"], why: 'These are not의 줄임말은 aren\'t예요.' },
+            { id: 8, icon: '🧅', ko: '저것들은 양파가 아니다.', en: 'Those ___ onions.', ans: "aren't", options: ["isn't", "aren't", "is not"], why: 'Those are not의 줄임말은 aren\'t!' },
+            { id: 9, icon: '🧥', ko: '이것은 내 외투가 아니다.', en: 'This ___ my coat.', ans: 'is not', options: ['is not', 'are not', 'am not'], why: 'This is not은 줄이지 않고 쓰는 경우가 많아요.' },
+            { id: 10, icon: '🧶', ko: '저것들은 내 스웨터가 아니다.', en: 'Those ___ my sweaters.', ans: 'are not', options: ['is not', 'are not', 'isn\'t'], why: '복수형 Those는 are not과 짝꿍이에요.' },
+            { id: 11, icon: '🍊', ko: '이것은 오렌지입니까? (네, 그렇습니다.)', en: 'Is this an orange? (___)', ans: 'Yes, it is.', options: ['Yes, this is.', 'Yes, it is.', 'Yes, they are.'], why: 'This로 물으면 대답은 It으로 해요!' },
+            { id: 12, icon: '🦎', ko: '저것은 이구아나입니까? (아니요.)', en: 'Is that an iguana? (___)', ans: "No, it isn't.", options: ["No, that isn't.", "No, it isn't.", "No, they aren't."], why: 'That으로 물으면 대답은 It으로 받아요.' },
+            { id: 13, icon: '🦘', ko: '이것들은 캥거루입니까? (네.)', en: 'Are these kangaroos? (___)', ans: 'Yes, they are.', options: ['Yes, these are.', 'Yes, they are.', 'Yes, it is.'], why: 'These(복수)로 물으면 대답은 They로 해요!' },
+            { id: 14, icon: '🖍️', ko: '저것들은 크레용입니까? (아니요.)', en: 'Are those crayons? (___)', ans: "No, they aren't.", options: ["No, those aren't.", "No, they aren't.", "No, it isn't."], why: 'Those(복수)로 물으면 대답은 They로 받아요.' },
+            { id: 15, icon: '🖋️', ko: '이것은 네 잉크니? (아니요.)', en: 'Is this your ink? (___)', ans: "No, it isn't.", options: ["No, it isn't.", "No, that isn't.", "No, I'm not."], why: '사물 지시 대명사 질문은 it으로 대답!' },
+            { id: 16, icon: '🧣', ko: '저것은 네 목도리니? (네.)', en: 'Is that your scarf? (___)', ans: 'Yes, it is.', options: ['Yes, it is.', 'Yes, that is.', 'Yes, I am.'], why: '멀리 있는 단수 사물 질문도 it으로 대답!' },
+            { id: 17, icon: '👟', ko: '이것들은 네 신발이니? (아니요.)', en: 'Are these your shoes? (___)', ans: "No, they aren't.", options: ["No, they aren't.", "No, these aren't.", "No, we aren't."], why: '복수 사물 질문은 they로 대답!' },
+            { id: 18, icon: '🧦', ko: '저것들은 네 양말이니? (네.)', en: 'Are those your socks? (___)', ans: 'Yes, they are.', options: ['Yes, they are.', 'Yes, those are.', 'Yes, we are.'], why: '멀리 있는 복수 사물도 they로 대답!' },
+            { id: 19, icon: '👗', ko: '저것은 네 치마니? (아니요.)', en: 'Is that your skirt? (___)', ans: "No, it isn't.", options: ["No, it isn't.", "No, that isn't.", "No, she isn't."], why: '치마는 사물이니까 it으로 대답해요.' },
+            { id: 20, icon: '👖', ko: '저것들은 네 바지니? (아니요.)', en: 'Are those your pants? (___)', ans: "No, they aren't.", options: ["No, they aren't.", "No, those aren't.", "No, it isn't."], why: '바지(pants)는 항상 복수형이므로 they로 대답!' }
+        ];
+
+        const sentenceData = [
+            { q: 'This is not an egg.', a: '', pro: '디스 이즈 낫 언 에그', ko: '이것은 달걀이 아니다.' },
+            { q: 'That is not a bird.', a: '', pro: '댓 이즈 낫 어 버드', ko: '저것은 새가 아니다.' },
+            { q: 'These are not tigers.', a: '', pro: '디즈 아 낫 타이거즈', ko: '이것들은 호랑이가 아니다.' },
+            { q: 'Those are not rabbits.', a: '', pro: '도우즈 아 낫 래비츠', ko: '저것들은 토끼가 아니다.' },
+            { q: "This isn't an eraser.", a: '', pro: '디스 이즌트 언 이레이저', ko: '이것은 지우개가 아니다.' },
+            { q: "That isn't a potato.", a: '', pro: '댓 이즌트 어 포테이토', ko: '저것은 감자가 아니다.' },
+            { q: "These aren't tomatoes.", a: '', pro: '디즈 아런트 토마토즈', ko: '이것들은 토마토가 아니다.' },
+            { q: "Those aren't onions.", a: '', pro: '도우즈 아런트 어니언즈', ko: '저것들은 양파가 아니다.' },
+            { q: 'This is not my coat.', a: '', pro: '디스 이즈 낫 마이 코트', ko: '이것은 내 외투가 아니다.' },
+            { q: 'Those are not my sweaters.', a: '', pro: '도우즈 아 낫 마이 스웨터즈', ko: '저것들은 내 스웨터가 아니다.' },
+            { q: 'Is this an orange?', a: 'Yes, it is.', pro: '이즈 디스 언 오렌지? / 예스, 잇 이즈.', ko: '이것은 오렌지인가요? / 네, 그렇습니다.' },
+            { q: 'Is that an iguana?', a: "No, it isn't.", pro: '이즈 댓 언 이구아나? / 노, 잇 이즌트.', ko: '저것은 이구아나인가요? / 아니요, 그렇지 않습니다.' },
+            { q: 'Are these kangaroos?', a: 'Yes, they are.', pro: '아 디즈 캥거루즈? / 예스, 데이 아.', ko: '이것들은 캥거루인가요? / 네, 그렇습니다.' },
+            { q: 'Are those crayons?', a: "No, they aren't.", pro: '아 도우즈 크레이온즈? / 노, 데이 아런트.', ko: '저것들은 크레용인가요? / 아니요, 아닙니다.' },
+            { q: 'Is this your ink?', a: "No, it isn't.", pro: '이즈 디스 유어 잉크? / 노, 잇 이즌트.', ko: '이것은 네 잉크니? / 아니요, 아니에요.' },
+            { q: 'Is that your scarf?', a: 'Yes, it is.', pro: '이즈 댓 유어 스카프? / 예스, 잇 이즈.', ko: '저것은 네 목도리니? / 네, 맞아요.' },
+            { q: 'Are these your shoes?', a: "No, they aren't.", pro: '아 디즈 유어 슈즈? / 노, 데이 아런트.', ko: '이것들은 네 신발이니? / 아니요, 아니에요.' },
+            { q: 'Are those your socks?', a: 'Yes, they are.', pro: '아 도우즈 유어 삭스? / 예스, 데이 아.', ko: '저것들은 네 양말이니? / 네, 맞아요.' },
+            { q: 'Is that your skirt?', a: "No, it isn't.", pro: '이즈 댓 유어 스커트? / 노, 잇 이즌트.', ko: '저것은 네 치마니? / 아니요, 아니에요.' },
+            { q: 'Are those your pants?', a: "No, they aren't.", pro: '아 도우즈 유어 팬츠? / 노, 데이 아런트.', ko: '저것들은 네 바지니? / 아니요, 아니에요.' }
+        ];
+
+        // --- CORE LOGIC ---
+        let currentQuizIndex = 0;
+        let learnedSet = new Set();
+        let myChart = null;
+        let quizQueue = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playQuizAudio() {
+            if (quizQueue[currentQuizIndex]) {
+                const q = quizQueue[currentQuizIndex];
+                let textToSpeak = q.en.replace('___', q.ans).replace('(___)', q.ans);
+                speak(textToSpeak);
+            }
+        }
+
+        function updateUI() {
+            const learned = learnedSet.size;
+            const total = quizSource.length;
+            const remaining = Math.max(0, total - learned);
+            const percentage = Math.min(100, Math.round((learned / total) * 100));
+            
+            const learnedEl = document.getElementById('learnedCount');
+            const remainingEl = document.getElementById('remainingCount');
+            const progressTextEl = document.getElementById('progressText');
+            const progressBarEl = document.getElementById('progressBar');
+
+            if (learnedEl) learnedEl.innerText = learned;
+            if (remainingEl) remainingEl.innerText = remaining;
+            if (progressTextEl) progressTextEl.innerText = percentage + '%';
+            if (progressBarEl) progressBarEl.style.width = percentage + '%';
+            
+            if (myChart) {
+                myChart.data.datasets[0].data = [learned, remaining];
+                myChart.update();
+            }
+        }
+
+        function nextQuiz() {
+            currentQuizIndex++;
+            if (currentQuizIndex >= quizQueue.length) {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('quiz-finished-view').classList.remove('hidden');
+                return;
+            }
+            const q = quizQueue[currentQuizIndex];
+            document.getElementById('quiz-icon').innerText = q.icon;
+            document.getElementById('quiz-ko-sentence').innerText = `"${q.ko}"`;
+            document.getElementById('quiz-en-display').innerText = q.en;
+            document.getElementById('quiz-feedback-main').innerText = "";
+            document.getElementById('quiz-feedback-sub').innerText = "";
+            
+            const optionsEl = document.getElementById('quiz-options');
+            optionsEl.innerHTML = "";
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn-quiz px-6 py-3 rounded-xl border-orange-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 italic";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(ans) {
+            const q = quizQueue[currentQuizIndex];
+            const mainMsg = document.getElementById('quiz-feedback-main');
+            const subMsg = document.getElementById('quiz-feedback-sub');
+            
+            if (ans === q.ans) {
+                const fixed = q.en.replace('___', `<span class='underline'>${ans}</span>`);
+                mainMsg.innerHTML = `정답! ✨ ${fixed}`;
+                mainMsg.className = "font-black text-xl text-teal-500";
+                subMsg.innerText = q.why;
+                speak(q.en.replace('___', ans).replace('(___)', ans));
+                
+                learnedSet.add(q.id); 
+                updateUI();
+                
+                setTimeout(nextQuiz, 3000);
+            } else {
+                mainMsg.innerText = "대상을 다시 확인해볼까요? 🤔";
+                mainMsg.className = "font-black text-xl text-red-500";
+                subMsg.innerText = "단수(하나)면 it, 복수(여럿)면 they로 대답해요!";
+            }
+        }
+
+        function renderSentences() {
+            const list = document.getElementById('sentenceList');
+            if (!list) return;
+            list.innerHTML = "";
+            sentenceData.forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-5 rounded-2xl border border-green-50 shadow-sm cursor-pointer hover:border-green-400 transition";
+                div.onclick = () => { 
+                    speak(s.q + " " + (s.a || '')); 
+                    div.querySelector('.trans-box').classList.toggle('hidden'); 
+                };
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-black">${i+1}</span>
+                            <div>
+                                <p class="text-xl font-black text-gray-800 tracking-wide">${s.q}</p>
+                                ${s.a ? `<p class="text-lg font-bold text-teal-600 tracking-wide">→ ${s.a}</p>` : ''}
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-400 font-bold italic text-right">[${s.pro}]</p>
+                    </div>
+                    <div class="trans-box hidden mt-4 bg-green-50 p-3 rounded-xl border border-green-100">
+                        <p class="text-green-700 font-bold text-sm">해석: ${s.ko}</p>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function resetLearning() {
+            learnedSet.clear();
+            currentQuizIndex = -1;
+            quizQueue = shuffle([...quizSource]);
+            updateUI();
+            const quizContainer = document.getElementById('quiz-container');
+            const finishedView = document.getElementById('quiz-finished-view');
+            if (quizContainer) quizContainer.classList.remove('hidden');
+            if (finishedView) finishedView.classList.add('hidden');
+            nextQuiz();
+        }
+
+        window.onload = () => {
+            renderSentences();
+            const canvas = document.getElementById('learningChart');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['완료', '남음'],
+                        datasets: [{ data: [0, quizSource.length], backgroundColor: ['#FF9F1C', '#E2E8F0'], borderWidth: 0 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { display: false } } }
+                });
+            }
+            resetLearning();
+        };
+    </script>
+</body>
+</html>
