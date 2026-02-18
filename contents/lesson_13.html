@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 13: 형용사 - 명사를 완성하는 마법의 장식</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Nunito', 'Noto Sans KR', sans-serif; background-color: #FFFBF0; color: #4A4A4A; overflow-x: hidden; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto; height: 250px; }
+        .hanja-box { display: inline-flex; flex-direction: column; align-items: center; background: white; padding: 8px 12px; border-radius: 12px; border: 1px solid #e2e8f0; margin: 0 4px; }
+        .btn-quiz { transition: all 0.2s; border-width: 2px; }
+        .btn-quiz:active { transform: scale(0.95); }
+        .moving-pos { animation: bounce-subtle 3s ease-in-out infinite; display: inline-block; }
+        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .adj-end { color: #FF9F1C; font-weight: 900; }
+        .role-card { transition: all 0.3s ease; border-top-width: 6px; }
+        .role-card:hover { transform: translateY(-5px); }
+        .compare-row { border-bottom: 1px dashed #e2e8f0; padding: 12px 0; }
+        .compare-row:last-child { border-bottom: none; }
+        .crown-icon { font-size: 1.5rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Progress -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm py-4">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-black text-orange-500 tracking-tight">Grammar Zap! <span class="text-gray-600 text-lg font-bold">Unit 13</span></h1>
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <nav class="hidden md:flex gap-4 text-sm font-bold text-gray-500">
+                    <a href="#intro" class="hover:text-orange-500 transition">형용사란?</a>
+                    <a href="#role" class="hover:text-orange-500 transition">형용사의 역할</a>
+                    <a href="#priority" class="hover:text-orange-500 transition font-black text-red-500 underline">수식의 질서</a>
+                </nav>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetLearning()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-lg font-bold text-gray-500 mr-2 transition">처음부터 다시 🔄</button>
+                    <div class="w-24 h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                        <div id="progressBar" class="h-full bg-teal-400 transition-all duration-500 w-0"></div>
+                    </div>
+                    <span id="progressText" class="text-sm font-bold text-teal-600">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 space-y-16">
+
+        <!-- SECTION 1: 형용사의 정의 -->
+        <section id="intro" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border border-orange-50">
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-black text-gray-800 tracking-tight flex items-center gap-3 italic">
+                        말로 담아내는 모습, <span class="text-orange-500">형용사</span> <span class="moving-pos text-3xl">🎨</span>
+                    </h2>
+                    <div class="space-y-4 text-gray-600 text-lg leading-relaxed">
+                        <div class="flex flex-wrap items-center gap-1 my-4">
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">形</span>
+                                <span class="text-[10px] text-gray-400">모양 형</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">容</span>
+                                <span class="text-[10px] text-gray-400">담을 용</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">詞</span>
+                                <span class="text-[10px] text-gray-400">말 사</span>
+                            </div>
+                            <span class="font-bold text-gray-700 ml-2">= '모양이나 상태를 말로 담는 것'</span>
+                        </div>
+                        
+                        <div class="bg-orange-50 p-5 rounded-2xl border border-orange-100 space-y-3">
+                            <p class="text-sm font-bold leading-relaxed text-gray-700 italic italic">
+                                "그 아이의 미소를 <span class="text-orange-600 font-black">형용</span>할 말을 찾을 수 없었다."
+                            </p>
+                            <p class="text-xs font-bold leading-relaxed text-gray-600 italic">
+                                <span class="underline">형용</span>은 모양이나 상태를 말로 담는 거예요. 설명이나 표현과 비슷하지만 특히 사람이나 사물의 <span class="text-orange-600 font-black">모습·색깔·느낌</span>을 자세히 그려낼 때 사용해요!
+                            </p>
+                        </div>
+
+                        <div class="bg-indigo-50 p-6 rounded-2xl border-l-4 border-indigo-400">
+                            <h4 class="font-black text-indigo-800 text-xl mb-3 italic italic italic">📌 형용사를 찾는 비결!</h4>
+                            <div class="space-y-4">
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-indigo-100">
+                                    <p class="text-sm font-bold">1️⃣ 우리말의 <span class="adj-end text-lg">"~ㄴ"</span>으로 끝나는 말</p>
+                                    <p class="text-[11px] text-gray-500 mt-1 pl-4 italic">I am a <span class="adj-end">happy</span> boy. (나는 행복<span class="adj-end">한</span> 소년이다.)</p>
+                                </div>
+                                <div class="bg-white p-3 rounded-xl shadow-sm border border-indigo-100">
+                                    <p class="text-sm font-bold">2️⃣ 색깔이나 수처럼 <span class="text-blue-600 text-lg">"~의"</span>로 끝나는 말</p>
+                                    <p class="text-[11px] text-gray-500 mt-1 pl-4 italic">You have a <span class="adj-end">red</span> crayon. (너는 빨간색<span class="adj-end text-blue-600 font-black">의</span> 크레용을 가지고 있다.)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="chart-container">
+                        <canvas id="learningChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 명사 + y 마법 -->
+        <section class="space-y-8">
+            <div class="bg-indigo-100 p-8 rounded-3xl border-2 border-indigo-200 shadow-lg">
+                <div class="text-center mb-8">
+                    <h4 class="text-2xl font-black text-indigo-800 italic italic">✨ 명사에 "-y"를 붙여보세요!</h4>
+                    <p class="text-sm font-bold text-indigo-600 mt-1 italic">이름(명사)이 모습(형용사)으로 마법처럼 변신해요.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="bg-white p-4 rounded-2xl text-center shadow-md border-t-4 border-indigo-400">
+                        <p class="text-xs text-gray-400 mb-1 italic italic italic">star [스타] 별</p>
+                        <p class="text-2xl mb-1">⭐</p>
+                        <p class="font-black text-indigo-600 text-sm">starry [스타리]</p>
+                        <p class="text-[10px] font-bold italic">별이 빛나<span class="adj-end">는</span></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl text-center shadow-md border-t-4 border-indigo-400">
+                        <p class="text-xs text-gray-400 mb-1 italic italic italic">sun [썬] 해</p>
+                        <p class="text-2xl mb-1">☀️</p>
+                        <p class="font-black text-indigo-600 text-sm">sunny [써니]</p>
+                        <p class="text-[10px] font-bold italic italic">햇살 비치<span class="adj-end">는</span></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl text-center shadow-md border-t-4 border-indigo-400">
+                        <p class="text-xs text-gray-400 mb-1 italic italic italic">wind [윈드] 바람</p>
+                        <p class="text-2xl mb-1">💨</p>
+                        <p class="font-black text-indigo-600 text-sm">windy [윈디]</p>
+                        <p class="text-[10px] font-bold italic italic italic">바람 부<span class="adj-end">는</span></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl text-center shadow-md border-t-4 border-indigo-400">
+                        <p class="text-xs text-gray-400 mb-1 italic italic italic">cloud [클라우드] 구름</p>
+                        <p class="text-2xl mb-1">☁️</p>
+                        <p class="font-black text-indigo-600 text-sm">cloudy [클라우디]</p>
+                        <p class="text-[10px] font-bold italic italic italic">구름 낀 <span class="adj-end">ㄴ</span></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-2xl text-center shadow-md border-t-4 border-indigo-400">
+                        <p class="text-xs text-gray-400 mb-1 italic italic italic">rain [레인] 비</p>
+                        <p class="text-2xl mb-1">🌧️</p>
+                        <p class="font-black text-indigo-600 text-sm">rainy [레이니]</p>
+                        <p class="text-[10px] font-bold italic italic italic">비 내리<span class="adj-end">는</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 형용사의 역할 (Moved Up) -->
+        <section id="role" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <div class="flex justify-center gap-2 mb-2">
+                    <div class="hanja-box shadow-sm border-blue-200">
+                        <span class="text-2xl font-black text-blue-500">補</span>
+                        <span class="text-[10px] text-gray-400">보충할 보</span>
+                    </div>
+                    <div class="hanja-box shadow-sm border-blue-200">
+                        <span class="text-2xl font-black text-blue-500">語</span>
+                        <span class="text-[10px] text-gray-400">말 어</span>
+                    </div>
+                </div>
+                <h3 class="text-3xl font-black text-gray-800 italic">🛠 형용사의 역할 (The Role)</h3>
+                <p class="text-gray-500 font-bold italic mt-2 text-sm italic">형용사는 명사를 위해 두 가지 일을 수행해요!</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Role 1 -->
+                <div class="role-card bg-white p-8 rounded-3xl shadow-lg border-orange-400">
+                    <h4 class="text-2xl font-black text-orange-600 mb-4 italic italic">1. 명사 수식 (Modifier)</h4>
+                    <p class="text-sm font-bold text-gray-500 mb-4">명사 바로 <span class="underline">앞</span>에서 성격을 꾸며요.</p>
+                    <div class="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                        <p class="text-lg font-bold italic">It is a <span class="text-orange-600 underline">big</span> elephant.</p>
+                        <p class="text-xs text-orange-700 mt-1 italic">"그것은 <span class="underline">큰</span> 코끼리이다."</p>
+                    </div>
+                </div>
+
+                <!-- Role 2 -->
+                <div class="role-card bg-white p-8 rounded-3xl shadow-lg border-blue-400">
+                    <h4 class="text-2xl font-black text-blue-600 mb-4 italic italic">2. 보어 역할 (Complement)</h4>
+                    <p class="text-sm font-bold text-gray-500 mb-4">be동사 <span class="underline">뒤</span>에서 주어를 보충해요.</p>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-lg font-bold italic">The elephant is <span class="text-blue-600 underline">big</span>.</p>
+                        <p class="text-xs text-blue-700 mt-1 italic">"그 코끼리는 <span class="underline">크다</span> (상태 보충)."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <h4 class="text-xl font-black mb-6 text-orange-400 text-center italic italic">💡 보어, 왜 보충하는 말인가요?</h4>
+                    <p class="text-sm text-center leading-relaxed font-bold italic">
+                        보어(補語)는 <span class="text-orange-400 underline underline-offset-4 font-black">부족한 정보를 채워 주는(補) 말(語)</span>이에요. <br>
+                        "The cat is..." 하고 멈추면 의미가 부족하죠? 그때 <span class="text-teal-400 italic font-black">cute</span> 같은 형용사가 나타나 주어인 고양이가 어떤지 <span class="text-teal-400 underline italic italic">보충</span>하며 정보를 완성해주는 거예요. <br>
+                        결국 <span class="text-red-400 font-black italic">보어 역시 명사(주어)를 설명하는 역할</span>이라는 사실이 본질이랍니다!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: 형용사의 명사 수식의 질서 (한정사) -->
+        <section id="priority" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <div class="flex justify-center gap-2 mb-2">
+                    <div class="hanja-box shadow-sm border-red-200">
+                        <span class="text-2xl font-black text-red-500">限</span>
+                        <span class="text-[10px] text-gray-400">한할 한</span>
+                    </div>
+                    <div class="hanja-box shadow-sm border-red-200">
+                        <span class="text-2xl font-black text-red-500">定</span>
+                        <span class="text-[10px] text-gray-400">정할 정</span>
+                    </div>
+                </div>
+                <h3 class="text-3xl font-black text-gray-800 italic italic">👑 형용사의 명사 수식의 질서</h3>
+                <p class="text-gray-500 font-bold italic mt-2 text-sm italic italic">명사 앞에 서는 '한정사 대장'들의 규칙을 배워봐요!</p>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-xl border-t-8 border-red-500 space-y-8">
+                <div class="bg-red-50 p-6 rounded-2xl border-l-4 border-red-400">
+                    <p class="text-sm font-bold text-gray-700 leading-relaxed italic italic">
+                        명사를 수식하는 모든 말은 넓은 의미에서 <span class="text-orange-500 font-black italic italic">형용사</span>예요. <br>
+                        그중 명사의 범위를 딱! 정해주는 말을 <span class="text-red-600 font-black underline decoration-wavy italic">한정사(限定詞)</span>라고 하며, 아래 3가지 종류가 있어요. 한정사는 명사의 '갓(관)'과 같아서 항상 <span class="text-red-500 font-black italic">맨 앞에</span> 서야 한답니다!
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- Article -->
+                    <div class="bg-teal-50 p-6 rounded-2xl border border-teal-200 shadow-sm text-center">
+                        <span class="crown-icon">🤴</span>
+                        <h5 class="font-black text-teal-800 text-sm mb-2 italic italic">1. 관사 (a / an / the)</h5>
+                        <p class="text-xs font-bold text-teal-600 bg-white p-2 rounded-lg border border-teal-100 italic italic">"I have <span class="underline">a</span> new blue bike."</p>
+                        <p class="text-[10px] text-gray-400 mt-2 italic italic">(나는 한 대의 새 파란 자전거를 가지고 있다.)</p>
+                    </div>
+                    <!-- Possessive -->
+                    <div class="bg-orange-50 p-6 rounded-2xl border border-orange-200 shadow-sm text-center">
+                        <span class="crown-icon">🎒</span>
+                        <h5 class="font-black text-orange-800 text-sm mb-2 italic italic">2. 소유격 (my / your / his...)</h5>
+                        <p class="text-xs font-bold text-orange-600 bg-white p-2 rounded-lg border border-orange-100 italic italic">"I like <span class="underline">my</span> new blue bike."</p>
+                        <p class="text-[10px] text-gray-400 mt-2 italic italic">(나는 나의 새 파란 자전거를 좋아한다.)</p>
+                    </div>
+                    <!-- Demonstrative -->
+                    <div class="bg-blue-50 p-6 rounded-2xl border border-blue-200 shadow-sm text-center">
+                        <span class="crown-icon">👆</span>
+                        <h5 class="font-black text-blue-800 text-sm mb-2 italic italic">3. 지시형용사 (this / that...)</h5>
+                        <p class="text-xs font-bold text-blue-600 bg-white p-2 rounded-lg border border-blue-100 italic italic">"Look at <span class="underline">that</span> new blue bike."</p>
+                        <p class="text-[10px] text-gray-400 mt-2 italic italic">(저 새 파란 자전거를 봐라.)</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-6 rounded-2xl border-2 border-gray-200">
+                    <h4 class="text-lg font-black text-gray-800 mb-4 italic text-center italic italic">📝 어순의 황금 규칙</h4>
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-4 font-black text-center">
+                        <div class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-sm italic">한정사 (딱 1개만!)</div>
+                        <div class="text-2xl">➔</div>
+                        <div class="bg-orange-400 text-white px-4 py-2 rounded-lg shadow-sm italic">형용사들 (여러 개 가능)</div>
+                        <div class="text-2xl">➔</div>
+                        <div class="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-sm italic">명사 (주인공)</div>
+                    </div>
+                    <p class="text-[11px] text-gray-500 mt-4 text-center font-bold italic italic">
+                        ※ 한정사는 셋 중 <span class="text-red-500 font-black">딱 하나</span>만 맨 앞에 올 수 있어요 (a my bike X). <br> 하지만 형용사는 "new blue bike"처럼 원하는 만큼 여러 개가 올 수 있답니다!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: 형용사 연구소 (QUIZ) -->
+        <section id="quiz-lab" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border-4 border-orange-200">
+            <div id="quiz-container">
+                <div class="text-center mb-8">
+                    <h3 class="text-3xl font-black text-gray-800 mb-2 italic italic">🏆 형용사 연결 연구소</h3>
+                    <p class="text-gray-500 font-bold text-sm italic italic">문장에 알맞은 형용사를 골라주세요! (정답 셔플 완료)</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-10">
+                    <div class="flex flex-col items-center">
+                        <div id="quiz-card" class="bg-orange-500 text-white p-10 rounded-3xl shadow-2xl transition-all duration-300 text-center min-w-[340px] cursor-pointer hover:scale-105" onclick="playQuizAudio()">
+                            <div id="quiz-icon" class="text-8xl mb-4">🐘</div>
+                            <div id="quiz-ko-sentence" class="text-xl font-bold mb-4 text-orange-100 italic italic italic">"그것은 큰 코끼리이다."</div>
+                            <div id="quiz-en-display" class="text-4xl font-black tracking-widest italic italic">It is a ___ elephant.</div>
+                            <div class="mt-4 text-xs opacity-60 font-bold italic italic">클릭하면 문장의 소리가 나요 🔊</div>
+                        </div>
+                    </div>
+
+                    <div id="option-buttons" class="flex justify-center gap-4">
+                        <!-- Shuffled JS Generated -->
+                    </div>
+
+                    <div id="quiz-msg" class="text-center min-h-[60px]">
+                        <p id="quiz-feedback-main" class="font-black text-xl"></p>
+                        <p id="quiz-feedback-sub" class="text-sm text-gray-500 font-bold mt-2 italic italic"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="quiz-finished-view" class="hidden py-10 text-center space-y-6">
+                <div class="text-8xl">🥇</div>
+                <h3 class="text-4xl font-black text-teal-500 italic italic">형용사 마스터 완료 (100%)!</h3>
+                <p class="text-gray-500 font-bold italic italic">명사를 꾸미고 보충하는 형용사의 마법을 완벽히 정복했습니다.</p>
+                <button onclick="resetLearning()" class="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition">다시 도전하기 🔄</button>
+            </div>
+        </section>
+
+        <!-- SECTION 5: SENTENCE PRACTICE -->
+        <section id="sentences" class="scroll-mt-24 mb-20">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl shadow-sm">📝</div>
+                <h3 class="text-2xl font-bold text-gray-800 italic italic">교재 문장 낭독 훈련 (20문장)</h3>
+            </div>
+            <p class="text-sm text-gray-500 font-black italic mb-6 ml-12 italic italic">
+                "한정사와 형용사의 위치를 눈여겨보며 명사를 어떻게 수식하는지 확인해보세요!"
+            </p>
+            <div id="sentenceList" class="grid gap-4">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-16 text-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h3 class="text-2xl font-black text-gray-800 mb-2 italic italic italic italic">Tony's Speaking English Grammar</h3>
+                <p class="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span class="underline italic italic italic">어순 감각</span>에 있습니다.</p>
+                <div class="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                <p class="text-gray-500 text-sm leading-relaxed italic font-bold">
+                    Tony's Speaking English Grammar helps you master the natural sense of English word order.<br>
+                    <span class="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const quizSource = [
+            { id: 1, icon: '🐘', ko: '그것은 큰 코끼리이다.', en: 'It is a ___ elephant.', options: ['big', 'small'], ans: 'big', why: '관사(a) 뒤, 명사(elephant) 앞에서 모양을 꾸며요.' },
+            { id: 2, icon: '🐘', ko: '그 코끼리는 크다.', en: 'The elephant is ___.', options: ['big', 'small'], ans: 'big', why: 'be동사 뒤에서 주어의 정보를 채워주는 보어 역할이에요.' },
+            { id: 3, icon: '🐜', ko: '그것은 작은 개미이다.', en: 'It is a ___ ant.', options: ['small', 'big'], ans: 'small', why: '명사 앞에서 성격을 한정하여 수식하고 있어요.' },
+            { id: 4, icon: '🐜', ko: '그 개미는 작다.', en: 'The ant is ___.', options: ['small', 'big'], ans: 'small', why: '주어인 개미가 어떤 상태인지 보충 설명하는 보어예요.' },
+            { id: 5, icon: '🐇', ko: '그것은 빠른 토끼이다.', en: 'It is a ___ rabbit.', options: ['fast', 'slow'], ans: 'fast', why: '형용사 fast가 토끼를 직접 꾸며주고 있어요.' },
+            { id: 6, icon: '🐇', ko: '그 토끼는 빠르다.', en: 'The rabbit is ___.', options: ['fast', 'slow'], ans: 'fast', why: '토끼의 속도 상태를 보충하는 보어 역할!' },
+            { id: 7, icon: '🐢', ko: '그것은 느린 거북이이다.', en: 'It is a ___ turtle.', options: ['slow', 'fast'], ans: 'slow', why: '느린(slow) 거북이! 명사 수식어!' },
+            { id: 8, icon: '🐢', ko: '그 거북이는 느리다.', en: 'The turtle is ___.', options: ['slow', 'fast'], ans: 'slow', why: '거북이의 상태 정보를 보충해요.' },
+            { id: 9, icon: '✏️', ko: '너는 긴 연필을 가지고 있다.', en: 'You have a ___ pencil.', options: ['long', 'short'], ans: 'long', why: '명사 앞에서 모습을 담아내는 형용사예요.' },
+            { id: 10, icon: '👩', ko: '우리 엄마는 키가 크시다.', en: 'My mom is ___.', options: ['tall', 'short'], ans: 'tall', why: '엄마의 외모 상태를 보충하는 보어예요.' },
+            { id: 11, icon: '🖍', ko: '너는 빨간색의 크레용을 가지고 있다.', en: 'You have a ___ crayon.', options: ['red', 'blue'], ans: 'red', why: '색깔(~의)도 명사를 꾸미는 형용사예요.' },
+            { id: 12, icon: '👨', ko: '우리 아빠는 키가 작으시다.', en: 'My dad is ___.', options: ['short', 'tall'], ans: 'short', why: '아빠의 상태를 설명하는 보어예요.' },
+            { id: 13, icon: '🚲', ko: '그녀는 그녀의 오래된 자전거를 좋아한다.', en: 'She likes her ___ bike.', options: ['old', 'new'], ans: 'old', why: '소유격(her) 대장 뒤에서 자전거를 꾸며요.' },
+            { id: 14, icon: '🚲', ko: '그는 그의 새 자전거를 좋아한다.', en: 'He likes his ___ bike.', options: ['new', 'old'], ans: 'new', why: '새로운(new) 자전거! 명사 수식!' },
+            { id: 15, icon: '🌧', ko: '비가 많이 온다.', en: 'It is ___.', options: ['rainy', 'sunny'], ans: 'rainy', why: 'rain에 y를 붙여 형용사가 되었어요!' },
+            { id: 16, icon: '💨', ko: '바람이 많이 분다.', en: 'It is ___.', options: ['windy', 'cloudy'], ans: 'windy', why: '바람(wind) 부는 상태를 보충 설명해요.' },
+            { id: 17, icon: '🐈', ko: '네 고양이는 뚱뚱하다.', en: 'Your cat is ___.', options: ['fat', 'ugly'], ans: 'fat', why: '고양이의 상태(뚱뚱한)를 설명하는 보어예요.' },
+            { id: 18, icon: '🐈', ko: '네 고양이는 못생겼다.', en: 'Your cat is ___.', options: ['ugly', 'pretty'], ans: 'ugly', why: '고양이의 외모를 보충 설명해요.' },
+            { id: 19, icon: '☀️', ko: '날씨가 화창하다.', en: 'It is ___.', options: ['sunny', 'rainy'], ans: 'sunny', why: 'sun에 ny를 붙여 화창한(ㄴ) 상태!' },
+            { id: 20, icon: '☁️', ko: '날씨가 흐리다.', en: 'It is ___.', options: ['cloudy', 'windy'], ans: 'cloudy', why: 'cloud에 y를 붙여 흐린(ㄴ) 상태!' }
+        ];
+
+        const sentenceData = [
+            { en: 'It is a <span class="text-orange-600 font-black italic">big</span> elephant.', pro: '잇 이즈 어 빅 엘리펀트', ko: '그것은 큰 코끼리이다. (명사 수식)' },
+            { en: 'The elephant is <span class="text-blue-600 font-black italic">big</span>.', pro: '더 엘리펀트 이즈 빅', ko: '그 코끼리는 크다. (보어 역할)' },
+            { en: 'It is a <span class="text-orange-600 font-black italic">small</span> ant.', pro: '잇 이즈 어 스몰 앤트', ko: '그것은 작은 개미이다. (명사 수식)' },
+            { en: 'The ant is <span class="text-blue-600 font-black italic">small</span>.', pro: '더 앤트 이즈 스몰', ko: '그 개미는 작다. (보어 역할)' },
+            { en: 'It is a <span class="text-orange-600 font-black italic">fast</span> rabbit.', pro: '잇 이즈 어 패스트 래빗', ko: '그것은 빠른 토끼이다. (명사 수식)' },
+            { en: 'The rabbit is <span class="text-blue-600 font-black italic">fast</span>.', pro: '더 래빗 이즈 패스트', ko: '그 토끼는 빠르다. (보어 역할)' },
+            { en: 'It is a <span class="text-orange-600 font-black italic">slow</span> turtle.', pro: '잇 이즈 어 슬로우 터틀', ko: '그것은 느린 거북이이다. (명사 수식)' },
+            { en: 'The turtle is <span class="text-blue-600 font-black italic">slow</span>.', pro: '더 터틀 이즈 슬로우', ko: '그 거북이는 느리다. (보어 역할)' },
+            { en: 'You have a <span class="text-orange-600 font-black italic">long</span> pencil.', pro: '유 해브 어 롱 펜슬', ko: '너는 긴 연필을 가지고 있다.' },
+            { en: 'You have a <span class="text-orange-600 font-black italic">red</span> crayon.', pro: '유 해브 어 레드 크레용', ko: '너는 빨간색의 크레용을 가지고 있다.' },
+            { en: 'She likes her <span class="text-orange-600 font-black italic">old</span> bike.', pro: '쉬 라이크스 허 올드 바이크', ko: '그녀는 그녀의 오래된 자전거를 좋아한다.' },
+            { en: 'He likes his <span class="text-orange-600 font-black italic">new</span> bike.', pro: '히 라이크스 히즈 뉴 바이크', ko: '그는 그의 새 자전거를 좋아한다.' },
+            { en: 'My mom is <span class="text-blue-600 font-black italic">tall</span>.', pro: '마이 맘 이즈 톨', ko: '우리 엄마는 키가 크시다.' },
+            { en: 'My dad is <span class="text-blue-600 font-black italic">short</span>.', pro: '마이 대드 이즈 쇼트', ko: '우리 아빠는 키가 작으시다.' },
+            { en: 'It is <span class="text-blue-600 font-black italic">rainy</span>.', pro: '잇 이즈 레이니', ko: '비가 많이 온다.' },
+            { en: 'It is <span class="text-blue-600 font-black italic">windy</span>.', pro: '잇 이즈 윈디', ko: '바람이 많이 분다.' },
+            { en: 'It is <span class="text-blue-600 font-black italic">sunny</span>.', pro: '잇 이즈 써니', ko: '날씨가 화창하다.' },
+            { en: 'It is <span class="text-blue-600 font-black italic">cloudy</span>.', pro: '잇 이즈 클라우디', ko: '날씨가 흐리다.' },
+            { en: 'Your cat is <span class="text-blue-600 font-black italic">fat</span>.', pro: '유어 캣 이즈 팻', ko: '네 고양이는 뚱뚱하다.' },
+            { en: 'Your cat is <span class="text-blue-600 font-black italic">ugly</span>.', pro: '유어 캣 이즈 어글리', ko: '네 고양이는 못생겼다.' }
+        ];
+
+        let currentQuizIndex = 0;
+        let learnedSet = new Set();
+        let myChart = null;
+        let quizQueue = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playQuizAudio() {
+            if (quizQueue[currentQuizIndex]) {
+                const q = quizQueue[currentQuizIndex];
+                speak(q.en.replace('___', q.ans));
+            }
+        }
+
+        function updateUI() {
+            const learned = learnedSet.size;
+            const total = quizSource.length;
+            const percentage = Math.round((learned / total) * 100);
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').innerText = percentage + '%';
+            
+            if (myChart) {
+                myChart.data.datasets[0].data = [learned, total - learned];
+                myChart.update();
+            }
+        }
+
+        function nextQuiz() {
+            currentQuizIndex++;
+            updateUI(); 
+            
+            if (currentQuizIndex >= quizQueue.length) {
+                setTimeout(() => {
+                    document.getElementById('quiz-container').classList.add('hidden');
+                    document.getElementById('quiz-finished-view').classList.remove('hidden');
+                }, 500);
+                return;
+            }
+            const q = quizQueue[currentQuizIndex];
+            document.getElementById('quiz-icon').innerText = q.icon;
+            document.getElementById('quiz-ko-sentence').innerText = `"${q.ko}"`;
+            document.getElementById('quiz-en-display').innerText = q.en;
+            document.getElementById('quiz-feedback-main').innerText = "";
+            document.getElementById('quiz-feedback-sub').innerText = "";
+
+            const optBox = document.getElementById('option-buttons');
+            optBox.innerHTML = "";
+            
+            const shuffledOptions = [...q.options].sort(() => Math.random() - 0.5);
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn-quiz px-8 py-4 rounded-xl border-orange-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 text-2xl italic";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                optBox.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(ans) {
+            const q = quizQueue[currentQuizIndex];
+            const mainMsg = document.getElementById('quiz-feedback-main');
+            const subMsg = document.getElementById('quiz-feedback-sub');
+            
+            if (ans.toLowerCase() === q.ans.toLowerCase()) {
+                mainMsg.innerHTML = `정답! ✨ ${q.en.replace('___', `<span class='underline italic'>${ans}</span>`)}`;
+                mainMsg.className = "font-black text-xl text-teal-500";
+                subMsg.innerText = q.why;
+                speak(q.en.replace('___', ans));
+                learnedSet.add(q.id); 
+                setTimeout(nextQuiz, 2500);
+            } else {
+                mainMsg.innerText = "단어를 다시 골라봐요! 🤔";
+                mainMsg.className = "font-black text-xl text-red-500";
+                subMsg.innerText = "명사의 모습이나 상태를 나타내는 단어를 찾아보세요.";
+            }
+        }
+
+        function renderSentences() {
+            const list = document.getElementById('sentenceList');
+            list.innerHTML = "";
+            sentenceData.forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-5 rounded-2xl border border-orange-50 shadow-sm cursor-pointer hover:border-orange-400 transition";
+                div.onclick = () => { 
+                    speak(s.en.replace(/<[^>]*>/g, '')); 
+                    div.querySelector('.trans-box').classList.toggle('hidden'); 
+                };
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center text-[10px] font-black">${i+1}</span>
+                            <p class="text-xl font-black text-gray-800 italic italic">${s.en}</p>
+                        </div>
+                        <p class="text-xs text-gray-400 font-bold italic italic italic">[${s.pro}]</p>
+                    </div>
+                    <div class="trans-box hidden mt-4 bg-orange-50 p-3 rounded-xl border border-orange-100">
+                        <p class="text-orange-700 font-bold text-sm">해석: ${s.ko}</p>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function resetLearning() {
+            learnedSet.clear();
+            currentQuizIndex = -1;
+            quizQueue = shuffle([...quizSource]);
+            updateUI();
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-finished-view').classList.add('hidden');
+            nextQuiz();
+        }
+
+        window.onload = () => {
+            renderSentences();
+            const canvas = document.getElementById('learningChart');
+            if (canvas) {
+                myChart = new Chart(canvas.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['완료', '남음'], datasets: [{ data: [0, 20], backgroundColor: ['#FF9F1C', '#E2E8F0'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { display: false } } }
+                });
+            }
+            resetLearning();
+        };
+    </script>
+</body>
+</html>

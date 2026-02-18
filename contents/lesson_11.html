@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 11: 일반동사 - 움직임과 상태의 주인공</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Nunito', 'Noto Sans KR', sans-serif; background-color: #FFFBF0; color: #4A4A4A; overflow-x: hidden; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto; height: 250px; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: all 0.3s ease; }
+        .hanja-box { display: inline-flex; flex-direction: column; align-items: center; background: white; padding: 8px 12px; border-radius: 12px; border: 1px solid #e2e8f0; margin: 0 4px; }
+        .btn-quiz { transition: all 0.2s; border-width: 2px; }
+        .btn-quiz:active { transform: scale(0.95); }
+        
+        /* Classification Charts */
+        .circle-base { position: relative; width: 180px; height: 180px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem; text-align: center; overflow: hidden; }
+        .be-dot { position: absolute; width: 12px; height: 12px; background: #FF9F1C; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.2); z-index: 10; }
+        
+        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .moving-pos { animation: bounce-subtle 3s ease-in-out infinite; display: inline-block; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Progress -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm py-4">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-black text-orange-500 tracking-tight">Grammar Zap! <span class="text-gray-600 text-lg font-bold">Unit 11</span></h1>
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <nav class="hidden md:flex gap-4 text-sm font-bold text-gray-500">
+                    <a href="#intro" class="hover:text-orange-500 transition">일반동사란?</a>
+                    <a href="#classify" class="hover:text-orange-500 transition">동사의 분류</a>
+                    <a href="#quiz-lab" class="hover:text-orange-500 transition font-black text-orange-600 underline text-lg">변신연구소</a>
+                </nav>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetLearning()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-lg font-bold text-gray-500 mr-2 transition">처음부터 다시 🔄</button>
+                    <div class="w-24 h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                        <div id="progressBar" class="h-full bg-teal-400 transition-all duration-500 w-0"></div>
+                    </div>
+                    <span id="progressText" class="text-sm font-bold text-teal-600">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 space-y-16">
+
+        <!-- SECTION 1: 일반동사 용어 정의 -->
+        <section id="intro" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border border-orange-50">
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-black text-gray-800 tracking-tight flex items-center gap-3">
+                        진짜 주인공, <span class="text-orange-500">일반동사</span> <span class="moving-pos text-3xl">⚙️</span>
+                    </h2>
+                    <div class="space-y-4 text-gray-600 text-lg leading-relaxed">
+                        <div class="flex flex-wrap items-center gap-1 my-4">
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">一</span>
+                                <span class="text-[10px] text-gray-400">한 일</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">般</span>
+                                <span class="text-[10px] text-gray-400">가지 반</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">동</span>
+                                <span class="text-[10px] text-gray-400">움직일 동</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">사</span>
+                                <span class="text-[10px] text-gray-400">말 사</span>
+                            </div>
+                            <span class="font-bold text-gray-700 ml-2 text-sm md:text-base">= '보통의 모든 동사'</span>
+                        </div>
+                        <p class="text-sm">be동사라는 특수한 동사를 제외한 나머지 모든 동사들이에요!</p>
+
+                        <div class="bg-indigo-50 p-6 rounded-2xl border-l-4 border-indigo-400">
+                            <h4 class="font-black text-indigo-800 text-xl mb-2 italic">📌 be동사 vs 일반동사 (not의 위치)</h4>
+                            <p class="text-sm leading-relaxed font-bold">
+                                be동사는 성격이 강해서 <span class="text-orange-600">뒤에</span> not을 붙이지만, <br>
+                                일반동사는 수줍음이 많아 <span class="text-blue-600">앞에</span> not을 붙여요! <span class="text-[10px] text-gray-400">(방법은 다음 과에서 배워요)</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="chart-container">
+                        <canvas id="learningChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 동사의 분류 -->
+        <section id="classify" class="scroll-mt-24 space-y-8">
+            <div class="text-center">
+                <h3 class="text-3xl font-black text-gray-800">📊 동사를 나누는 2가지 기준</h3>
+                <p class="text-gray-500 font-bold italic">우리가 배우는 모든 동사의 지도를 그려봐요.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Chart 1: be vs 일반 -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg flex flex-col items-center gap-6">
+                    <h4 class="font-black text-lg text-gray-700">1. 문법적 성격에 따른 분류</h4>
+                    <div class="circle-base bg-blue-50 border-4 border-blue-200">
+                        <div class="be-dot" style="top: 40%; left: 18%;"></div>
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <span class="text-blue-800 opacity-60">전체 동사의 세상<br>(일반동사)</span>
+                        </div>
+                        <div class="absolute top-[32%] left-[10%] text-[10px] font-black text-orange-600">be동사</div>
+                    </div>
+                    <p class="text-xs text-center text-gray-500 leading-relaxed font-bold">
+                        모든 동사 단어 중 be동사는 단 1개뿐이지만,<br>
+                        그 중요도는 나머지 모두를 합친 것만큼 커요!
+                    </p>
+                </div>
+
+                <!-- Chart 2: 동작 vs 상태 -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg flex flex-col items-center gap-6">
+                    <h4 class="font-black text-lg text-gray-700">2. 의미와 진행형에 따른 분류</h4>
+                    <div class="circle-base border-4 border-green-200">
+                        <div class="absolute inset-0 bg-green-50" style="clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);">
+                            <span class="absolute top-1/4 left-1/2 -translate-x-1/2 text-green-700">동작동사</span>
+                        </div>
+                        <div class="absolute inset-0 bg-orange-50" style="clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);">
+                            <span class="absolute bottom-4 left-1/2 -translate-x-1/2 text-orange-800">상태동사</span>
+                            <div class="be-dot" style="bottom: 22%; left: 12%;"></div>
+                            <div class="absolute bottom-[24%] left-[20%] text-[9px] font-black text-orange-600">be동사</div>
+                        </div>
+                        <div class="absolute top-1/2 left-0 w-full h-0.5 bg-gray-200 z-0"></div>
+                    </div>
+                    <p class="text-xs text-center text-gray-500 leading-relaxed font-bold">
+                        <span class="text-green-600">동작</span>: 점프하다, 달리다 (진행형 가능 ⭕)<br>
+                        <span class="text-orange-600">상태</span>: 사랑하다, 생각하다, be동사 (진행형 원칙적 불가 ❌)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 현재형의 본질 -->
+        <section class="bg-indigo-900 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+            <div class="relative z-10">
+                <h3 class="text-2xl font-black mb-4 flex items-center gap-2">
+                    📅 현재형(Present Tense)의 진짜 의미
+                </h3>
+                <p class="text-indigo-200 leading-relaxed mb-6 font-bold">
+                    현재형은 '지금 이 순간'이 아니에요! <br>
+                    <span class="text-orange-400 font-black italic">"어제도 그랬고, 오늘도 하고, 특별한 일이 없는 한 내일도 습관처럼 하는 일"</span>을 말해요.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white/10 p-5 rounded-xl border border-white/20">
+                        <span class="text-xs font-black uppercase tracking-widest text-indigo-300 italic">습관처럼 하는 일 (Present)</span>
+                        <p class="text-lg font-bold">I study English every day.</p>
+                        <p class="text-[11px] text-indigo-200 mt-1 italic">"나는 (어제도 오늘도 하는 습관처럼) 영어 공부를 한다."</p>
+                    </div>
+                    <div class="bg-white/10 p-5 rounded-xl border border-white/20 opacity-60">
+                        <span class="text-xs font-black uppercase tracking-widest text-indigo-300 italic">지금 당장 하는 일 (Progressive)</span>
+                        <p class="text-sm font-bold">I am studying English now.</p>
+                        <p class="text-[11px] text-indigo-200 mt-1 italic">"나는 지금 당장 하고 있는 중이다." (이건 나중에 배워요!)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: 3인칭 단수 현재형 -->
+        <section class="space-y-6">
+            <div class="text-center">
+                <h3 class="text-3xl font-black text-gray-800 italic">👑 기초 영문법의 핵심 열쇠: <span class="text-orange-500">3인칭 단수 현재형</span></h3>
+                <p class="text-gray-500 font-bold italic mt-1 text-sm md:text-base">이 규칙을 마스터하면 영어의 기초 체력이 완성됩니다!</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-3xl shadow-lg border-t-4 border-orange-500">
+                    <h4 class="text-xl font-black text-orange-600 mb-4">주어가 3인칭 단수란? ☝️</h4>
+                    <div class="space-y-3">
+                        <p class="text-xs text-gray-500 font-bold leading-relaxed bg-orange-50 p-3 rounded-lg">
+                            1인칭인 <span class="text-orange-600">나(I, We)</span>도 아니고, <br>
+                            2인칭인 <span class="text-blue-600">너(You)</span>도 아닌, <br>
+                            나와 너를 제외한 모든 것 중 <span class="underline underline-offset-4 decoration-orange-500 font-black italic">딱 하나(단수)</span>를 뜻해요!
+                        </p>
+                        <div class="bg-white border border-gray-100 p-3 rounded-xl">
+                            <span class="text-[10px] font-black text-gray-400 block mb-1">인칭대명사 / 지시대명사</span>
+                            <p class="text-sm font-bold text-gray-700 italic">He, She, It / This, That</p>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                            <span class="text-[10px] font-black text-blue-400 block mb-1">헷갈리기 쉬운 3인칭 단수</span>
+                            <p class="text-sm font-bold text-gray-700 italic">My mom, Your dog, Tom, The cat</p>
+                            <p class="text-[10px] text-red-400 mt-1 italic">※ 소유격이 붙어도 주인공이 '나/너'가 아니면 3인칭 단수!</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-3xl shadow-lg border-t-4 border-teal-500">
+                    <h4 class="text-xl font-black text-teal-600 mb-4">동사의 변신 조건 ✨</h4>
+                    <p class="text-sm text-gray-600 font-bold leading-relaxed mb-4 italic">
+                        동사 끝에 <span class="text-red-500 font-black">-s</span> 혹은 <span class="text-red-500 font-black">-es</span>를 붙여야 할 때는 단 1가지 상황뿐입니다!
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-3 bg-teal-50 p-3 rounded-lg">
+                            <span class="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center font-black">1</span>
+                            <span class="text-sm font-black italic">주인공(주어)이 <span class="text-teal-600">3인칭이면서 단수</span>이고,</span>
+                        </div>
+                        <div class="flex items-center gap-3 bg-teal-50 p-3 rounded-lg">
+                            <span class="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center font-black">2</span>
+                            <span class="text-sm font-black italic">동사가 과거/미래가 아닌 <span class="text-orange-600">현재형</span>일 때!</span>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-[11px] text-gray-400 italic font-bold">"복잡한 스펠링보다는 단어 뒤에 's 소리'를 낸다고 기억하세요!"</p>
+                </div>
+            </div>
+
+            <div class="bg-orange-100 p-8 rounded-3xl border border-orange-200 flex flex-col md:flex-row items-center gap-6">
+                <div class="text-6xl font-black text-orange-800">Has</div>
+                <div>
+                    <h4 class="text-2xl font-black text-orange-800 mb-2 italic">Have는 Has로 외우세요!</h4>
+                    <p class="text-gray-700 leading-relaxed font-bold italic">
+                        `Have`는 "가지다" 또는 몸 안으로 가지는 "먹다"는 뜻이에요. <br>
+                        3인칭 단수 주인공을 만나 현재를 말할 때는 <span class="text-red-600 font-black italic">Has [해즈]</span>로 모양을 바꿉니다. 단어로 통째로 익히는 게 훨씬 편해요!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: QUIZ LAB (20 Items) -->
+        <section id="quiz-lab" class="bg-white rounded-3xl p-8 shadow-xl border-4 border-orange-200">
+            <div id="quiz-container">
+                <div class="text-center mb-8">
+                    <h3 class="text-3xl font-black text-gray-800 mb-2 italic">🏆 일반동사 변신 연구소</h3>
+                    <p class="text-gray-500 font-bold text-sm italic">주어에 알맞은 형태를 골라보세요 (1~20번 전체)</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-10">
+                    <div class="flex flex-col items-center">
+                        <div id="quiz-card" class="bg-orange-500 text-white p-10 rounded-3xl shadow-2xl transition-all duration-300 text-center min-w-[340px] cursor-pointer hover:scale-105" onclick="playQuizAudio()">
+                            <div id="quiz-icon" class="text-8xl mb-4">🎤</div>
+                            <div id="quiz-ko-sentence" class="text-xl font-bold mb-4 text-orange-100 italic">"나는 노래를 잘한다."</div>
+                            <div id="quiz-en-display" class="text-4xl font-black tracking-widest italic">I ___ well.</div>
+                            <div class="mt-4 text-xs opacity-60 font-bold italic">클릭하면 문장의 소리가 나요 🔊</div>
+                        </div>
+                    </div>
+
+                    <div id="option-buttons" class="flex justify-center gap-4">
+                        <!-- JS Generated -->
+                    </div>
+
+                    <div id="quiz-msg" class="text-center min-h-[60px]">
+                        <p id="quiz-feedback-main" class="font-black text-xl"></p>
+                        <p id="quiz-feedback-sub" class="text-sm text-gray-500 font-bold mt-2 italic"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="quiz-finished-view" class="hidden py-10 text-center space-y-6">
+                <div class="text-8xl">🥇</div>
+                <h3 class="text-4xl font-black text-teal-500 italic">20문장 완전 정복!</h3>
+                <p class="text-gray-500 font-bold italic">1/2인칭 원형부터 3인칭 단수 변신까지 모두 마스터했습니다.</p>
+                <button onclick="resetLearning()" class="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition">다시 도전하기 🔄</button>
+            </div>
+        </section>
+
+        <!-- SECTION 6: SENTENCE PRACTICE -->
+        <section id="sentences" class="scroll-mt-24 mb-20">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl shadow-sm">📝</div>
+                <h3 class="text-2xl font-bold text-gray-800 italic">교재 문장 낭독 훈련 (20문장)</h3>
+            </div>
+            <p class="text-sm text-gray-500 font-black italic mb-6 ml-12">
+                "일반동사는 주어의 움직임이나 상태를 나타내는 말이에요. be동사를 제외한 나머지 모든 동사들이죠."
+            </p>
+            <div id="sentenceList" class="grid gap-4">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-100 border-t border-gray-200 py-16 text-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h3 class="text-2xl font-black text-gray-800 mb-2 italic">Tony's Speaking English Grammar</h3>
+                <p class="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span class="underline italic">어순 감각</span>에 있습니다.</p>
+                <div class="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                <p class="text-gray-500 text-sm leading-relaxed italic font-bold">
+                    Tony's Speaking English Grammar helps you master the natural sense of English word order.<br>
+                    <span class="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA (Full 20 Items from textbook) ---
+        const quizSource = [
+            { id: 1, icon: '🎤', ko: '나는 노래를 잘한다.', en: 'I ___ well.', options: ['sing', 'sings'], ans: 'sing', why: '주어가 1인칭 I일 때는 동사가 변신하지 않아요!' },
+            { id: 2, icon: '🐦', ko: '그 새들은 노래를 잘한다.', en: 'The birds ___ well.', options: ['sing', 'sings'], ans: 'sing', why: 'The birds는 여럿(복수)이므로 s를 붙이지 않아요!' },
+            { id: 3, icon: '💃', ko: '너는 춤을 잘 춘다.', en: 'You ___ well.', options: ['dance', 'dances'], ans: 'dance', why: '주어가 2인칭 You일 때도 동사원형을 그대로 써요.' },
+            { id: 4, icon: '🐒', ko: '그 원숭이들은 춤을 잘 춘다.', en: 'The monkeys ___ well.', options: ['dance', 'dances'], ans: 'dance', why: '원숭이들이 여러 마리(복수)라서 s가 필요 없어요!' },
+            { id: 5, icon: '🏊‍♂️', ko: '우리는 수영을 잘한다.', en: 'We ___ well.', options: ['swim', 'swims'], ans: 'swim', why: '우리(We)는 1인칭 복수이므로 변신하지 않아요.' },
+            { id: 6, icon: '🐺', ko: '그 늑대들은 수영을 잘한다.', en: 'The wolves ___ well.', options: ['swim', 'swims'], ans: 'swim', why: '늑대들이 여럿(복수)이면 swims가 아닌 swim!' },
+            { id: 7, icon: '📐', ko: '나는 수학을 좋아한다.', en: 'I ___ math.', options: ['like', 'likes'], ans: 'like', why: '나(I)는 주인공이지만 3인칭이 아니에요!' },
+            { id: 8, icon: '👨‍👩‍👧‍👦', ko: '그들은 수학을 좋아한다.', en: 'They ___ math.', options: ['like', 'likes'], ans: 'like', why: '그들(They)은 3인칭이지만 복수라서 s가 안 붙어요.' },
+            { id: 9, icon: '🍅', ko: '그 소년들은 토마토를 가지고 있다.', en: 'The boys ___ tomatoes.', options: ['have', 'has'], ans: 'have', why: '주어 The boys가 여럿이므로 have를 그대로 써요.' },
+            { id: 10, icon: '❤️', ko: '그 소년들은 토마토를 매우 좋아한다.', en: 'The boys ___ tomatoes.', options: ['love', 'loves'], ans: 'love', why: '여러 명(복수 주어)일 때는 변신 금지!' },
+            { id: 11, icon: '🕺', ko: '그는 춤을 잘 춘다.', en: 'He ___ well.', options: ['dance', 'dances'], ans: 'dances', why: '주어 He는 3인칭 단수 현재형이므로 dances!' },
+            { id: 12, icon: '🏊‍♀️', ko: '그녀는 빠르게 수영한다.', en: 'She ___ fast.', options: ['swim', 'swims'], ans: 'swims', why: '주어 She는 3인칭 단수 현재형이므로 swims!' },
+            { id: 13, icon: '🏫', ko: '오스카는 학교에 간다.', en: 'Oscar ___ to school.', options: ['go', 'goes'], ans: 'goes', why: 'Oscar는 3인칭 단수 한 명의 현재 습관이에요!' },
+            { id: 14, icon: '📐', ko: '그의 아빠는 수학을 가르치신다.', en: 'His dad ___ math.', options: ['teach', 'teaches'], ans: 'teaches', why: 'His dad는 3인칭 단수이므로 끝에 s 소리가 나야 해요.' },
+            { id: 15, icon: '🔧', ko: '그의 엄마는 차를 수리하신다.', en: 'His mom ___ cars.', options: ['fix', 'fixes'], ans: 'fixes', why: 'His mom은 3인칭 단수 한 명의 습관적인 일이에요.' },
+            { id: 16, icon: '🦅', ko: '이 새는 빠르게 난다.', en: 'This bird ___ fast.', options: ['fly', 'flies'], ans: 'flies', why: 'This bird는 3인칭 단수 사물입니다.' },
+            { id: 17, icon: '🐤', ko: '저 새는 노래를 잘 한다.', en: 'That bird ___ well.', options: ['sing', 'sings'], ans: 'sings', why: 'That bird는 3인칭 단수 사물입니다.' },
+            { id: 18, icon: '🐈', ko: '한 소녀가 고양이를 가지고 있다.', en: 'A girl ___ a cat.', options: ['have', 'has'], ans: 'has', why: 'Have의 3인칭 단수 현재형은 Has로 약속되어 있어요!' },
+            { id: 19, icon: '🧼', ko: '그 고양이는 얼굴을 씻는다.', en: 'The cat ___ its face.', options: ['wash', 'washes'], ans: 'washes', why: 'The cat은 3인칭 단수 한 마리의 습관이에요.' },
+            { id: 20, icon: '🐟', ko: '그것은 생선을 좋아한다.', en: 'It ___ fish.', options: ['like', 'likes'], ans: 'likes', why: '주어 It은 3인칭 단수 사물의 현재 상태예요.' }
+        ];
+
+        const sentenceData = [
+            { en: 'I sing well.', pro: '아이 싱 웰', ko: '나는 노래를 잘한다.' },
+            { en: 'The birds sing well.', pro: '더 버즈 싱 웰', ko: '그 새들은 노래를 잘한다.' },
+            { en: 'You dance well.', pro: '유 댄스 웰', ko: '너는 춤을 잘 춘다.' },
+            { en: 'The monkeys dance well.', pro: '더 멍키즈 댄스 웰', ko: '그 원숭이들은 춤을 잘 춘다.' },
+            { en: 'We swim well.', pro: '위 스윔 웰', ko: '우리는 수영을 잘한다.' },
+            { en: 'The wolves swim well.', pro: '더 울브즈 스윔 웰', ko: '그 늑대들은 수영을 잘한다.' },
+            { en: 'I like math.', pro: '아이 라이크 매쓰', ko: '나는 수학을 좋아한다.' },
+            { en: 'They like math.', pro: '데이 라이크 매쓰', ko: '그들은 수학을 좋아한다.' },
+            { en: 'The boys have tomatoes.', pro: '더 보이즈 해브 토메이토즈', ko: '그 소년들은 토마토를 가지고 있다.' },
+            { en: 'The boys love tomatoes.', pro: '더 보이즈 러브 토메이토즈', ko: '그 소년들은 토마토를 매우 좋아한다.' },
+            { en: 'He <span class=\"text-orange-600 font-black italic\">dances</span> well.', pro: '히 댄시즈 웰', ko: '그는 춤을 잘 춘다.' },
+            { en: 'She <span class=\"text-orange-600 font-black italic\">swims</span> fast.', pro: '쉬 스윔즈 패스트', ko: '그녀는 빠르게 수영한다.' },
+            { en: 'Oscar <span class=\"text-orange-600 font-black italic\">goes</span> to school.', pro: '오스카 고즈 투 스쿨', ko: '오스카는 학교에 간다.' },
+            { en: 'His dad <span class=\"text-orange-600 font-black italic\">teaches</span> math.', pro: '히즈 대드 티치즈 매쓰', ko: '그의 아빠는 수학을 가르치신다.' },
+            { en: 'His mom <span class=\"text-orange-600 font-black italic\">fixes</span> cars.', pro: '히즈 맘 픽시즈 카즈', ko: '그의 엄마는 차를 수리하신다.' },
+            { en: 'This bird <span class=\"text-orange-600 font-black italic\">flies</span> fast.', pro: '디스 버드 플라이즈 패스트', ko: '이 새는 빠르게 난다.' },
+            { en: 'That bird <span class=\"text-orange-600 font-black italic\">sings</span> well.', pro: '댓 버드 싱즈 웰', ko: '저 새는 노래를 잘 한다.' },
+            { en: 'A girl <span class=\"text-orange-600 font-black italic\">has</span> a cat.', pro: '어 걸 해즈 어 캣', ko: '한 소녀가 고양이를 가지고 있다.' },
+            { en: 'The cat <span class=\"text-orange-600 font-black italic\">washes</span> its face.', pro: '더 캣 와쉬즈 잇츠 페이스', ko: '그 고양이는 얼굴을 씻는다.' },
+            { en: 'It <span class=\"text-orange-600 font-black italic\">likes</span> fish.', pro: '잇 라이크스 피쉬', ko: '그것은 생선을 좋아한다.' }
+        ];
+
+        // --- LOGIC ---
+        let currentQuizIndex = 0;
+        let learnedSet = new Set();
+        let myChart = null;
+        let quizQueue = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playQuizAudio() {
+            if (quizQueue[currentQuizIndex]) {
+                const q = quizQueue[currentQuizIndex];
+                speak(q.en.replace('___', q.ans));
+            }
+        }
+
+        function updateUI() {
+            const learned = learnedSet.size;
+            const total = quizSource.length;
+            const percentage = Math.round((learned / total) * 100);
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').innerText = percentage + '%';
+            
+            if (myChart) {
+                myChart.data.datasets[0].data = [learned, total - learned];
+                myChart.update();
+            }
+        }
+
+        function nextQuiz() {
+            currentQuizIndex++;
+            if (currentQuizIndex >= quizQueue.length) {
+                document.getElementById('quiz-container').classList.add('hidden');
+                document.getElementById('quiz-finished-view').classList.remove('hidden');
+                return;
+            }
+            const q = quizQueue[currentQuizIndex];
+            document.getElementById('quiz-icon').innerText = q.icon;
+            document.getElementById('quiz-ko-sentence').innerText = `"${q.ko}"`;
+            document.getElementById('quiz-en-display').innerText = q.en;
+            document.getElementById('quiz-feedback-main').innerText = "";
+            document.getElementById('quiz-feedback-sub').innerText = "";
+
+            const optBox = document.getElementById('option-buttons');
+            optBox.innerHTML = "";
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn-quiz px-8 py-4 rounded-xl border-orange-200 bg-white hover:bg-orange-50 shadow-sm font-black text-orange-600 text-2xl italic";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                optBox.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(ans) {
+            const q = quizQueue[currentQuizIndex];
+            const mainMsg = document.getElementById('quiz-feedback-main');
+            const subMsg = document.getElementById('quiz-feedback-sub');
+            
+            if (ans === q.ans) {
+                mainMsg.innerHTML = `정답! ✨ ${q.en.replace('___', `<span class='underline italic'>${ans}</span>`)}`;
+                mainMsg.className = "font-black text-xl text-teal-500";
+                subMsg.innerText = q.why;
+                speak(q.en.replace('___', ans));
+                learnedSet.add(q.id); 
+                updateUI();
+                setTimeout(nextQuiz, 3000);
+            } else {
+                mainMsg.innerText = "다시 한번 생각해봐요! 🤔";
+                mainMsg.className = "font-black text-xl text-red-500";
+                subMsg.innerText = "주인공이 3인칭 단수인지, 혹은 1/2인칭이나 복수인지 확인하세요.";
+            }
+        }
+
+        function renderSentences() {
+            const list = document.getElementById('sentenceList');
+            list.innerHTML = "";
+            sentenceData.forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-5 rounded-2xl border border-orange-50 shadow-sm cursor-pointer hover:border-orange-400 transition";
+                div.onclick = () => { 
+                    speak(s.en.replace(/<[^>]*>/g, '')); 
+                    div.querySelector('.trans-box').classList.toggle('hidden'); 
+                };
+                div.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center text-[10px] font-black">${i+1}</span>
+                            <p class="text-xl font-black text-gray-800 italic">${s.en}</p>
+                        </div>
+                        <p class="text-xs text-gray-400 font-bold italic">[${s.pro}]</p>
+                    </div>
+                    <div class="trans-box hidden mt-4 bg-orange-50 p-3 rounded-xl border border-orange-100">
+                        <p class="text-orange-700 font-bold text-sm">해석: ${s.ko}</p>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function resetLearning() {
+            learnedSet.clear();
+            currentQuizIndex = -1;
+            quizQueue = shuffle([...quizSource]);
+            updateUI();
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-finished-view').classList.add('hidden');
+            nextQuiz();
+        }
+
+        window.onload = () => {
+            renderSentences();
+            const canvas = document.getElementById('learningChart');
+            if (canvas) {
+                myChart = new Chart(canvas.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['완료', '남음'], datasets: [{ data: [0, 20], backgroundColor: ['#FF9F1C', '#E2E8F0'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { display: false } } }
+                });
+            }
+            resetLearning();
+        };
+    </script>
+</body>
+</html>
