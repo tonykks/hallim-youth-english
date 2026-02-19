@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 15: 의문사 있는 의문문 - 생성 논리 완벽 증명</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Nunito', 'Noto Sans KR', sans-serif; background-color: #FFFBF0; color: #000000; overflow-x: hidden; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin: 0 auto; height: 250px; }
+        .hanja-box { display: inline-flex; flex-direction: column; align-items: center; background: white; padding: 8px 12px; border-radius: 12px; border: 1px solid #e2e8f0; margin: 0 4px; }
+        .btn-quiz { transition: all 0.2s; border-width: 2px; }
+        .btn-quiz:active { transform: scale(0.95); }
+        .moving-pos { animation: bounce-subtle 3s ease-in-out infinite; display: inline-block; }
+        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        
+        .logic-card { background: white; border-radius: 1.5rem; padding: 1.5rem; border: 2px solid #fee2e2; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); min-height: 480px; display: flex; flex-direction: column; justify-content: space-between; }
+        .step-row { display: flex; align-items: flex-start; margin-bottom: 0.6rem; line-height: 1.4; word-spacing: 0.05rem; }
+        .step-num { width: 22px; height: 22px; background: #000000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; margin-right: 12px; flex-shrink: 0; margin-top: 2px; }
+        .arrow-down { color: #94a3b8; font-size: 12px; margin: 2px 0 2px 34px; font-weight: bold; }
+        .strike { text-decoration: line-through; color: #ef4444; opacity: 0.7; }
+        .replace-tag { color: #2563eb; font-weight: 900; }
+        .final-q { font-size: 1.1rem; color: #2563eb; border-top: 1px dashed #e2e8f0; padding-top: 1rem; margin-top: 0.8rem; }
+        .answer-box { background: #f8fafc; padding: 1rem; border-radius: 1rem; border: 1px solid #e2e8f0; margin-top: auto; }
+        .ko-sub { display: block; font-size: 0.75rem; color: #64748b; font-weight: normal; margin-top: 1px; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Progress -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm py-4">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-black text-orange-500 tracking-tight">Grammar Zap! <span class="text-gray-600 text-lg font-bold">Unit 15</span></h1>
+            <div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                <nav class="hidden md:flex gap-4 text-sm font-bold text-gray-500">
+                    <a href="#intro" class="hover:text-orange-500 transition">6하원칙</a>
+                    <a href="#logic-main" class="hover:text-orange-500 transition font-black text-red-500 underline">생성 논리 증명</a>
+                    <a href="#quiz-lab" class="hover:text-orange-500 transition font-black text-orange-600 underline">의문문 연구소</a>
+                </nav>
+                <div class="flex items-center gap-2">
+                    <button onclick="resetLearning()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-lg font-bold text-gray-500 mr-2 transition">처음부터 다시 🔄</button>
+                    <div class="w-24 h-3 bg-gray-100 rounded-full overflow-hidden relative">
+                        <div id="progressBar" class="h-full bg-teal-400 transition-all duration-500 w-0"></div>
+                    </div>
+                    <span id="progressText" class="text-sm font-bold text-teal-600">0%</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 space-y-16">
+
+        <!-- SECTION 1: 의문사의 정의와 6하원칙 -->
+        <section id="intro" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border border-orange-50 text-black">
+            <div class="grid lg:grid-cols-2 gap-8 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-black text-gray-800 tracking-tight flex items-center gap-3 italic">
+                        궁금할 때 던지는, <span class="text-orange-500">의문사</span> <span class="moving-pos text-3xl">🔍</span>
+                    </h2>
+                    <div class="space-y-4 text-gray-600 text-lg leading-relaxed">
+                        <div class="flex flex-wrap items-center gap-1 my-4">
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">疑</span>
+                                <span class="text-[10px] text-gray-400">의심할 의</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">問</span>
+                                <span class="text-[10px] text-gray-400">물을 문</span>
+                            </div>
+                            <div class="hanja-box shadow-sm border-orange-200">
+                                <span class="text-2xl font-black text-orange-500">詞</span>
+                                <span class="text-[10px] text-gray-400">말 사</span>
+                            </div>
+                            <span class="font-bold text-gray-700 ml-2">= '궁금해서 묻는 말'</span>
+                        </div>
+                        <p class="text-sm font-bold leading-relaxed">기자가 기사를 쓸 때 지키는 <span class="text-indigo-600 underline underline-offset-4">육하원칙(六何原則)</span>을 아나요? <br>여섯 가지 '어찌(何) 물어보는 원칙'이 바로 영어 의문사의 정체랍니다!</p>
+
+                        <div class="bg-indigo-50 p-6 rounded-2xl border-l-4 border-indigo-400 font-bold">
+                            <h4 class="font-black text-indigo-800 text-xl mb-4 italic">📌 육하원칙 = 의문사 6형제</h4>
+                            <div class="grid grid-cols-3 gap-2 text-[11px] text-center italic">
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-orange-100 text-black">누가 (Who)</div>
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-orange-100 text-black">언제 (When)</div>
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-orange-100 text-black">어디서 (Where)</div>
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-orange-100 text-black">무엇을 (What)</div>
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-orange-100 text-black">왜 (Why)</div>
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-orange-100 text-black">어떻게 (How)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-center text-black">
+                    <div class="chart-container">
+                        <canvas id="learningChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: 의문사 있는 의문문 생성 논리 증명 -->
+        <section id="logic-main" class="scroll-mt-24 space-y-12">
+            <div class="text-center text-black">
+                <h3 class="text-3xl font-black text-gray-800 italic">📉 의문사 있는 의문문의 탄생 과정 증명</h3>
+                <p class="text-gray-500 font-bold italic mt-2 text-sm italic">평서문에서 의문사가 맨 앞으로 튀어나오는 마법을 확인하세요!</p>
+            </div>
+
+            <!-- 생성 공식 박스 -->
+            <div class="bg-black text-white p-6 rounded-3xl shadow-xl flex flex-col md:flex-row items-center justify-around gap-4 font-black text-[10px] md:text-xs italic italic">
+                <span>1. 평서문</span>
+                <span class="text-lg">➔</span>
+                <span>2. Yes/No 의문문</span>
+                <span class="text-lg">➔</span>
+                <span>3. 궁금한 정보 가리기</span>
+                <span class="text-lg">➔</span>
+                <span>4. 의문사로 교체</span>
+                <span class="text-lg">➔</span>
+                <span class="bg-red-600 text-white px-4 py-1 rounded-full">5. 의문사 맨 앞으로!</span>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 text-black">
+                <!-- 🅰️ be동사 문장 -->
+                <div class="space-y-6">
+                    <h4 class="text-xl font-black text-orange-600 flex items-center gap-2 border-b-2 border-orange-100 pb-2">
+                        <span>🅰️ be동사 문장의 6사례</span>
+                    </h4>
+                    
+                    <!-- Case 1: be-Who -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">1. WHO (사람이 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num">1</span> <div>She is my teacher. <span class="ko-sub">(그녀는 내 선생님이다.)</span></div></div>
+                            <div class="step-row"><span class="step-num">2</span> <div>Is she my teacher? <span class="ko-sub">(그녀는 내 선생님이니?)</span></div></div>
+                            <div class="step-row"><span class="step-num">3</span> <div>Is she [<span class="strike">my teacher</span> &nbsp; &nbsp; <span class="replace-tag">who</span>]? <span class="ko-sub">(그녀는 이니 [누구]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>Who is she? <span class="ko-sub">(누구니 그녀는?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> She is my teacher. (평서문)</p>
+                            <p class="mt-1">➔ <strong>My teacher.</strong> (간단 대답)</p>
+                        </div>
+                    </div>
+
+                    <!-- Case 2: be-What -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">2. WHAT (사물이 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num">1</span> <div>That is a present. <span class="ko-sub">(저것은 선물이다.)</span></div></div>
+                            <div class="step-row"><span class="step-num">2</span> <div>Is that a present? <span class="ko-sub">(저것은 선물이니?)</span></div></div>
+                            <div class="step-row"><span class="step-num">3</span> <div>Is that [<span class="strike">a present</span> &nbsp; &nbsp; <span class="replace-tag">what</span>]? <span class="ko-sub">(저것은 이니 [무엇]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>What is that? <span class="ko-sub">(무엇이니 저것은?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> That is a present. ➔ <strong>A present.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 3: be-When -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">3. WHEN (시간이 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num">1</span> <div>My birthday is in October. <span class="ko-sub">(내 생일은 10월이다.)</span></div></div>
+                            <div class="step-row"><span class="step-num">2</span> <div>Is your birthday in October? <span class="ko-sub">(네 생일은 10월이니?)</span></div></div>
+                            <div class="step-row"><span class="step-num">3</span> <div>Is your birthday [<span class="strike">in October</span> &nbsp; &nbsp; <span class="replace-tag">when</span>]? <span class="ko-sub">(네 생일은 이니 [언제]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>When is your birthday? <span class="ko-sub">(언제니 네 생일은?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> My birthday is in October. ➔ <strong>In October.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 4: be-Where -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">4. WHERE (장소가 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num">1</span> <div>His house is in Seoul. <span class="ko-sub">(그의 집은 서울에 있다.)</span></div></div>
+                            <div class="step-row"><span class="step-num">2</span> <div>Is his house in Seoul? <span class="ko-sub">(그의 집은 서울에 있니?)</span></div></div>
+                            <div class="step-row"><span class="step-num">3</span> <div>Is his house [<span class="strike">in Seoul</span> &nbsp; &nbsp; <span class="replace-tag">where</span>]? <span class="ko-sub">(그의 집은 있니 [어디]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>Where is his house? <span class="ko-sub">(어디에 있니 그의 집은?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> It is in Seoul. ➔ <strong>In Seoul.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 5: be-Why -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">5. WHY (이유가 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num">1</span> <div>Sam is so sad because he lost his toy. <span class="ko-sub">(샘은 장난감을 잃어버려서 아주 슬프다.)</span></div></div>
+                            <div class="step-row"><span class="step-num">2</span> <div>Is Sam so sad because he lost his toy? <span class="ko-sub">(샘은 장난감을 잃어버려서 아주 슬프니?)</span></div></div>
+                            <div class="step-row"><span class="step-num">3</span> <div>Is Sam so sad [<span class="strike">because he lost his toy</span> &nbsp; &nbsp; <span class="replace-tag">why</span>]? <span class="ko-sub">(샘은 아주 슬프니 [왜]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>Why is Sam so sad? <span class="ko-sub">(왜 샘은 아주 슬프니?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> He is so sad because he lost his toy. ➔ <strong>Because he lost his toy.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 6: be-How -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">6. HOW (상태가 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num">1</span> <div>You are fine. <span class="ko-sub">(너는 잘 지낸다.)</span></div></div>
+                            <div class="step-row"><span class="step-num">2</span> <div>Are you fine? <span class="ko-sub">(너는 잘 지내니?)</span></div></div>
+                            <div class="step-row"><span class="step-num">3</span> <div>Are you [<span class="strike">fine</span> &nbsp; &nbsp; <span class="replace-tag">how</span>]? <span class="ko-sub">(너는 이니 [어떠니]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>How are you? <span class="ko-sub">(어떠니 너는?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> I am fine. ➔ <strong>Fine.</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 🅱️ 일반동사 문장 -->
+                <div class="space-y-6">
+                    <h4 class="text-xl font-black text-teal-600 flex items-center gap-2 border-b-2 border-teal-100 pb-2">
+                        <span>🅱️ 일반동사 문장의 6사례</span>
+                    </h4>
+
+                    <!-- Case 7: gen-Who -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">1. WHO (좋아하는 대상이 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num bg-teal-600">1</span> <div>She likes David. <span class="ko-sub">(그녀는 데이비드를 좋아한다.)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">2</span> <div>Does she like David? <span class="ko-sub">(그녀는 데이비드를 좋아하니?)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">3</span> <div>Does she like [<span class="strike">David</span> &nbsp; &nbsp; <span class="replace-tag">who</span>]? <span class="ko-sub">(그녀는 좋아하니 [누구]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>Who does she like? <span class="ko-sub">(누구를 그녀는 좋아하니?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> She likes David. ➔ <strong>David.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 8: gen-What -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">2. WHAT (무엇을 가졌는지 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num bg-teal-600">1</span> <div>You have a big bag. <span class="ko-sub">(너는 큰 가방을 가지고 있다.)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">2</span> <div>Do you have a big bag? <span class="ko-sub">(너는 큰 가방을 가지고 있니?)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">3</span> <div>Do you have [<span class="strike">a big bag</span> &nbsp; &nbsp; <span class="replace-tag">what</span>]? <span class="ko-sub">(너는 가지고 있니 [무엇]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>What do you have? <span class="ko-sub">(무엇을 너는 가지고 있니?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> I have a big bag. ➔ <strong>A big bag.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 9: gen-When -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">3. WHEN (언제 일어나는지 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num bg-teal-600">1</span> <div>They get up at 7 o'clock. <span class="ko-sub">(그들은 7시에 일어난다.)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">2</span> <div>Do they get up at 7 o'clock? <span class="ko-sub">(그들은 7시에 일어나니?)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">3</span> <div>Do they get up [<span class="strike">at 7 o'clock</span> &nbsp; &nbsp; <span class="replace-tag">when</span>]? <span class="ko-sub">(그들은 일어나니 [언제]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>When do they get up? <span class="ko-sub">(언제 그들은 일어나니?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> They get up at 7 o'clock. ➔ <strong>At 7 o'clock.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 10: gen-Where -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">4. WHERE (어디에 사는지 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num bg-teal-600">1</span> <div>She lives in Jeju. <span class="ko-sub">(그녀는 제주에 산다.)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">2</span> <div>Does she live in Jeju? <span class="ko-sub">(그녀는 제주에 사니?)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">3</span> <div>Does she live [<span class="strike">in Jeju</span> &nbsp; &nbsp; <span class="replace-tag">where</span>]? <span class="ko-sub">(그녀는 사니 [어디]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>Where does she live? <span class="ko-sub">(어디에 그녀는 사니?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> She lives in Jeju. ➔ <strong>In Jeju.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 11: gen-Why -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">5. WHY (전화하는 이유가 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num bg-teal-600">1</span> <div>Sandara calls him because she needs help. <span class="ko-sub">(산다라는 도움이 필요해서 그에게 전화한다.)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">2</span> <div>Does she call him because she needs help? <span class="ko-sub">(그녀는 도움이 필요해서 그에게 전화하니?)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">3</span> <div>Does she call him [<span class="strike">because... needs help</span> &nbsp; &nbsp; <span class="replace-tag">why</span>]? <span class="ko-sub">(그녀는 그에게 전화하니 [왜]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>Why does she call him? <span class="ko-sub">(왜 그녀는 그에게 전화하니?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> She calls him because she needs help. ➔ <strong>Because she needs help.</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Case 12: gen-How -->
+                    <div class="logic-card">
+                        <p class="text-[10px] font-black text-gray-400 mb-3 uppercase">6. HOW (교통 수단이 궁금할 때)</p>
+                        <div class="space-y-2 text-sm font-bold">
+                            <div class="step-row"><span class="step-num bg-teal-600">1</span> <div>Alice goes to school by bus. <span class="ko-sub">(앨리스는 버스로 학교에 간다.)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">2</span> <div>Does Alice go to school by bus? <span class="ko-sub">(앨리스는 버스로 학교에 가니?)</span></div></div>
+                            <div class="step-row"><span class="step-num bg-teal-600">3</span> <div>Does Alice go to school [<span class="strike">by bus</span> &nbsp; &nbsp; <span class="replace-tag">how</span>]? <span class="ko-sub">(앨리스는 학교에 가니 [어떻게]?)</span></div></div>
+                            <div class="step-row final-q"><span class="step-num bg-blue-600">5</span> <div>How does Alice go to school? <span class="ko-sub">(어떻게 앨리스는 학교에 가니?)</span></div></div>
+                        </div>
+                        <div class="answer-box text-xs leading-relaxed">
+                            <p><strong>Answer:</strong> She goes to school by bus. ➔ <strong>By bus.</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: 의문대명사 vs 의문부사 -->
+        <section class="scroll-mt-24 space-y-8 text-black">
+            <div class="text-center">
+                <h3 class="text-3xl font-black text-gray-800 italic italic">⚖️ 의문사의 두 가지 얼굴</h3>
+                <p class="text-gray-500 font-bold italic mt-2 text-sm">어떤 정보를 대신 물어보느냐에 따라 성격이 달라요!</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 font-bold">
+                <div class="bg-white p-8 rounded-3xl shadow-lg border-t-8 border-orange-400">
+                    <h4 class="text-xl font-black text-orange-600 mb-4">1. 의문대명사 (Who, What)</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-6 italic">
+                        주인공(<strong>명사</strong>)을 대신 묻는 말이에요! <br>
+                        그래서 대답은 항상 <strong>이름, 신분, 종류</strong> 같은 명사가 나와요.
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-3xl shadow-lg border-t-8 border-teal-400">
+                    <h4 class="text-xl font-black text-teal-600 mb-4">2. 의문부사 (When, Where, Why, How)</h4>
+                    <p class="text-sm text-gray-600 leading-relaxed mb-6 italic">
+                        동사를 꾸미던 <strong>부사</strong>(장소, 시간, 방법, 이유)를 대신 묻는 말이에요! <br>
+                        그래서 대답은 <strong>~에, ~할 때, ~때문에</strong> 같은 부사 덩어리가 나와요.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: 의문사 연결 연구소 (QUIZ) -->
+        <section id="quiz-lab" class="scroll-mt-24 bg-white rounded-3xl p-8 shadow-xl border-4 border-orange-200 text-black">
+            <div id="quiz-container">
+                <div class="text-center mb-8">
+                    <h3 class="text-3xl font-black text-gray-800 mb-2 italic italic italic">🏆 의문사 연결 연구소</h3>
+                    <p class="text-gray-500 font-bold text-sm italic italic">상황에 맞는 의문사 왕관을 골라 질문을 완성하세요!</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-10">
+                    <div class="flex flex-col items-center">
+                        <div id="quiz-card" class="bg-orange-500 text-white p-10 rounded-3xl shadow-2xl transition-all duration-300 text-center min-w-[340px] cursor-pointer hover:scale-105" onclick="playQuizAudio()">
+                            <div id="quiz-icon" class="text-8xl mb-4">👦</div>
+                            <div id="quiz-ko-sentence" class="text-xl font-bold mb-4 text-orange-100 italic italic">"그 남자아이는 누구니?"</div>
+                            <div id="quiz-en-display" class="text-4xl font-black tracking-widest italic italic italic">___ is the boy?</div>
+                            <div class="mt-4 text-xs opacity-60 font-bold italic italic">클릭하면 대화의 소리가 나요 🔊</div>
+                        </div>
+                    </div>
+
+                    <div id="option-buttons" class="flex justify-center gap-2 flex-wrap">
+                        <!-- Shuffled Option Buttons -->
+                    </div>
+
+                    <div id="quiz-msg" class="text-center min-h-[120px]">
+                        <p id="quiz-feedback-main" class="font-black text-xl"></p>
+                        <p id="quiz-feedback-sub" class="text-sm text-gray-700 font-bold mt-2 italic italic italic"></p>
+                        <div id="quiz-answer-display" class="mt-4 p-3 bg-blue-50 rounded-xl border border-blue-100 hidden">
+                            <p class="text-blue-600 font-black text-sm italic"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="quiz-finished-view" class="hidden py-10 text-center space-y-6">
+                <div class="text-8xl">🥇</div>
+                <h3 class="text-4xl font-black text-teal-500 italic italic italic">의문사 마스터 완료 (100%)!</h3>
+                <p class="text-gray-500 font-bold italic">이제 육하원칙으로 어떤 정보든 정확히 묻고 답할 수 있습니다.</p>
+                <button onclick="resetLearning()" class="bg-orange-500 text-white px-8 py-4 rounded-2xl font-black shadow-lg hover:bg-orange-600 transition">다시 도전하기 🔄</button>
+            </div>
+        </section>
+
+        <!-- SECTION 5: SENTENCE PRACTICE -->
+        <section id="sentences" class="scroll-mt-24 mb-20 text-black">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl shadow-sm">📝</div>
+                <h3 class="text-2xl font-bold text-gray-800 italic italic italic">교재 문장 낭독 훈련 (20문장 대화)</h3>
+            </div>
+            <p class="text-sm text-gray-500 font-black italic mb-6 ml-12 italic italic italic">
+                "질문에 담긴 의문사의 의도를 생각하며 리듬감 있게 대화해보세요!"
+            </p>
+            <div id="sentenceList" class="grid gap-4">
+                <!-- JS Populated -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER: Standard Restored -->
+    <footer class="bg-gray-100 border-t border-gray-200 py-16 text-center text-black">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto">
+                <h3 class="text-2xl font-black text-gray-800 mb-2 italic">Tony's Speaking English Grammar</h3>
+                <p class="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span class="underline">어순 감각</span>에 있습니다.</p>
+                <div class="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                <p class="text-gray-500 text-sm leading-relaxed italic font-bold">
+                    Tony's Speaking English Grammar helps you master the natural sense of English word order.<br>
+                    <span class="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const quizSource = [
+            { id: 1, icon: '👦', ko: '그 남자아이는 누구니?', en: '___ is the boy?', options: ['Who', 'When'], ans: 'Who', reply: 'He is my brother.', why: '사람의 신분(누구)을 묻는 의문대명사 Who예요.' },
+            { id: 2, icon: '😢', ko: '샘은 왜 그렇게 슬프니?', en: '___ is Sam so sad?', options: ['Why', 'How'], ans: 'Why', reply: 'Because he lost his toy.', why: '이유를 묻는 Why! 대답은 Because로 시작해요.' },
+            { id: 3, icon: '🎂', ko: '네 생일은 언제니?', en: '___ is your birthday?', options: ['When', 'Where'], ans: 'When', reply: 'It is in October.', why: '시간(언제)을 물을 때는 When을 사용해요.' },
+            { id: 4, icon: '🏠', ko: '네 집은 어디니?', en: '___ is your house?', options: ['Where', 'Who'], ans: 'Where', reply: 'It is in Seoul.', why: '위치(어디)를 묻는 의문부사 Where입니다.' },
+            { id: 5, icon: '👵👴', ko: '네 조부모님은 어떻게 지내시니?', en: '___ are your grandparents?', options: ['How', 'What'], ans: 'How', reply: 'They are very well.', why: '상태나 안부를 묻는 의문부사 How예요.' },
+            { id: 6, icon: '📍', ko: '그녀는 어디에 사니?', en: '___ does she live?', options: ['Where', 'Why'], ans: 'Where', reply: 'She lives in Jeju.', why: '장소를 가리고 묻는 Where가 문장 맨 앞으로!' },
+            { id: 7, icon: '🎒', ko: '너는 무엇을 가지고 있니?', en: '___ do you have?', options: ['What', 'When'], ans: 'What', reply: 'I have a big bag.', why: '사물의 종류(무엇)를 대신하는 의문대명사 What!' },
+            { id: 8, icon: '🌅', ko: '그들은 언제 일어나니?', en: '___ do they get up?', options: ['When', 'How'], ans: 'When', reply: 'They get up at 7 o\'clock.', why: '시간 정보를 가리고 묻는 When입니다.' },
+            { id: 9, icon: '🏫', ko: '앨리스는 학교에 어떻게 가니?', en: '___ does Alice go to school?', options: ['How', 'Who'], ans: 'How', reply: 'She goes by bus.', why: '이동 수단(방법)을 묻는 의문부사 How입니다.' },
+            { id: 10, icon: '📞', ko: '산다라는 왜 그에게 전화하니?', en: '___ does Sandara call him?', options: ['Why', 'What'], ans: 'Why', reply: 'Because she needs help.', why: '동작의 이유를 묻는 Why입니다.' },
+            { id: 11, icon: '👩', ko: '그녀는 누구니?', en: '___ is she?', options: ['Who', 'Where'], ans: 'Who', reply: 'She is my teacher.', why: '사람의 신분을 묻는 Who를 쓰세요.' },
+            { id: 12, icon: '📦', ko: '저것은 무엇이니?', en: '___ is that?', options: ['What', 'When'], ans: 'What', reply: 'It is a present.', why: '사물의 정체를 묻고 있어요.' },
+            { id: 13, icon: '📝', ko: '그 시험은 언제니?', en: '___ is the test?', options: ['When', 'Why'], ans: 'When', reply: 'It is tomorrow.', why: '시간 정보를 묻는 When!' },
+            { id: 14, icon: '👋', ko: '너는 어떻게 지내니?', en: '___ are you?', options: ['How', 'Who'], ans: 'How', reply: 'I am fine, thanks.', why: '상태를 묻는 가장 친숙한 How예요.' },
+            { id: 15, icon: '😡', ko: '그들은 왜 화가 났니?', en: '___ are they angry?', options: ['Why', 'How'], ans: 'Why', reply: 'Because they are hungry.', why: '이유를 묻고 Because로 답해요.' },
+            { id: 16, icon: '🖍', ko: '그들의 크레용은 어디에 있니?', en: '___ are their crayons?', options: ['Where', 'What'], ans: 'Where', reply: 'They are in the box.', why: '위치를 묻는 의문사 Where!' },
+            { id: 17, icon: '🐼', ko: '판다는 어디에 사니?', en: '___ do pandas live?', options: ['Where', 'How'], ans: 'Where', reply: 'They live in the forest.', why: '장소를 묻는 Where!' },
+            { id: 18, icon: '🐒', ko: '그 원숭이는 무엇을 먹니?', en: '___ does the monkey eat?', options: ['What', 'Who'], ans: 'What', reply: 'It eats bananas.', why: '먹이의 종류(무엇)를 궁금해해요.' },
+            { id: 19, icon: '💘', ko: '그녀는 누구를 좋아하니?', en: '___ does she like?', options: ['Who', 'Where'], ans: 'Who', reply: 'She likes David.', why: '좋아하는 대상을 묻는 Who!' },
+            { id: 20, icon: '🎻', ko: '그 콘서트는 언제 시작하니?', en: '___ does the concert begin?', options: ['When', 'Why'], ans: 'When', reply: '시작 시간을 묻는 When!' }
+        ];
+
+        const sentenceData = [
+            { en: 'Who is the boy? (He is my brother.)', pro: '후 이즈 더 보이? (히 이즈 마이 브라더)', ko: '그 남자아이는 누구니? (그는 내 남동생이야.)' },
+            { en: 'Why is Sam so sad? (Because he lost his toy.)', pro: '와이 이즈 샘 쏘 새드? (비커즈 히 로스트 히즈 토이)', ko: '샘은 왜 그렇게 슬프니? (그는 장난감을 잃어버렸기 때문이야.)' },
+            { en: 'When is your birthday? (It is in October.)', pro: '웬 이즈 유어 벌쓰데이? (잇 이즈 인 악토버)', ko: '네 생일은 언제니? (10월에 있어.)' },
+            { en: 'Where is your house? (It is in Seoul.)', pro: '웨어 이즈 유어 하우스? (잇 이즈 인 서울)', ko: '네 집은 어디니? (서울에 있어.)' },
+            { en: 'How are your grandparents? (They are very well.)', pro: '하우 아 유어 그랜드페어런츠? (데이 아 베리 웰)', ko: '네 조부모님은 어떻게 지내시니? (그분들은 아주 잘 지내셔.)' },
+            { en: 'Where does she live? (She lives in Jeju.)', pro: '웨어 더즈 쉬 리브? (쉬 리브즈 인 제주)', ko: '그녀는 어디에 사니? (그녀는 제주도에 살아.)' },
+            { en: 'What do you have? (I have a big bag.)', pro: '왓 두 유 해브? (아이 해브 어 빅 백)', ko: '너는 무엇을 가지고 있니? (나는 큰 가방을 가지고 있어.)' },
+            { en: 'When do they get up? (They get up at 7 o\'clock.)', pro: '웬 두 데이 겟 업? (데이 겟 업 앳 세븐 어클락)', ko: '그들은 언제 일어나니? (그들은 7시에 일어나.)' },
+            { en: 'How does Alice go to school? (She goes by bus.)', pro: '하우 더즈 앨리스 고 투 스쿨? (쉬 고즈 바이 버스)', ko: '앨리스는 학교에 어떻게 가니? (그녀는 버스로 가.)' },
+            { en: 'Why does Sandara call him? (Because she needs help.)', pro: '와이 더즈 산다라 콜 힘? (비커즈 쉬 니즈 헬프)', ko: '산다라는 왜 그에게 전화하니? (도움이 필요하기 때문이야.)' },
+            { en: 'Who is she? (She is my teacher.)', pro: '후 이즈 쉬? (쉬 이즈 마이 티처)', ko: '그녀는 누구니? (그녀는 내 선생님이야.)' },
+            { en: 'What is that? (It is a present.)', pro: '왓 이즈 댓? (잇 이즈 어 프레전트)', ko: '저것은 무엇이니? (그것은 선물이야.)' },
+            { en: 'When is the test? (It is tomorrow.)', pro: '웬 이즈 더 테스트? (잇 이즈 투모로우)', ko: '그 시험은 언제니? (그것은 내일이야.)' },
+            { en: 'How are you? (I am fine, thanks.)', pro: '하우 아 유? (아이 엠 파인, 쌩스)', ko: '너는 어떻게 지내니? (난 잘 지내, 고마워.)' },
+            { en: 'Why are they angry? (Because they are hungry.)', pro: '와이 아 데이 앵그리? (비커즈 데이 아 헝그리)', ko: '그들은 왜 화가 났니? (그들이 배고프기 때문이야.)' },
+            { en: 'Where are their crayons? (They are in the box.)', pro: '웨어 아 데어 크레이용즈? (데이 아 인 더 박스)', ko: '그들의 크레용은 어디에 있니? (그것들은 상자 안에 있어.)' },
+            { en: 'Where do pandas live? (They live in the forest.)', pro: '웨어 두 판다즈 리브? (데이 리브 인 더 포레스트)', ko: '판다는 어디에 사니? (그것들은 숲속에 살아.)' },
+            { en: 'What does the monkey eat? (It eats bananas.)', pro: '왓 더즈 더 멍키 잇? (잇 잇츠 바나나즈)', ko: '그 원숭이는 무엇을 먹니? (그것은 바나나를 먹어.)' },
+            { en: 'Who does she like? (She likes David.)', pro: '후 더즈 쉬 라이크? (쉬 라이크스 데이비드)', ko: '그녀는 누구를 좋아하니? (그녀는 데이비드를 좋아해.)' },
+            { en: 'When does the concert begin? (It begins at 8.)', pro: '웬 더즈 더 콘서트 비긴? (잇 비긴즈 앳 에잇)', ko: '그 콘서트는 언제 시작하니? (그것은 8시에 시작해.)' }
+        ];
+
+        let currentQuizIndex = 0;
+        let learnedSet = new Set();
+        let myChart = null;
+        let quizQueue = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playQuizAudio() {
+            if (quizQueue[currentQuizIndex]) {
+                const q = quizQueue[currentQuizIndex];
+                speak(q.en.replace('___', q.ans) + ". " + q.reply);
+            }
+        }
+
+        function updateUI() {
+            const learned = learnedSet.size;
+            const total = quizSource.length;
+            const percentage = Math.round((learned / total) * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').innerText = percentage + '%';
+            if (myChart) {
+                myChart.data.datasets[0].data = [learned, total - learned];
+                myChart.update();
+            }
+        }
+
+        function nextQuiz() {
+            currentQuizIndex++;
+            updateUI();
+            if (currentQuizIndex >= quizQueue.length) {
+                setTimeout(() => {
+                    document.getElementById('quiz-container').classList.add('hidden');
+                    document.getElementById('quiz-finished-view').classList.remove('hidden');
+                }, 500);
+                return;
+            }
+            const q = quizQueue[currentQuizIndex];
+            document.getElementById('quiz-icon').innerText = q.icon;
+            document.getElementById('quiz-ko-sentence').innerText = `"${q.ko}"`;
+            document.getElementById('quiz-en-display').innerText = q.en;
+            document.getElementById('quiz-feedback-main').innerText = "";
+            document.getElementById('quiz-feedback-sub').innerText = "";
+            document.getElementById('quiz-answer-display').classList.add('hidden');
+
+            const optBox = document.getElementById('option-buttons');
+            optBox.innerHTML = "";
+            const options = shuffle(['Who', 'What', 'When', 'Where', 'Why', 'How']);
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "btn-quiz px-5 py-3 rounded-xl border-orange-200 bg-white hover:bg-orange-50 shadow-sm font-black text-black text-sm italic italic italic";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt);
+                optBox.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(ans) {
+            const q = quizQueue[currentQuizIndex];
+            const mainMsg = document.getElementById('quiz-feedback-main');
+            const subMsg = document.getElementById('quiz-feedback-sub');
+            const ansDisplay = document.getElementById('quiz-answer-display');
+            
+            if (ans.toLowerCase() === q.ans.toLowerCase()) {
+                mainMsg.innerHTML = `정답! ✨ ${q.en.replace('___', `<u>${ans}</u>`)}`;
+                mainMsg.className = "font-black text-xl text-teal-600";
+                subMsg.innerText = q.why;
+                ansDisplay.querySelector('p').innerText = "Full Answer: " + q.reply;
+                ansDisplay.classList.remove('hidden');
+                speak(q.en.replace('___', ans) + ". " + q.reply);
+                learnedSet.add(q.id); 
+                setTimeout(nextQuiz, 3500);
+            } else {
+                mainMsg.innerText = "다시 골라봐요! 🤔";
+                mainMsg.className = "font-black text-xl text-red-500";
+                subMsg.innerText = "육하원칙 중 어떤 정보를 묻고 있는지 생각해보세요.";
+            }
+        }
+
+        function renderSentences() {
+            const list = document.getElementById('sentenceList');
+            list.innerHTML = "";
+            sentenceData.forEach((s, i) => {
+                const div = document.createElement('div');
+                div.className = "bg-white p-5 rounded-2xl border border-orange-50 shadow-sm cursor-pointer hover:border-orange-400 transition";
+                div.onclick = () => { 
+                    speak(s.en.replace(/<[^>]*>/g, '')); 
+                    div.querySelector('.trans-box').classList.toggle('hidden'); 
+                };
+                div.innerHTML = `
+                    <div class="flex justify-between items-center text-black">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center text-[10px] font-black">${i+1}</span>
+                            <p class="text-xl font-black italic">${s.en}</p>
+                        </div>
+                        <p class="text-xs text-gray-400 font-bold italic">[${s.pro}]</p>
+                    </div>
+                    <div class="trans-box hidden mt-4 bg-orange-50 p-3 rounded-xl border border-orange-100">
+                        <p class="text-orange-700 font-bold text-sm">해석: ${s.ko}</p>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function resetLearning() {
+            learnedSet.clear();
+            currentQuizIndex = -1;
+            quizQueue = shuffle([...quizSource]);
+            updateUI();
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-finished-view').classList.add('hidden');
+            nextQuiz();
+        }
+
+        window.onload = () => {
+            renderSentences();
+            const canvas = document.getElementById('learningChart');
+            if (canvas) {
+                myChart = new Chart(canvas.getContext('2d'), {
+                    type: 'doughnut',
+                    data: { labels: ['완료', '남음'], datasets: [{ data: [0, 20], backgroundColor: ['#000000', '#E2E8F0'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '80%', plugins: { legend: { display: false } } }
+                });
+            }
+            resetLearning();
+        };
+    </script>
+</body>
+</html>
