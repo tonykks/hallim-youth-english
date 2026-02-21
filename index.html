@@ -6,12 +6,10 @@
 <meta name="description" content="한림청소년문화의집 방과후영어 - 초중등 영어 학습 포털">
 <meta name="author" content="Tony">
 
-<!-- 파비콘 설정 -->
 <link rel="icon" href="images/profile_icon.png" type="image/png">
 
 <title>한림청소년문화의집 방과후영어</title>
 
-<!-- Tailwind CSS & Fonts -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
@@ -35,7 +33,6 @@
 </script>
 
 <style>
-  /* === Color System === */
   :root{ 
     --brand-dark:#1f3556; 
     --brand:#2b5aa6; 
@@ -64,7 +61,6 @@
   .header-container {
     position: relative;
     height: 300px;
-    /* GitHub Raw URL 사용 */
     background-image: url('https://raw.githubusercontent.com/tonykks/hallim-youth-english/main/images/%EC%A0%84%EA%B2%BD%EC%82%AC%EC%A7%84.jpg');
     background-size: cover;
     background-position: center;
@@ -76,11 +72,10 @@
     text-align: center;
     color: white;
   }
-  /* 이미지 오버레이: 텍스트 가독성 강화 */
   .header-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45); 
+    background: rgba(0, 0, 0, 0.45);
     backdrop-filter: blur(2px);
     z-index: 1;
   }
@@ -90,15 +85,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* 수직 중앙 정렬 명시 */
+    justify-content: center;
     padding: 0 1rem;
     width: 100%;
-    height: 100%; /* 부모 높이 전체 사용 */
+    height: 100%;
   }
-
-  /* 메인 타이틀 스타일 강화 */
   .main-title {
-    font-size: 2.6rem; /* 폰트 사이즈 키움 */
+    font-size: 2.6rem;
     font-weight: 900;
     text-shadow: 2px 2px 12px rgba(0,0,0,0.9);
     margin: 0;
@@ -107,7 +100,7 @@
     letter-spacing: -0.02em;
   }
 
-  /* === Navigation === */
+  /* === Navigation (드롭다운 통일 버전) === */
   .navbar { background: var(--brand-dark); position: sticky; top: 0; z-index: 50; }
   .nav-btn {
     background: transparent;
@@ -115,18 +108,62 @@
     padding: 12px 18px;
     font-weight: 600;
     transition: all 0.2s;
-    border-radius: 6px;
+    border-radius: 8px;
     text-decoration: none;
     font-size: 1rem;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
   }
   .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
   .nav-btn.active { background: var(--brand); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+  .nav-item{ position:relative; }
+  .nav-btn .caret{ font-size:0.85rem; opacity:0.85; transform: translateY(1px); }
+
+  .dropdown-menu{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    top:100%;
+    margin-top:4px;
+    background:linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
+    border-radius:16px;
+    padding:14px;
+    box-shadow:0 12px 28px rgba(0,0,0,0.35);
+    display:none;
+    z-index:200;
+  }
+  .nav-item:hover .dropdown-menu,
+  .nav-item:focus-within .dropdown-menu{ display:flex; }
+
+  .dropdown-row{ display:flex; gap:16px; }
+
+  .dropdown-item{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px 20px;
+    border-radius:14px;
+    color:#fff;
+    text-decoration:none;
+    font-weight:800;
+    background:rgba(255,255,255,0.12);
+    min-width:120px;
+    font-size:1rem;
+    transition:all 0.2s ease;
+    white-space:nowrap;
+  }
+  .dropdown-item:hover{
+    background:rgba(255,255,255,0.28);
+    transform:translateY(-2px);
+  }
 
   /* === Welcome Section === */
   .welcome-container {
     text-align: center;
     padding: 3rem 1.5rem;
-    max-width: 1100px; /* 카드가 한 줄에 잘 들어가도록 너비 확장 */
+    max-width: 1100px;
     margin: 0 auto;
   }
   .welcome-title {
@@ -137,8 +174,7 @@
     word-break: keep-all;
   }
   @media (prefers-color-scheme: dark){ .welcome-title{ color: #e5e7eb; } }
-  
-  /* Bouncing Emoji Animation */
+
   .emoji-bounce {
     display: inline-block;
     font-size: 3.5rem;
@@ -154,11 +190,9 @@
     60% {transform: translateY(-10px);}
   }
 
-  /* === Selection Cards (Big Buttons) === */
   .card-grid {
     display: grid;
-    /* 데스크탑에서 3개를 한 줄에 강제 배치 (1fr 1fr 1fr) */
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
     margin-top: 3rem;
     padding: 0 1rem;
@@ -166,7 +200,7 @@
   .selection-card {
     background: var(--card-bg);
     border-radius: 20px;
-    padding: 1.5rem 1rem; /* 패딩 축소하여 크기 줄임 */
+    padding: 1.5rem 1rem;
     text-align: center;
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -176,7 +210,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* 상단 정렬 */
+    justify-content: flex-start;
     height: 100%;
   }
   .selection-card:hover {
@@ -185,11 +219,11 @@
     border-color: var(--brand);
   }
   .card-icon { 
-    font-size: 3rem; /* 아이콘 크기 축소 */
+    font-size: 3rem;
     margin-bottom: 1rem; 
   }
   .card-title { 
-    font-size: 1.35rem; /* 제목 크기 약간 축소 */
+    font-size: 1.35rem;
     font-weight: 700; 
     margin-bottom: 0.5rem; 
     color: var(--brand); 
@@ -198,108 +232,109 @@
     color: var(--muted); 
     font-size: 0.95rem; 
     line-height: 1.5;
-    word-break: keep-all; /* 단어 단위 줄바꿈 */
+    word-break: keep-all;
   }
 
-  /* === Mobile Tweaks === */
   @media (max-width: 768px) {
     .header-container { height: 260px; }
     .main-title { font-size: 2.0rem; }
     .nav-btn { padding: 10px 12px; font-size: 0.9rem; }
     .welcome-title { font-size: 1.4rem; }
-    /* 모바일에서는 세로로 쌓이되, 간격 조정 */
     .card-grid { grid-template-columns: 1fr; gap: 1.2rem; }
     .card-icon { font-size: 2.5rem; }
   }
 
   /* Modal */
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
-  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:400px; text-align:center; }
+  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:420px; text-align:center; }
 </style>
 </head>
 <body>
 
-  <!-- 1. Header Area -->
-  <header class="header-container">
-    <div class="header-overlay"></div>
-    <div class="header-content">
-      <!-- 수정: 프로필 아이콘과 서브 타이틀 삭제, H1만 중앙 배치 -->
-      <h1 class="main-title">한림청소년문화의집 방과후영어</h1>
-    </div>
-  </header>
+<header class="header-container">
+  <div class="header-overlay"></div>
+  <div class="header-content">
+    <h1 class="main-title">한림청소년문화의집 방과후영어</h1>
+  </div>
+</header>
 
-  <!-- 2. Navigation Bar -->
-  <nav class="navbar flex justify-center flex-wrap shadow-md">
-    <a href="index.html" class="nav-btn active">Home</a>
-    <a href="e.html" class="nav-btn">초등학생</a>
-    <a href="m.html" class="nav-btn">중학생</a>
-    <a href="g.html" class="nav-btn">문법사항</a>
-    <a href="#" class="nav-btn" id="contact-btn">Contact</a>
-  </nav>
+<!-- Navigation Bar (통일) -->
+<nav class="navbar flex justify-center flex-wrap shadow-md" aria-label="Main Navigation">
+  <a href="index.html" class="nav-btn active">Home</a>
 
-  <!-- 3. Main Welcome Content -->
-  <main class="welcome-container">
-    
-    <!-- Welcome Message & Animation -->
-    <div class="mb-8">
-      <div class="mb-6">
-        <span class="emoji-bounce">👋</span>
-        <span class="emoji-bounce">🏫</span>
-        <span class="emoji-bounce">✨</span>
+  <div class="nav-item">
+    <a href="e.html" class="nav-btn" aria-haspopup="true" aria-expanded="false">초등학생 <span class="caret">▾</span></a>
+    <div class="dropdown-menu" role="menu" aria-label="초등학생 메뉴">
+      <div class="dropdown-row">
+        <a class="dropdown-item" href="e-grammar.html" role="menuitem">초등문법</a>
+        <a class="dropdown-item" href="e.html" role="menuitem">연습문제</a>
       </div>
-      <h2 class="welcome-title">
-        한림청소년문화센터 방과후교실에<br>오신 것을 환영합니다!
-      </h2>
-      <p style="color:var(--muted); font-size:1.1rem;">
-        자신의 학습 단계에 맞는 과정을 선택하여<br>즐겁게 영어를 시작해보세요.
-      </p>
-    </div>
-
-    <hr style="border:0; height:1px; background:var(--muted); opacity:0.3; margin: 2rem auto; width: 60%;">
-
-    <!-- 4. Selection Cards (Main Navigation) -->
-    <div class="card-grid">
-      <!-- 초등학생 카드 -->
-      <a href="e.html" class="selection-card">
-        <div class="card-icon">🌱</div>
-        <h3 class="card-title">초등학생</h3>
-        <p class="card-desc">Grammar, ZAP! 입문1,2<br><span class="text-sm opacity-80">(기초 단어 및 표현)</span></p>
-      </a>
-
-      <!-- 중학생 카드 -->
-      <a href="m.html" class="selection-card">
-        <div class="card-icon">🌲</div>
-        <h3 class="card-title">중학생</h3>
-        <p class="card-desc">중학영어 1-A<br><span class="text-sm opacity-80">(교과서 핵심 단어)</span></p>
-      </a>
-
-      <!-- 문법사항 카드 -->
-      <a href="g.html" class="selection-card">
-        <div class="card-icon">📚</div>
-        <h3 class="card-title">문법사항</h3>
-        <p class="card-desc">Tony쌤의 영어 말하기를<br>위한 기초 문법 사항</p>
-      </a>
-    </div>
-
-  </main>
-
-  <!-- Contact Modal -->
-  <div id="contact-modal" class="modal" aria-hidden="true">
-    <div class="modal-content shadow-xl">
-      <h3 class="text-2xl font-bold mb-2">Contact Me</h3>
-      <p class="text-gray-500 mb-6">Tony (Retired Engineer & Educator)</p>
-      
-      <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
-        <p class="mb-2"><strong>📧 Email:</strong> smile21c@korea.com</p>
-        <p class="text-xs text-gray-500 mt-2">* 문의 사항은 이메일로 보내주시면 확인 후 답변 드리겠습니다.</p>
-      </div>
-      
-      <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">닫기 (Close)</button>
     </div>
   </div>
 
+  <div class="nav-item">
+    <a href="m.html" class="nav-btn" aria-haspopup="true" aria-expanded="false">중학생 <span class="caret">▾</span></a>
+    <div class="dropdown-menu" role="menu" aria-label="중학생 메뉴">
+      <div class="dropdown-row">
+        <a class="dropdown-item" href="m-grammar.html" role="menuitem">중등문법</a>
+        <a class="dropdown-item" href="m.html" role="menuitem">연습문제</a>
+      </div>
+    </div>
+  </div>
+
+  <a href="#" class="nav-btn" id="contact-btn">Contact</a>
+</nav>
+
+<main class="welcome-container">
+  <div class="mb-8">
+    <div class="mb-6">
+      <span class="emoji-bounce">👋</span>
+      <span class="emoji-bounce">🏫</span>
+      <span class="emoji-bounce">✨</span>
+    </div>
+    <h2 class="welcome-title">
+      한림청소년문화센터 방과후교실에<br>오신 것을 환영합니다!
+    </h2>
+    <p style="color:var(--muted); font-size:1.1rem;">
+      자신의 학습 단계에 맞는 과정을 선택하여<br>즐겁게 영어를 시작해보세요.
+    </p>
+  </div>
+
+  <hr style="border:0; height:1px; background:var(--muted); opacity:0.3; margin: 2rem auto; width: 60%;">
+
+  <div class="card-grid">
+    <a href="e.html" class="selection-card">
+      <div class="card-icon">🌱</div>
+      <h3 class="card-title">초등학생</h3>
+      <p class="card-desc">Grammar, ZAP! 입문1,2<br><span class="text-sm opacity-80">(기초 단어 및 표현)</span></p>
+    </a>
+
+    <a href="m.html" class="selection-card">
+      <div class="card-icon">🌲</div>
+      <h3 class="card-title">중학생</h3>
+      <p class="card-desc">중학영어 1-A<br><span class="text-sm opacity-80">(교과서 핵심 단어)</span></p>
+    </a>
+
+    <a href="e-grammar.html" class="selection-card">
+      <div class="card-icon">📚</div>
+      <h3 class="card-title">문법요약</h3>
+      <p class="card-desc">초등/중등 문법 요약을<br>빠르게 복습해요</p>
+    </a>
+  </div>
+</main>
+
+<!-- Contact Modal (간단 버전) -->
+<div id="contact-modal" class="modal" aria-hidden="true">
+  <div class="modal-content shadow-xl">
+    <h3 class="text-2xl font-bold mb-4">Contact Me</h3>
+    <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
+      <p class="mb-0"><strong>📧 Email:</strong> smile21c@korea.com</p>
+    </div>
+    <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">닫기 (Close)</button>
+  </div>
+</div>
+
 <script>
-  // 모달 제어 로직
   const contactBtn = document.getElementById('contact-btn');
   const contactModal = document.getElementById('contact-modal');
   const closeBtn = document.getElementById('close-modal-btn');
@@ -316,8 +351,7 @@
 
   if(contactBtn) contactBtn.addEventListener('click', openModal);
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
-  
-  // 배경 클릭 시 닫기
+
   window.addEventListener('click', (e) => {
     if (e.target === contactModal) closeModal();
   });

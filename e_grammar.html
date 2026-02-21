@@ -12,23 +12,11 @@
   :root{
     --brand-dark:#1f3556;
     --brand:#2b5aa6;
-    --brand-hover:#234b8b;
     --accent:#7b1fa2;
     --card-bg:#ffffff;
     --page-bg:#f0f4f8;
     --text:#111827;
     --muted:#6b7280;
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --card-bg:#1f2937;
-      --page-bg:#111827;
-      --text:#f3f4f6;
-      --muted:#9ca3af;
-      --brand-dark:#101e33;
-      --brand:#3b82f6;
-      --brand-hover:#2563eb;
-    }
   }
 
   body{ font-family:'Noto Sans KR','Inter',sans-serif; background:var(--page-bg); color:var(--text); }
@@ -41,7 +29,6 @@
     background-position: center;
     border-bottom: 4px solid var(--brand);
     display:flex;
-    flex-direction:column;
     align-items:center;
     justify-content:center;
     text-align:center;
@@ -54,25 +41,11 @@
     backdrop-filter: blur(2px);
     z-index:1;
   }
-  .header-content{
-    position:relative;
-    z-index:2;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:0 1rem;
-    width:100%;
-    height:100%;
-  }
+  .header-content{ position:relative; z-index:2; }
   .main-title{
     font-size:2.6rem;
     font-weight:900;
     text-shadow:2px 2px 12px rgba(0,0,0,0.9);
-    margin:0;
-    line-height:1.3;
-    word-break:keep-all;
-    letter-spacing:-0.02em;
   }
 
   .navbar{ background:var(--brand-dark); position:sticky; top:0; z-index:50; }
@@ -81,13 +54,56 @@
     color:rgba(255,255,255,0.9);
     padding:12px 18px;
     font-weight:600;
-    transition:all 0.2s;
-    border-radius:6px;
+    border-radius:8px;
     text-decoration:none;
     font-size:1rem;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
   }
-  .nav-btn:hover{ background:rgba(255,255,255,0.15); color:#fff; transform:translateY(-2px); }
-  .nav-btn.active{ background:var(--brand); color:#fff; box-shadow:0 2px 4px rgba(0,0,0,0.2); }
+  .nav-btn:hover{ background:rgba(255,255,255,0.14); color:#fff; }
+  .nav-btn.active{ background:var(--brand); color:#fff; }
+
+  /* 드롭다운 */
+  .nav-item{ position:relative; }
+  .nav-btn .caret{ font-size:0.85rem; opacity:0.85; transform: translateY(1px); }
+
+  .dropdown-menu{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    top:100%;
+    margin-top:4px;
+    background:linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
+    border-radius:16px;
+    padding:14px;
+    box-shadow:0 12px 28px rgba(0,0,0,0.35);
+    display:none;
+    z-index:200;
+  }
+  .nav-item:hover .dropdown-menu,
+  .nav-item:focus-within .dropdown-menu{ display:flex; }
+
+  .dropdown-row{ display:flex; gap:16px; }
+
+  .dropdown-item{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px 20px;
+    border-radius:14px;
+    color:#fff;
+    text-decoration:none;
+    font-weight:800;
+    background:rgba(255,255,255,0.12);
+    min-width:120px;
+    font-size:1rem;
+    transition:all 0.2s ease;
+  }
+  .dropdown-item:hover{
+    background:rgba(255,255,255,0.28);
+    transform:translateY(-2px);
+  }
 
   .content-container{
     max-width:900px;
@@ -101,9 +117,6 @@
     font-weight:800;
     color:var(--brand-dark);
     margin-bottom:0.5rem;
-  }
-  @media (prefers-color-scheme: dark){
-    .page-title{ color:var(--text); }
   }
 
   .page-desc{
@@ -120,8 +133,7 @@
 
   .quiz-btn{
     display:flex;
-    align-items:center; /* 수직 중앙 정렬 */
-    justify-content:space-between;
+    align-items:center;
     text-decoration:none;
     background:var(--card-bg);
     color:var(--text);
@@ -133,30 +145,9 @@
     transition:all 0.2s;
     font-size:1rem;
   }
-  .quiz-btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 15px rgba(43, 90, 166, 0.15);
-    border-color:var(--brand);
-    color:var(--brand);
-    background:var(--page-bg);
-  }
 
-  .quiz-btn .left{
-    display:flex;
-    align-items:center; /* 번호와 제목 밑줄 정렬 */
-    gap:10px;
-    min-width:0;
-    text-align:left;
-  }
+  .left{ display:flex; align-items:center; gap:12px; text-align:left; }
 
-  /* ✅ 긴 제목은 자동 줄바꿈(2줄 이상도 가능). keep-all로 한국어 단어 중간 잘림 방지 */
-  .quiz-btn .title{
-    display:block;
-    white-space:normal;
-    overflow-wrap:anywhere;
-    word-break:keep-all;
-    line-height:1.25;
-  }
   .badge{
     display:inline-flex;
     align-items:center;
@@ -166,35 +157,12 @@
     border-radius:10px;
     font-weight:900;
     font-size:0.95rem;
-    flex:0 0 auto;
-}
-
-/* 1과정 (1~10) */
-.badge.level1{
     background:rgba(43,90,166,0.12);
     color:var(--brand);
-}
-
-/* 2과정 (11~20) */
-.badge.level2{
-    background:rgba(123,31,162,0.12);
-    color:var(--accent);
-}
-  }
-  @media (prefers-color-scheme: dark){
-    .badge{ background:rgba(59,130,246,0.18); color:#93c5fd; }
-  }
-
-  @media (max-width:768px){
-    .header-container{ height:220px; }
-    .main-title{ font-size:1.8rem; }
-    .nav-btn{ padding:10px 12px; font-size:0.9rem; }
-    .quiz-list{ grid-template-columns:1fr; }
-    .content-container{ margin:2rem auto; }
   }
 
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
-  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:400px; text-align:center; }
+  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:420px; text-align:center; }
 </style>
 </head>
 
@@ -209,10 +177,27 @@
 
 <nav class="navbar flex justify-center flex-wrap shadow-md">
   <a href="index.html" class="nav-btn">Home</a>
-  <a href="e.html" class="nav-btn">초등학생</a>
-  <a href="m.html" class="nav-btn">중학생</a>
-  <a href="g.html" class="nav-btn">문법사항</a>
-  <a href="e-grammar.html" class="nav-btn active">초등 문법</a>
+
+  <div class="nav-item">
+    <a href="e.html" class="nav-btn active">초등학생 <span class="caret">▾</span></a>
+    <div class="dropdown-menu">
+      <div class="dropdown-row">
+        <a class="dropdown-item" href="e-grammar.html">초등문법</a>
+        <a class="dropdown-item" href="e.html">연습문제</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-item">
+    <a href="m.html" class="nav-btn">중학생 <span class="caret">▾</span></a>
+    <div class="dropdown-menu">
+      <div class="dropdown-row">
+        <a class="dropdown-item" href="m-grammar.html">중등문법</a>
+        <a class="dropdown-item" href="m.html">연습문제</a>
+      </div>
+    </div>
+  </div>
+
   <a href="#" class="nav-btn" id="contact-btn">Contact</a>
 </nav>
 
@@ -223,20 +208,15 @@
   <div class="quiz-list" id="lesson-links"></div>
 </main>
 
-<div id="contact-modal" class="modal" aria-hidden="true">
-  <div class="modal-content shadow-xl">
-    <h3 class="text-2xl font-bold mb-2">Contact Me</h3>
-    <p class="text-gray-500 mb-6">Tony (Retired Engineer & Educator)</p>
-    <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
-      <p class="mb-2"><strong>📧 Email:</strong> smile21c@korea.com</p>
-      <p class="text-xs text-gray-500 mt-2">* 문의 사항은 이메일로 보내주시면 확인 후 답변 드리겠습니다.</p>
-    </div>
-    <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">닫기 (Close)</button>
+<div id="contact-modal" class="modal">
+  <div class="modal-content">
+    <h3 class="text-2xl font-bold mb-4">Contact Me</h3>
+    <p><strong>📧 Email:</strong> smile21c@korea.com</p>
+    <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition mt-4">닫기 (Close)</button>
   </div>
 </div>
 
 <script>
-  // ✅ 레슨 제목(1~20) — 주인님이 주신 목차 기반
   const LESSON_TITLES = [
     "알파벳과 수 세기",
     "명사(1)",
@@ -257,7 +237,7 @@
     "현재 진행형",
     "현재 진행형의 부정문과 의문문",
     "조동사 can",
-    "명령문",
+    "명령문"
   ];
 
   const BASE = "https://tonykks.github.io/hallim-youth-english/contents/";
@@ -267,7 +247,6 @@
     const a = document.createElement("a");
     a.className = "quiz-btn";
     a.target = "_blank";
-    a.rel = "noopener noreferrer";
     a.href = `${BASE}lesson_${i}.html`;
 
     const left = document.createElement("span");
@@ -276,40 +255,29 @@
     const badge = document.createElement("span");
     badge.className = "badge";
     badge.textContent = i + "과";
-    badge.classList.add(i <= 10 ? "level1" : "level2");
 
     const title = document.createElement("span");
-    title.className = "title";
-    title.textContent = LESSON_TITLES[i - 1] || `Lesson ${i}`;
+    title.textContent = LESSON_TITLES[i - 1];
+
     left.appendChild(badge);
     left.appendChild(title);
-
-    // ✅ 화살표 제거 버전: 왼쪽(번호+제목)만 카드에 넣기
     a.appendChild(left);
-
     container.appendChild(a);
   }
 
-  // Contact 모달
   const contactBtn = document.getElementById('contact-btn');
   const contactModal = document.getElementById('contact-modal');
   const closeBtn = document.getElementById('close-modal-btn');
 
-  function openModal(e) {
+  contactBtn.addEventListener('click', function(e){
     e.preventDefault();
-    contactModal.style.display = 'flex';
-    contactModal.setAttribute('aria-hidden', 'false');
-  }
-  function closeModal() {
-    contactModal.style.display = 'none';
-    contactModal.setAttribute('aria-hidden', 'true');
-  }
-
-  if (contactBtn) contactBtn.addEventListener('click', openModal);
-  if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-  window.addEventListener('click', (e) => {
-    if (e.target === contactModal) closeModal();
+    contactModal.style.display='flex';
+  });
+  closeBtn.addEventListener('click', function(){
+    contactModal.style.display='none';
+  });
+  window.addEventListener('click', function(e){
+    if(e.target===contactModal) contactModal.style.display='none';
   });
 </script>
 

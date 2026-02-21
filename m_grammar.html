@@ -56,13 +56,63 @@
     color:rgba(255,255,255,0.9);
     padding:12px 18px;
     font-weight:600;
-    border-radius:6px;
+    border-radius:8px;
     text-decoration:none;
     font-size:1rem;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
   }
+  .nav-btn:hover{ background:rgba(255,255,255,0.14); color:#fff; }
   .nav-btn.active{ background:var(--brand); color:#fff; }
 
-  .content-container{
+  /* ✅ 드롭다운 */
+  .nav-item{ position:relative; }
+  .nav-btn .caret{ font-size:0.85rem; opacity:0.85; transform: translateY(1px); }
+
+  /* 2개 버튼이 옆으로 나오는 드롭다운(이미지처럼) */
+  .dropdown-menu{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    top:100%; /* 버튼 바로 아래 붙임 */
+    margin-top:4px;
+    background:linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
+    border-radius:16px;
+    padding:14px;
+    box-shadow:0 12px 28px rgba(0,0,0,0.35);
+    display:none;
+    z-index:200;
+  }
+  .nav-item:hover .dropdown-menu{ display:flex; }
+  .nav-item:focus-within .dropdown-menu{ display:flex; }
+
+  .dropdown-menu .dropdown-row{
+    display:flex;
+    gap:16px;
+  }
+
+  .dropdown-item{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px 20px;
+    border-radius:14px;
+    color:#fff;
+    text-decoration:none;
+    font-weight:800;
+    white-space:nowrap;
+    background:rgba(255,255,255,0.12);
+    min-width:120px;
+    font-size:1rem;
+    transition:all 0.2s ease;
+  }
+  .dropdown-item:hover{
+    background:rgba(255,255,255,0.28);
+    transform:translateY(-2px);
+  }
+
+  .nav-btn:focus{ outline:2px solid rgba(255,255,255,0.35); outline-offset:2px; }.content-container{
     max-width:900px;
     margin:3rem auto;
     padding:0 1.5rem;
@@ -150,13 +200,29 @@
   </div>
 </header>
 
-<nav class="navbar flex justify-center flex-wrap shadow-md">
+<nav class="navbar flex justify-center flex-wrap shadow-md" aria-label="Main Navigation">
   <a href="index.html" class="nav-btn">Home</a>
-  <a href="e.html" class="nav-btn">초등학생</a>
-  <a href="m.html" class="nav-btn">중학생</a>
-  <a href="g.html" class="nav-btn">문법사항</a>
-  <a href="m-grammar.html" class="nav-btn active">중등 문법</a>
-  <a href="#" class="nav-btn">Contact</a>
+
+  <div class="nav-item">
+    <a href="e.html" class="nav-btn" aria-haspopup="true" aria-expanded="false">초등학생 <span class="caret">▾</span></a>
+    <div class="dropdown-menu" role="menu" aria-label="초등학생 메뉴">
+      <div class="dropdown-row">
+        <a class="dropdown-item" href="e-grammar.html" role="menuitem">초등문법</a>
+        <a class="dropdown-item" href="e.html" role="menuitem">연습문제</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-item">
+    <a href="m.html" class="nav-btn active" aria-haspopup="true" aria-expanded="false">중학생 <span class="caret">▾</span></a>
+    <div class="dropdown-menu" role="menu" aria-label="중학생 메뉴">
+      <div class="dropdown-row">
+        <a class="dropdown-item" href="m-grammar.html" role="menuitem">중등문법</a>
+        <a class="dropdown-item" href="m.html" role="menuitem">연습문제</a>
+      </div>
+    </div>
+  </div>
+    <a href="#" class="nav-btn" id="contact-btn">Contact</a>
 </nav>
 
 <main class="content-container">
@@ -165,6 +231,23 @@
 
   <div class="quiz-list" id="lesson-links"></div>
 </main>
+
+<!-- ✅ Contact Modal (간단 버전) -->
+<div id="contact-modal" class="modal" aria-hidden="true">
+  <div class="modal-content shadow-xl">
+    <h3 class="text-2xl font-bold mb-4">Contact Me</h3>
+    <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
+      <p class="mb-0"><strong>📧 Email:</strong> smile21c@korea.com</p>
+    </div>
+    <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">닫기 (Close)</button>
+  </div>
+</div>
+
+<style>
+  /* ✅ 모달(기존과 동일 패턴) */
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
+  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:420px; text-align:center; }
+</style>
 
 <script>
   const LESSON_TITLES = [
@@ -202,6 +285,25 @@
     a.appendChild(left);
     container.appendChild(a);
   }
+
+  // ✅ Contact 모달 (문구 최소화)
+  const contactBtn = document.getElementById('contact-btn');
+  const contactModal = document.getElementById('contact-modal');
+  const closeBtn = document.getElementById('close-modal-btn');
+
+  function openModal(e){
+    e.preventDefault();
+    contactModal.style.display = 'flex';
+    contactModal.setAttribute('aria-hidden','false');
+  }
+  function closeModal(){
+    contactModal.style.display = 'none';
+    contactModal.setAttribute('aria-hidden','true');
+  }
+
+  if(contactBtn) contactBtn.addEventListener('click', openModal);
+  if(closeBtn) closeBtn.addEventListener('click', closeModal);
+  window.addEventListener('click', (e)=>{ if(e.target === contactModal) closeModal(); });
 </script>
 
 </body>
