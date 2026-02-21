@@ -69,18 +69,58 @@
     letter-spacing: -0.02em;
   }
 
-  /* Navigation Bar */
+  /* Navigation Bar (드롭다운 통일 버전) */
   .navbar { background: var(--brand-dark); position: sticky; top: 0; z-index: 50; }
   .nav-btn {
+    background: transparent;
     color: rgba(255,255,255,0.9);
     padding: 12px 18px;
     font-weight: 600;
     transition: all 0.2s;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
   }
   .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
   .nav-btn.active { background: var(--brand); color: #fff; }
+
+  .nav-item { position: relative; padding-bottom: 10px; } /* ✅ 마우스가 아래로 이동할 때 사라지는 현상 방지용 완충 공간 */
+  .nav-btn .caret { font-size: 0.85rem; opacity: 0.85; transform: translateY(1px); }
+
+  .dropdown-menu {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(100% - 6px); /* ✅ 버튼과 메뉴 사이 틈 제거 */
+    background: linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    display: none;
+    z-index: 200;
+  }
+  .nav-item:hover .dropdown-menu,
+  .nav-item:focus-within .dropdown-menu { display: flex; }
+
+  .dropdown-row { display: flex; gap: 16px; }
+  .dropdown-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 20px;
+    border-radius: 14px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 800;
+    background: rgba(255,255,255,0.12);
+    min-width: 120px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .dropdown-item:hover { background: rgba(255,255,255,0.28); transform: translateY(-2px); }
 
   /* Content Layout */
   .content-container {
@@ -165,12 +205,30 @@
     </div>
   </header>
 
-  <!-- Navigation -->
+  <!-- Navigation (수정본) -->
   <nav class="navbar flex justify-center flex-wrap shadow-lg">
     <a href="index.html" class="nav-btn">Home</a>
-    <a href="e.html" class="nav-btn">초등학생</a>
-    <a href="m.html" class="nav-btn active">중학생</a>
-    <a href="g.html" class="nav-btn">문법사항</a>
+
+    <div class="nav-item">
+      <a href="e.html" class="nav-btn">초등학생 <span class="caret">▾</span></a>
+      <div class="dropdown-menu">
+        <div class="dropdown-row">
+          <a class="dropdown-item" href="e_grammar.html">초등문법</a>
+          <a class="dropdown-item" href="e.html">연습문제</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <a href="m.html" class="nav-btn active">중학생 <span class="caret">▾</span></a>
+      <div class="dropdown-menu">
+        <div class="dropdown-row">
+          <a class="dropdown-item" href="m_grammar.html">중등문법</a>
+          <a class="dropdown-item" href="m.html">연습문제</a>
+        </div>
+      </div>
+    </div>
+
     <a href="#" class="nav-btn" id="contact-btn">Contact</a>
   </nav>
 
@@ -188,7 +246,6 @@
             <span>📚 단어 암기 퀴즈 센터</span>
         </h3>
         
-        <!-- 단어 퀴즈 랭킹 버튼 (섹션 상단 배치) -->
         <div class="mb-6">
             <a class="quiz-btn rank-btn-quiz w-full" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=leaderboard">
                 <span class="flex items-center">
@@ -200,7 +257,6 @@
         </div>
 
         <div class="quiz-list">
-            <!-- 1과 ~ 6과 (대명사 격변화) -->
             <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_1"><span>중등 단어장 (1과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
             <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_2"><span>중등 단어장 (2과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
             <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_3"><span>중등 단어장 (3과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
@@ -208,7 +264,6 @@
             <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_5"><span>중등 단어장 (5과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
             <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_6"><span>중등 단어장 (6과_대명사격변화)</span> <span class="text-xl opacity-40">➜</span></a>
             
-            <!-- 7과 ~ 12과 (문장 및 동사변화) -->
             <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_7"><span>중등 단어장 (1과_문장활용종합)</span> <span class="text-xl opacity-40">➜</span></a>
             <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_8"><span>중등 단어장 (2과_문장활용종합)</span> <span class="text-xl opacity-40">➜</span></a>
             <a class="quiz-btn" target="_blank" href="https://script.google.com/macros/s/AKfycby0PGmAEMCzJT8yQz21Gbz0GAryTsDR6cKlpkZc_EkboBOYZ8pu90DlpZE4pdVRx6Gk/exec?page=quiz_9"><span>중등 단어장 (3과_문장활용종합)</span> <span class="text-xl opacity-40">➜</span></a>
@@ -224,7 +279,6 @@
             <span>🎮 어순 감각 익히기 (Hangman)</span>
         </h3>
 
-        <!-- 행맨 실시간 랭킹 버튼 (게임 시작 전 바로 확인 가능하도록 배치) -->
         <div class="mb-6">
             <a class="quiz-btn rank-btn-hangman w-full" target="_blank" href="https://script.google.com/macros/s/AKfycbwvFdOsfSa2nQlXB1OReCDTN_wr2NXMswJyd61YHaO583vuSmpW-9KSFvMCFVOQULTXrw/exec?page=leaderboard">
                 <span class="flex items-center">
@@ -247,16 +301,12 @@
 
   </main>
 
-  <!-- Contact Modal -->
+  <!-- Contact Modal (단순 버전) -->
   <div id="contact-modal" class="modal" aria-hidden="true">
     <div class="modal-content">
-      <h3 class="text-2xl font-black text-brand-dark mb-2">Contact Tony</h3>
-      <p class="text-gray-500 mb-6 font-medium">Retired Engineer & Educator</p>
-      <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl mb-6 text-left border border-gray-100 dark:border-gray-700">
-        <p class="mb-3 flex items-center gap-2"><strong>📧 Email:</strong> <span class="text-blue-600 dark:text-blue-400">smile21c@korea.com</span></p>
-        <p class="text-xs text-muted leading-relaxed">* 학습 자료나 시스템 오류 문의 사항은 이메일로 보내주시면 확인 후 답변 드리겠습니다.</p>
-      </div>
-      <button id="close-modal-btn" class="w-full bg-brand text-white py-3 rounded-xl font-bold hover:bg-brand-hover transition shadow-lg">닫기 (Close)</button>
+      <h3 class="text-2xl font-black mb-4">Contact Me</h3>
+      <p><strong>📧 Email:</strong> <span>smile21c@korea.com</span></p>
+      <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition shadow-lg mt-6">닫기 (Close)</button>
     </div>
   </div>
 
@@ -270,7 +320,6 @@
       contactModal.style.display = 'flex';
       contactModal.setAttribute('aria-hidden', 'false');
     }
-    
     function closeModal() {
       contactModal.style.display = 'none';
       contactModal.setAttribute('aria-hidden', 'true');
@@ -278,7 +327,6 @@
 
     if(contactBtn) contactBtn.addEventListener('click', openModal);
     if(closeBtn) closeBtn.addEventListener('click', closeModal);
-    
     window.addEventListener('click', (e) => {
       if (e.target === contactModal) closeModal();
     });

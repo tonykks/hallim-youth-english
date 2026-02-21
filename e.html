@@ -40,7 +40,7 @@
     }
   }
 
-  body{ font-family:'Noto Sans KR', 'Inter', sans-serif; background:var(--page-bg); color:var(--text); }
+  body{ font-family:'Noto Sans KR', 'Inter', sans-serif; background:var(--page-bg); color:var(--text);  overflow-x: hidden; }
 
   .header-container {
     position: relative;
@@ -97,6 +97,53 @@
   }
   .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
   .nav-btn.active { background: var(--brand); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+
+  /* 드롭다운(초등/중등) - ✅ 마우스 내려갈 때 사라짐 방지 포함 */
+  .nav-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    border-radius:8px;
+  }
+  .nav-item{ position:relative; padding-bottom:10px; }
+  .nav-btn .caret{ font-size:0.85rem; opacity:0.85; transform: translateY(1px); }
+
+  .dropdown-menu{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    top: calc(100% - 6px); /* 버튼과 메뉴 사이 틈 제거 */
+    margin-top:0;
+    background:linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
+    border-radius:16px;
+    padding:14px;
+    box-shadow:0 12px 28px rgba(0,0,0,0.35);
+    display:none;
+    z-index:200;
+  }
+  .nav-item:hover .dropdown-menu,
+  .nav-item:focus-within .dropdown-menu{ display:flex; }
+
+  .dropdown-row{ display:flex; gap:16px; }
+
+  .dropdown-item{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px 20px;
+    border-radius:14px;
+    color:#fff;
+    text-decoration:none;
+    font-weight:800;
+    background:rgba(255,255,255,0.12);
+    min-width:120px;
+    transition:all 0.2s ease;
+    white-space:nowrap;
+  }
+  .dropdown-item:hover{
+    background:rgba(255,255,255,0.28);
+    transform:translateY(-2px);
+  }
 
   .content-container {
     max-width: 900px;
@@ -178,9 +225,27 @@
 
   <nav class="navbar flex justify-center flex-wrap shadow-md">
     <a href="index.html" class="nav-btn">Home</a>
-    <a href="e.html" class="nav-btn active">초등학생</a>
-    <a href="m.html" class="nav-btn">중학생</a>
-    <a href="g.html" class="nav-btn">문법사항</a>
+
+    <div class="nav-item">
+      <a href="e.html" class="nav-btn active">초등학생 <span class="caret">▾</span></a>
+      <div class="dropdown-menu">
+        <div class="dropdown-row">
+          <a class="dropdown-item" href="e_grammar.html">초등문법</a>
+          <a class="dropdown-item" href="e.html">연습문제</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-item">
+      <a href="m.html" class="nav-btn">중학생 <span class="caret">▾</span></a>
+      <div class="dropdown-menu">
+        <div class="dropdown-row">
+          <a class="dropdown-item" href="m_grammar.html">중등문법</a>
+          <a class="dropdown-item" href="m.html">연습문제</a>
+        </div>
+      </div>
+    </div>
+
     <a href="#" class="nav-btn" id="contact-btn">Contact</a>
   </nav>
 

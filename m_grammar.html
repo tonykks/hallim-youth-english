@@ -67,7 +67,7 @@
   .nav-btn.active{ background:var(--brand); color:#fff; }
 
   /* ✅ 드롭다운 */
-  .nav-item{ position:relative; }
+  .nav-item{ position:relative; padding-bottom:10px; }
   .nav-btn .caret{ font-size:0.85rem; opacity:0.85; transform: translateY(1px); }
 
   /* 2개 버튼이 옆으로 나오는 드롭다운(이미지처럼) */
@@ -75,8 +75,8 @@
     position:absolute;
     left:50%;
     transform:translateX(-50%);
-    top:100%; /* 버튼 바로 아래 붙임 */
-    margin-top:4px;
+    top: calc(100% - 6px);
+    margin-top: 0;
     background:linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
     border-radius:16px;
     padding:14px;
@@ -207,7 +207,7 @@
     <a href="e.html" class="nav-btn" aria-haspopup="true" aria-expanded="false">초등학생 <span class="caret">▾</span></a>
     <div class="dropdown-menu" role="menu" aria-label="초등학생 메뉴">
       <div class="dropdown-row">
-        <a class="dropdown-item" href="e_grammar.html" role="menuitem">초등문법</a>
+        <a class="dropdown-item" href="e-grammar.html" role="menuitem">초등문법</a>
         <a class="dropdown-item" href="e.html" role="menuitem">연습문제</a>
       </div>
     </div>
@@ -217,7 +217,7 @@
     <a href="m.html" class="nav-btn active" aria-haspopup="true" aria-expanded="false">중학생 <span class="caret">▾</span></a>
     <div class="dropdown-menu" role="menu" aria-label="중학생 메뉴">
       <div class="dropdown-row">
-        <a class="dropdown-item" href="m_grammar.html" role="menuitem">중등문법</a>
+        <a class="dropdown-item" href="m-grammar.html" role="menuitem">중등문법</a>
         <a class="dropdown-item" href="m.html" role="menuitem">연습문제</a>
       </div>
     </div>
@@ -308,4 +308,3 @@
 
 </body>
 </html>
-

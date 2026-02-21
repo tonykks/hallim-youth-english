@@ -118,15 +118,15 @@
   .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
   .nav-btn.active { background: var(--brand); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-  .nav-item{ position:relative; }
+  .nav-item{ position:relative; padding-bottom:10px; }
   .nav-btn .caret{ font-size:0.85rem; opacity:0.85; transform: translateY(1px); }
 
   .dropdown-menu{
     position:absolute;
     left:50%;
     transform:translateX(-50%);
-    top:100%;
-    margin-top:4px;
+    top: calc(100% - 6px);
+    margin-top: 0;
     background:linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
     border-radius:16px;
     padding:14px;
@@ -266,7 +266,7 @@
     <a href="e.html" class="nav-btn" aria-haspopup="true" aria-expanded="false">초등학생 <span class="caret">▾</span></a>
     <div class="dropdown-menu" role="menu" aria-label="초등학생 메뉴">
       <div class="dropdown-row">
-        <a class="dropdown-item" href="e_grammar.html" role="menuitem">초등문법</a>
+        <a class="dropdown-item" href="e-grammar.html" role="menuitem">초등문법</a>
         <a class="dropdown-item" href="e.html" role="menuitem">연습문제</a>
       </div>
     </div>
@@ -276,7 +276,7 @@
     <a href="m.html" class="nav-btn" aria-haspopup="true" aria-expanded="false">중학생 <span class="caret">▾</span></a>
     <div class="dropdown-menu" role="menu" aria-label="중학생 메뉴">
       <div class="dropdown-row">
-        <a class="dropdown-item" href="m_grammar.html" role="menuitem">중등문법</a>
+        <a class="dropdown-item" href="m-grammar.html" role="menuitem">중등문법</a>
         <a class="dropdown-item" href="m.html" role="menuitem">연습문제</a>
       </div>
     </div>
@@ -359,4 +359,3 @@
 
 </body>
 </html>
-
