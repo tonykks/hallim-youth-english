@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>중등 문법 - 한림청소년문화의집 방과후영어</title>
+
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --brand-dark:#1f3556;
+    --brand:#2b5aa6;
+    --accent:#7b1fa2;
+    --card-bg:#ffffff;
+    --page-bg:#f0f4f8;
+    --text:#111827;
+    --muted:#6b7280;
+  }
+  body{ font-family:'Noto Sans KR','Inter',sans-serif; background:var(--page-bg); color:var(--text); }
+
+  .header-container{
+    position: relative;
+    height: 300px;
+    background-image: url('https://raw.githubusercontent.com/tonykks/hallim-youth-english/main/images/%EC%A0%84%EA%B2%BD%EC%82%AC%EC%A7%84.jpg');
+    background-size: cover;
+    background-position: center;
+    border-bottom: 4px solid var(--brand);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    color:#fff;
+  }
+  .header-overlay{
+    position:absolute;
+    inset:0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(2px);
+    z-index:1;
+  }
+  .header-content{
+    position:relative;
+    z-index:2;
+  }
+  .main-title{
+    font-size:2.6rem;
+    font-weight:900;
+    text-shadow:2px 2px 12px rgba(0,0,0,0.9);
+  }
+
+  .navbar{ background:var(--brand-dark); position:sticky; top:0; z-index:50; }
+  .nav-btn{
+    background:transparent;
+    color:rgba(255,255,255,0.9);
+    padding:12px 18px;
+    font-weight:600;
+    border-radius:6px;
+    text-decoration:none;
+    font-size:1rem;
+  }
+  .nav-btn.active{ background:var(--brand); color:#fff; }
+
+  .content-container{
+    max-width:900px;
+    margin:3rem auto;
+    padding:0 1.5rem;
+    text-align:center;
+  }
+
+  .page-title{
+    font-size:2rem;
+    font-weight:800;
+    color:var(--brand-dark);
+    margin-bottom:0.5rem;
+  }
+
+  .page-desc{
+    color:var(--muted);
+    font-size:1.1rem;
+    margin-bottom:2rem;
+  }
+
+  .quiz-list{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap:16px;
+  }
+
+  .quiz-btn{
+    display:flex;
+    align-items:center;
+    text-decoration:none;
+    background:var(--card-bg);
+    color:var(--text);
+    padding:18px 24px;
+    border-radius:12px;
+    font-weight:700;
+    border:1px solid #e5e7eb;
+    box-shadow:0 4px 6px rgba(0,0,0,0.02);
+    transition:all 0.2s;
+    font-size:1rem;
+  }
+  .quiz-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 15px rgba(43, 90, 166, 0.15);
+    border-color:var(--brand);
+  }
+
+  .left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:left;
+  }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:48px;
+    height:36px;
+    border-radius:10px;
+    font-weight:900;
+    font-size:0.95rem;
+    background:rgba(43,90,166,0.12);
+    color:var(--brand);
+  }
+
+  .title{
+    display:block;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    line-height:1.3;
+  }
+
+  @media (max-width:768px){
+    .quiz-list{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+
+<body>
+
+<header class="header-container">
+  <div class="header-overlay"></div>
+  <div class="header-content">
+    <h1 class="main-title">한림청소년문화의집 방과후영어</h1>
+  </div>
+</header>
+
+<nav class="navbar flex justify-center flex-wrap shadow-md">
+  <a href="index.html" class="nav-btn">Home</a>
+  <a href="e.html" class="nav-btn">초등학생</a>
+  <a href="m.html" class="nav-btn">중학생</a>
+  <a href="g.html" class="nav-btn">문법사항</a>
+  <a href="m-grammar.html" class="nav-btn active">중등 문법</a>
+  <a href="#" class="nav-btn">Contact</a>
+</nav>
+
+<main class="content-container">
+  <h2 class="page-title">중등 문법 (Middle School Grammar)</h2>
+  <p class="page-desc">CHECK CHECK 중학영어 1-A</p>
+
+  <div class="quiz-list" id="lesson-links"></div>
+</main>
+
+<script>
+  const LESSON_TITLES = [
+    "They Are Students.",
+    "She Likes Apples.",
+    "Mike Is a Doctor.",
+    "What Is Your Hobby?",
+    "I Was Tired Yesterday.",
+    "He Can Speak English."
+  ];
+
+  const BASE = "https://tonykks.github.io/hallim-youth-english/contents/";
+  const container = document.getElementById("lesson-links");
+
+  for (let i = 1; i <= 6; i++) {
+    const a = document.createElement("a");
+    a.className = "quiz-btn";
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.href = `${BASE}lesson_m${i}.html`;
+
+    const left = document.createElement("span");
+    left.className = "left";
+
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = i + "과";
+
+    const title = document.createElement("span");
+    title.className = "title";
+    title.textContent = LESSON_TITLES[i - 1];
+
+    left.appendChild(badge);
+    left.appendChild(title);
+    a.appendChild(left);
+    container.appendChild(a);
+  }
+</script>
+
+</body>
+</html>
