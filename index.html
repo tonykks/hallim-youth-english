@@ -42,6 +42,8 @@
     --page-bg:#f0f4f8; 
     --text:#111827; 
     --muted:#6b7280; 
+    --elementary-bg: #eef2ff;
+    --middle-bg: #f5f3ff;
   }
   @media (prefers-color-scheme: dark){
     :root{ 
@@ -52,6 +54,8 @@
       --brand-dark:#101e33; 
       --brand:#3b82f6; 
       --brand-hover:#2563eb; 
+      --elementary-bg: #1e293b;
+      --middle-bg: #2e1065;
     }
   }
 
@@ -100,7 +104,7 @@
     letter-spacing: -0.02em;
   }
 
-  /* === Navigation (드롭다운 통일 버전) === */
+  /* === Navigation (원래 상태로 복구) === */
   .navbar { background: var(--brand-dark); position: sticky; top: 0; z-index: 50; }
   .nav-btn {
     background: transparent;
@@ -118,14 +122,14 @@
   .nav-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateY(-2px); }
   .nav-btn.active { background: var(--brand); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-  .nav-item{ position:relative; padding-bottom:10px; }
+  .nav-item{ position:relative; padding-bottom:0px; }
   .nav-btn .caret{ font-size:0.85rem; opacity:0.85; transform: translateY(1px); }
 
   .dropdown-menu{
     position:absolute;
     left:50%;
     transform:translateX(-50%);
-    top: calc(100% - 6px);
+    top: 100%;
     margin-top: 0;
     background:linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
     border-radius:16px;
@@ -159,89 +163,63 @@
     transform:translateY(-2px);
   }
 
-  /* === Welcome Section === */
-  .welcome-container {
-    text-align: center;
-    padding: 3rem 1.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
+  /* === Main Sections Grouping === */
+  .section-group {
+    border-radius: 24px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
   }
-  .welcome-title {
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--brand-dark);
-    margin-bottom: 1.5rem;
-    word-break: keep-all;
-  }
-  @media (prefers-color-scheme: dark){ .welcome-title{ color: #e5e7eb; } }
+  .section-elementary { background: var(--elementary-bg); border: 2px solid rgba(59, 130, 246, 0.2); }
+  .section-middle { background: var(--middle-bg); border: 2px solid rgba(123, 31, 162, 0.2); }
 
-  .emoji-bounce {
+  .section-label {
     display: inline-block;
-    font-size: 3.5rem;
-    margin: 0 0.5rem;
-    animation: bounce 2s infinite;
+    padding: 4px 16px;
+    border-radius: 99px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
-  .emoji-bounce:nth-child(2) { animation-delay: 0.2s; }
-  .emoji-bounce:nth-child(3) { animation-delay: 0.4s; }
+  .label-elementary { background: #3b82f6; color: white; }
+  .label-middle { background: #7b1fa2; color: white; }
 
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-    40% {transform: translateY(-20px);}
-    60% {transform: translateY(-10px);}
-  }
-
-  .card-grid {
+  .card-grid-custom {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    margin-top: 3rem;
-    padding: 0 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
   }
+
   .selection-card {
     background: var(--card-bg);
-    border-radius: 20px;
+    border-radius: 16px;
     padding: 1.5rem 1rem;
     text-align: center;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
     border: 1px solid rgba(0,0,0,0.05);
     text-decoration: none;
     color: var(--text);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    height: 100%;
   }
   .selection-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.2);
     border-color: var(--brand);
   }
-  .card-icon { 
-    font-size: 3rem;
-    margin-bottom: 1rem; 
-  }
-  .card-title { 
-    font-size: 1.35rem;
-    font-weight: 700; 
-    margin-bottom: 0.5rem; 
-    color: var(--brand); 
-  }
-  .card-desc { 
-    color: var(--muted); 
-    font-size: 0.95rem; 
-    line-height: 1.5;
-    word-break: keep-all;
-  }
+  .card-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .card-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--brand); }
+  .card-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.4; word-break: keep-all; }
 
   @media (max-width: 768px) {
-    .header-container { height: 260px; }
-    .main-title { font-size: 2.0rem; }
-    .nav-btn { padding: 10px 12px; font-size: 0.9rem; }
-    .welcome-title { font-size: 1.4rem; }
-    .card-grid { grid-template-columns: 1fr; gap: 1.2rem; }
-    .card-icon { font-size: 2.5rem; }
+    .header-container { height: 220px; }
+    .main-title { font-size: 1.8rem; }
+    .card-grid-custom { grid-template-columns: 1fr; }
+    .section-group { padding: 1.25rem; }
   }
 
   /* Modal */
@@ -258,7 +236,7 @@
   </div>
 </header>
 
-<!-- Navigation Bar (통일) -->
+<!-- Navigation Bar (원래 상태 복구) -->
 <nav class="navbar flex justify-center flex-wrap shadow-md" aria-label="Main Navigation">
   <a href="index.html" class="nav-btn active">Home</a>
 
@@ -285,50 +263,55 @@
   <a href="#" class="nav-btn" id="contact-btn">Contact</a>
 </nav>
 
-<main class="welcome-container">
-  <div class="mb-8">
-    <div class="mb-6">
-      <span class="emoji-bounce">👋</span>
-      <span class="emoji-bounce">🏫</span>
-      <span class="emoji-bounce">✨</span>
-    </div>
-    <h2 class="welcome-title">
-      한림청소년문화센터 방과후교실에<br>오신 것을 환영합니다!
+<main class="max-w-4xl mx-auto px-4 py-12">
+  <div class="text-center mb-12">
+    <div class="text-4xl mb-4">🏫 ✨ 📖</div>
+    <h2 class="text-2xl md:text-3xl font-extrabold mb-4" style="word-break: keep-all;">
+      단계별 학습 과정을 선택하세요
     </h2>
-    <p style="color:var(--muted); font-size:1.1rem;">
-      자신의 학습 단계에 맞는 과정을 선택하여<br>즐겁게 영어를 시작해보세요.
-    </p>
+    <p class="text-gray-500">본인에게 필요한 학습 메뉴를 클릭하여 공부를 시작해 보세요.</p>
   </div>
 
-  <hr style="border:0; height:1px; background:var(--muted); opacity:0.3; margin: 2rem auto; width: 60%;">
+  <!-- 초등부 섹션 -->
+  <section class="section-group section-elementary">
+    <span class="section-label label-elementary">Elementary School</span>
+    <div class="card-grid-custom">
+      <a href="e_grammar.html" class="selection-card">
+        <div class="card-icon">📚</div>
+        <h3 class="card-title">초등문법</h3>
+        <p class="card-desc">기초 영문법의 핵심 내용을<br>쉽고 재미있게 정리합니다.</p>
+      </a>
+      <a href="e.html" class="selection-card">
+        <div class="card-icon">✍️</div>
+        <h3 class="card-title">초등연습문제</h3>
+        <p class="card-desc">Grammar ZAP! 입문 1,2 기반<br>다양한 실전 문제를 풀어보세요.</p>
+      </a>
+    </div>
+  </section>
 
-  <div class="card-grid">
-    <a href="e.html" class="selection-card">
-      <div class="card-icon">🌱</div>
-      <h3 class="card-title">초등학생</h3>
-      <p class="card-desc">Grammar, ZAP! 입문1,2<br><span class="text-sm opacity-80">(기초 단어 및 표현)</span></p>
-    </a>
-
-    <a href="m.html" class="selection-card">
-      <div class="card-icon">🌲</div>
-      <h3 class="card-title">중학생</h3>
-      <p class="card-desc">중학영어 1-A<br><span class="text-sm opacity-80">(교과서 핵심 단어)</span></p>
-    </a>
-
-    <a href="e-grammar.html" class="selection-card">
-      <div class="card-icon">📚</div>
-      <h3 class="card-title">문법요약</h3>
-      <p class="card-desc">초등/중등 문법 요약을<br>빠르게 복습해요</p>
-    </a>
-  </div>
+  <!-- 중등부 섹션 -->
+  <section class="section-group section-middle">
+    <span class="section-label label-middle">Middle School</span>
+    <div class="card-grid-custom">
+      <a href="m_grammar.html" class="selection-card">
+        <div class="card-icon">📖</div>
+        <h3 class="card-title">중등문법</h3>
+        <p class="card-desc">중학교 교과 과정에 맞춘<br>필수 영문법 핵심 요약입니다.</p>
+      </a>
+      <a href="m.html" class="selection-card">
+        <div class="card-icon">📝</div>
+        <h3 class="card-title">중등연습문제</h3>
+        <p class="card-desc">중학영어 1-A 기반<br>교과서 핵심 단어와 문장 연습.</p>
+      </a>
+    </div>
+  </section>
 </main>
 
-<!-- Contact Modal (간단 버전) -->
-<div id="contact-modal" class="modal" aria-hidden="true">
+<div id="contact-modal" class="modal">
   <div class="modal-content shadow-xl">
     <h3 class="text-2xl font-bold mb-4">Contact Me</h3>
     <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
-      <p class="mb-0"><strong>📧 Email:</strong> smile21c@korea.com</p>
+      <p class="mb-0 text-gray-800"><strong>📧 Email:</strong> smile21c@korea.com</p>
     </div>
     <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">닫기 (Close)</button>
   </div>
@@ -342,21 +325,15 @@
   function openModal(e) {
     e.preventDefault();
     contactModal.style.display = 'flex';
-    contactModal.setAttribute('aria-hidden', 'false');
   }
   function closeModal() {
     contactModal.style.display = 'none';
-    contactModal.setAttribute('aria-hidden', 'true');
   }
 
   if(contactBtn) contactBtn.addEventListener('click', openModal);
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
-
-  window.addEventListener('click', (e) => {
-    if (e.target === contactModal) closeModal();
-  });
+  window.addEventListener('click', (e) => { if (e.target === contactModal) closeModal(); });
 </script>
 
 </body>
 </html>
-
