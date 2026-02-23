@@ -10,15 +10,28 @@
 
 <style>
   :root{
-    --brand-dark:#1f3556;
+    --brand-dark:#111b2d;
     --brand:#2b5aa6;
+    --brand-hover:#3b71c6;
     --accent:#7b1fa2;
     --card-bg:#ffffff;
     --page-bg:#f0f4f8;
     --text:#111827;
     --muted:#6b7280;
   }
-  body{ font-family:'Noto Sans KR','Inter',sans-serif; background:var(--page-bg); color:var(--text); }
+  @media (prefers-color-scheme: dark){
+    :root{ 
+      --card-bg:#1f2937; 
+      --page-bg:#111827; 
+      --text:#f3f4f6; 
+      --muted:#9ca3af;
+      --brand-dark:#0a121e; 
+      --brand:#3b82f6; 
+      --brand-hover:#60a5fa; 
+    }
+  }
+
+  body{ font-family:'Noto Sans KR','Inter',sans-serif; background:var(--page-bg); color:var(--text); overflow-x: hidden; }
 
   .header-container{
     position: relative;
@@ -40,79 +53,101 @@
     backdrop-filter: blur(2px);
     z-index:1;
   }
-  .header-content{
-    position:relative;
-    z-index:2;
-  }
+  .header-content{ position:relative; z-index:2; width: 100%; padding: 0 1rem; }
   .main-title{
     font-size:2.6rem;
     font-weight:900;
     text-shadow:2px 2px 12px rgba(0,0,0,0.9);
+    margin: 0;
+    line-height: 1.3;
+    word-break: keep-all;
   }
 
-  .navbar{ background:var(--brand-dark); position:sticky; top:0; z-index:50; }
-  .nav-btn{
-    background:transparent;
-    color:rgba(255,255,255,0.9);
-    padding:12px 18px;
-    font-weight:600;
-    border-radius:8px;
-    text-decoration:none;
-    font-size:1rem;
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
+  /* === Navigation (index.html 최신 UI 이식) === */
+  .navbar { background: var(--brand-dark); position: sticky; top: 0; z-index: 100; padding: 12px 0; }
+  
+  .nav-inner {
+    max-width: 480px; 
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px; 
+    width: 100%;
+    padding: 0 4px;
   }
-  .nav-btn:hover{ background:rgba(255,255,255,0.14); color:#fff; }
-  .nav-btn.active{ background:var(--brand); color:#fff; }
 
-  /* ✅ 드롭다운 */
-  .nav-item{ position:relative; padding-bottom:10px; }
-  .nav-btn .caret{ font-size:0.85rem; opacity:0.85; transform: translateY(1px); }
+  .nav-item { flex: 1; position: relative; display: flex; justify-content: center; }
 
-  /* 2개 버튼이 옆으로 나오는 드롭다운(이미지처럼) */
-  .dropdown-menu{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    top: calc(100% - 6px);
+  .nav-btn {
+    width: 100%;
+    background: var(--brand); /* 모든 버튼 색상 통일 */
+    color: #fff;
+    padding: 10px 0;
+    font-weight: 700;
+    transition: all 0.2s;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .nav-btn:hover { background: var(--brand-hover); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+  
+  /* 현재 중등 문법 페이지이므로 '중 학 생' 활성화 */
+  .nav-btn.active { background: var(--brand); opacity: 0.9; border: 1px solid rgba(255,255,255,0.3); }
+
+  .nav-btn .caret{ font-size:0.7rem; opacity:0.8; transform: translateY(1px); }
+
+  /* 드롭다운 메뉴: 공백 제거 및 연결성 강화 */
+  .dropdown-menu {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 100%; 
+    background: var(--brand-dark);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    display: none;
+    z-index: 200;
+    border: 1px solid rgba(255,255,255,0.1);
+    flex-direction: row;
+    gap: 10px;
     margin-top: 0;
-    background:linear-gradient(180deg,#3b6cc2 0%, #2b5aa6 100%);
-    border-radius:16px;
-    padding:14px;
-    box-shadow:0 12px 28px rgba(0,0,0,0.35);
-    display:none;
-    z-index:200;
   }
-  .nav-item:hover .dropdown-menu{ display:flex; }
-  .nav-item:focus-within .dropdown-menu{ display:flex; }
+  .nav-item::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 10px; 
+  }
+  .nav-item:hover .dropdown-menu { display: flex; }
 
-  .dropdown-menu .dropdown-row{
-    display:flex;
-    gap:16px;
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 8px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    background: var(--brand);
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
   }
+  .dropdown-item:hover { background: var(--brand-hover); transform: translateY(-1px); }
 
-  .dropdown-item{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:14px 20px;
-    border-radius:14px;
-    color:#fff;
-    text-decoration:none;
-    font-weight:800;
-    white-space:nowrap;
-    background:rgba(255,255,255,0.12);
-    min-width:120px;
-    font-size:1rem;
-    transition:all 0.2s ease;
-  }
-  .dropdown-item:hover{
-    background:rgba(255,255,255,0.28);
-    transform:translateY(-2px);
-  }
-
-  .nav-btn:focus{ outline:2px solid rgba(255,255,255,0.35); outline-offset:2px; }.content-container{
+  /* === Main Content Styles (기존 보존) === */
+  .content-container{
     max-width:900px;
     margin:3rem auto;
     padding:0 1.5rem;
@@ -125,6 +160,7 @@
     color:var(--brand-dark);
     margin-bottom:0.5rem;
   }
+  @media (prefers-color-scheme: dark){ .page-title { color: var(--text); } }
 
   .page-desc{
     color:var(--muted);
@@ -156,14 +192,10 @@
     transform:translateY(-3px);
     box-shadow:0 8px 15px rgba(43, 90, 166, 0.15);
     border-color:var(--brand);
+    color: var(--brand);
   }
 
-  .left{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    text-align:left;
-  }
+  .left{ display:flex; align-items:center; gap:12px; text-align:left; }
 
   .badge{
     display:inline-flex;
@@ -178,16 +210,18 @@
     color:var(--brand);
   }
 
-  .title{
-    display:block;
-    white-space:normal;
-    overflow-wrap:anywhere;
-    line-height:1.3;
+  .title{ display:block; white-space:normal; overflow-wrap:anywhere; line-height:1.3; }
+
+  @media (max-width: 768px) {
+    .header-container { height: 220px; }
+    .main-title { font-size: 1.8rem; }
+    .nav-inner { flex-wrap: wrap; max-width: 100%; gap: 8px; padding: 0 10px; }
+    .nav-item { width: calc(50% - 8px); }
+    .dropdown-menu { flex-direction: column; min-width: 140px; }
   }
 
-  @media (max-width:768px){
-    .quiz-list{ grid-template-columns:1fr; }
-  }
+  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
+  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:420px; text-align:center; }
 </style>
 </head>
 
@@ -200,29 +234,33 @@
   </div>
 </header>
 
-<nav class="navbar flex justify-center flex-wrap shadow-md" aria-label="Main Navigation">
-  <a href="index.html" class="nav-btn">Home</a>
+<nav class="navbar shadow-lg" aria-label="Main Navigation">
+  <div class="nav-inner">
+    <div class="nav-item">
+      <a href="index.html" class="nav-btn">Home</a>
+    </div>
 
-  <div class="nav-item">
-    <a href="e.html" class="nav-btn" aria-haspopup="true" aria-expanded="false">초등학생 <span class="caret">▾</span></a>
-    <div class="dropdown-menu" role="menu" aria-label="초등학생 메뉴">
-      <div class="dropdown-row">
-        <a class="dropdown-item" href="e_grammar.html" role="menuitem">초등문법</a>
-        <a class="dropdown-item" href="e.html" role="menuitem">연습문제</a>
+    <div class="nav-item">
+      <a href="e.html" class="nav-btn">초등학생 <span class="caret">▼</span></a>
+      <div class="dropdown-menu">
+          <a class="dropdown-item" href="e_grammar.html">초등문법</a>
+          <a class="dropdown-item" href="e.html">연습문제</a>
       </div>
     </div>
-  </div>
 
-  <div class="nav-item">
-    <a href="m.html" class="nav-btn active" aria-haspopup="true" aria-expanded="false">중학생 <span class="caret">▾</span></a>
-    <div class="dropdown-menu" role="menu" aria-label="중학생 메뉴">
-      <div class="dropdown-row">
-        <a class="dropdown-item" href="m_grammar.html" role="menuitem">중등문법</a>
-        <a class="dropdown-item" href="m.html" role="menuitem">연습문제</a>
+    <div class="nav-item">
+      <!-- 중등 문법 페이지이므로 중 학 생 active 적용 -->
+      <a href="m.html" class="nav-btn active">중 학 생 <span class="caret">▼</span></a>
+      <div class="dropdown-menu">
+          <a class="dropdown-item" href="m_grammar.html">중등문법</a>
+          <a class="dropdown-item" href="m.html">연습문제</a>
       </div>
     </div>
+
+    <div class="nav-item">
+      <a href="#" class="nav-btn" id="contact-btn">Contact</a>
+    </div>
   </div>
-    <a href="#" class="nav-btn" id="contact-btn">Contact</a>
 </nav>
 
 <main class="content-container">
@@ -232,22 +270,15 @@
   <div class="quiz-list" id="lesson-links"></div>
 </main>
 
-<!-- ✅ Contact Modal (간단 버전) -->
 <div id="contact-modal" class="modal" aria-hidden="true">
   <div class="modal-content shadow-xl">
     <h3 class="text-2xl font-bold mb-4">Contact Me</h3>
-    <div class="bg-gray-100 p-4 rounded-lg mb-6 text-left">
-      <p class="mb-0"><strong>📧 Email:</strong> smile21c@korea.com</p>
+    <div class="bg-gray-100 p-4 rounded-xl mb-6 text-left">
+      <p class="mb-0 text-gray-800"><strong>📧 Email:</strong> smile21c@korea.com</p>
     </div>
     <button id="close-modal-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">닫기 (Close)</button>
   </div>
 </div>
-
-<style>
-  /* ✅ 모달(기존과 동일 패턴) */
-  .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
-  .modal-content{ background:var(--card-bg); padding:2rem; border-radius:1rem; width:90%; max-width:420px; text-align:center; }
-</style>
 
 <script>
   const LESSON_TITLES = [
@@ -262,6 +293,7 @@
   const BASE = "https://tonykks.github.io/hallim-youth-english/contents/";
   const container = document.getElementById("lesson-links");
 
+  // 기존 문법 리스트 생성 로직 유지
   for (let i = 1; i <= 6; i++) {
     const a = document.createElement("a");
     a.className = "quiz-btn";
@@ -286,7 +318,6 @@
     container.appendChild(a);
   }
 
-  // ✅ Contact 모달 (문구 최소화)
   const contactBtn = document.getElementById('contact-btn');
   const contactModal = document.getElementById('contact-modal');
   const closeBtn = document.getElementById('close-modal-btn');
@@ -308,4 +339,3 @@
 
 </body>
 </html>
-
