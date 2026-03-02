@@ -115,7 +115,7 @@
 
   .nav-btn {
     width: 100%;
-    background: var(--brand); /* 모든 버튼 색상을 Home과 동일하게 통일 */
+    background: var(--brand); 
     color: #fff;
     padding: 10px 0;
     font-weight: 700;
@@ -132,18 +132,15 @@
   }
   
   .nav-btn:hover { background: var(--brand-hover); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-  
-  /* 현재 페이지(Home)는 약간의 효과 차이를 두어 구분 가능하게 함 */
   .nav-btn.active { background: var(--brand); opacity: 0.9; border: 1px solid rgba(255,255,255,0.3); }
 
   .nav-btn .caret{ font-size:0.7rem; opacity:0.8; transform: translateY(1px); }
 
-  /* 드롭다운 메뉴: 공백(Gap) 제거를 위해 top: 100% 설정 */
   .dropdown-menu {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: 100%; /* 버튼 바로 아래 밀착 */
+    top: 100%; 
     background: var(--brand-dark);
     border-radius: 12px;
     padding: 12px;
@@ -153,16 +150,15 @@
     border: 1px solid rgba(255,255,255,0.1);
     flex-direction: row;
     gap: 10px;
-    margin-top: 0; /* 불필요한 마진 제거 */
+    margin-top: 0; 
   }
-  /* 버튼 영역을 살짝 확장하여 마우스 이동 시 안정성 확보 */
   .nav-item::after {
     content: "";
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
-    height: 10px; /* 투명한 연결 다리 역할 */
+    height: 10px; 
   }
   .nav-item:hover .dropdown-menu { display: flex; }
 
@@ -204,9 +200,17 @@
   .label-elementary { background: #3b82f6; color: white; }
   .label-middle { background: #7b1fa2; color: white; }
 
+  /* 카드가 3개가 될 경우를 대비한 유연한 그리드 */
   .card-grid-custom {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  
+  /* 중등 섹션은 3개 카드를 위해 별도 조정 가능 (데스크톱에서 3열) */
+  .card-grid-middle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.25rem;
   }
 
@@ -223,15 +227,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100%;
   }
   .selection-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     border-color: var(--brand);
   }
+  
+  /* 챗봇 전용 강조 스타일 */
+  .card-chatbot {
+    border: 2px solid #7b1fa2;
+    background: linear-gradient(to bottom right, var(--card-bg), #fdf4ff);
+  }
+
   .card-icon { font-size: 2.8rem; margin-bottom: 0.8rem; }
   .card-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--brand); }
   .card-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.4; word-break: keep-all; }
+  
+  .notice-badge {
+    display: inline-block;
+    background: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
 
   .description-text {
     max-width: 480px; 
@@ -244,7 +267,7 @@
   @media (max-width: 768px) {
     .header-container { height: 220px; }
     .main-title { font-size: 1.8rem; }
-    .card-grid-custom { grid-template-columns: 1fr; }
+    .card-grid-custom, .card-grid-middle { grid-template-columns: 1fr; }
     .section-group { padding: 1.25rem; }
     .nav-inner { flex-wrap: wrap; max-width: 100%; gap: 8px; padding: 0 10px; }
     .nav-item { width: calc(50% - 8px); }
@@ -278,11 +301,12 @@
     </div>
 
     <div class="nav-item">
-      <!-- 중 학 생으로 글자 너비 매칭 -->
       <a href="m.html" class="nav-btn">중 학 생 <span class="caret">▼</span></a>
       <div class="dropdown-menu">
           <a class="dropdown-item" href="m_grammar.html">중등문법</a>
           <a class="dropdown-item" href="m.html">연습문제</a>
+          <!-- 드롭다운에도 챗봇 추가 -->
+          <a class="dropdown-item" href="https://chatgpt.com/g/g-3XquXOwbM-jungdeungyeongeoseonsaeng" target="_blank">어순감각챗봇</a>
       </div>
     </div>
 
@@ -292,7 +316,7 @@
   </div>
 </nav>
 
-<main class="max-w-4xl mx-auto px-4 py-12">
+<main class="max-w-6xl mx-auto px-4 py-12">
   <div class="text-center mb-12">
     <div class="text-5xl mb-6">👋 ✨ 🏫</div>
     <h2 class="text-3xl font-black mb-4" style="word-break: keep-all;">
@@ -321,7 +345,7 @@
 
   <section class="section-group section-middle">
     <span class="section-label label-middle">Middle School</span>
-    <div class="card-grid-custom">
+    <div class="card-grid-middle">
       <a href="m_grammar.html" class="selection-card">
         <div class="card-icon">📖</div>
         <h3 class="card-title">중등문법</h3>
@@ -331,6 +355,17 @@
         <div class="card-icon">📝</div>
         <h3 class="card-title">중등연습문제</h3>
         <p class="card-desc">중학영어 1-A 기반<br>교과서 핵심 단어와 문장 연습.</p>
+      </a>
+      <!-- 어순감각챗봇 카드 추가 -->
+      <a href="https://chatgpt.com/g/g-3XquXOwbM-jungdeungyeongeoseonsaeng" target="_blank" rel="noopener noreferrer" class="selection-card card-chatbot">
+        <span class="notice-badge">ChatGPT 로그인 필수</span>
+        <div class="card-icon">🤖</div>
+        <h3 class="card-title" style="color:#7b1fa2;">어순감각챗봇</h3>
+        <p class="card-desc">
+          <strong>[중등영어선생 GPT]</strong><br>
+          문장 성분과 8품사의 관계를 이해했다면?<br>
+          5형식을 기반으로 문장이 확장되는 원리를 익히고 스스로 심화 학습을 해보세요!
+        </p>
       </a>
     </div>
   </section>
