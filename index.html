@@ -241,6 +241,43 @@
     background: linear-gradient(to bottom right, var(--card-bg), #fdf4ff);
   }
 
+  /* 챗봇 카드 내부 버튼/안내 */
+  .chatbot-actions{
+    width: 100%;
+    margin-top: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .chatbot-btn{
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 0.85rem 0.9rem;
+    font-weight: 900;
+    letter-spacing: -0.2px;
+    color: #ffffff;
+    background: #7b1fa2;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .chatbot-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+  .chatbot-btn:active{ transform: translateY(0px); filter: brightness(0.98); }
+  .chatbot-btn-2{ background:#6a1b9a; }
+  .chatbot-btn-3{ background:#4a148c; }
+
+  .chatbot-help{
+    width: 100%;
+    margin-top: 0.85rem;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--muted);
+    text-align: left;
+    word-break: keep-all;
+  }
+  .chatbot-help strong{ color: var(--text); }
+
+
   .card-icon { font-size: 2.8rem; margin-bottom: 0.8rem; }
   .card-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--brand); }
   .card-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.4; word-break: keep-all; }
@@ -357,7 +394,7 @@
         <p class="card-desc">중학영어 1-A 기반<br>교과서 핵심 단어와 문장 연습.</p>
       </a>
       <!-- 어순감각챗봇 카드 추가 -->
-      <a href="https://chatgpt.com/g/g-3XquXOwbM-jungdeungyeongeoseonsaeng" target="_blank" rel="noopener noreferrer" class="selection-card card-chatbot">
+      <div class="selection-card card-chatbot" role="group" aria-label="어순감각챗봇 시작">
         <span class="notice-badge">ChatGPT 로그인 필수</span>
         <div class="card-icon">🤖</div>
         <h3 class="card-title" style="color:#7b1fa2;">어순감각챗봇</h3>
@@ -366,7 +403,18 @@
           문장 성분과 8품사의 관계를 이해했다면?<br>
           5형식을 기반으로 문장이 확장되는 원리를 익히고 스스로 심화 학습을 해보세요!
         </p>
-      </a>
+
+        <div class="chatbot-actions" aria-label="복사 후 ChatGPT 열기">
+          <button type="button" class="chatbot-btn" onclick="copyAndOpen('단문복습')">단문복습 시작</button>
+          <button type="button" class="chatbot-btn chatbot-btn-2" onclick="copyAndOpen('복문복습')">복문복습 시작</button>
+          <button type="button" class="chatbot-btn chatbot-btn-3" onclick="copyAndOpen('영작연습')">영작연습 시작</button>
+        </div>
+
+        <p class="chatbot-help">
+          방법 1) 위 버튼을 누르면 <strong>키워드가 복사</strong>되고 ChatGPT가 열립니다. 열린 화면의 입력창에 <strong>붙여넣기</strong> 하세요.<br>
+          방법 2) 버튼이 어렵다면, ChatGPT 입력창에 아래 3개 중 하나를 <strong>직접 입력</strong>해도 됩니다: <strong>단문복습</strong>, <strong>복문복습</strong>, <strong>영작연습</strong>
+        </p>
+      </div>
     </div>
   </section>
 </main>
@@ -397,6 +445,27 @@
   if(contactBtn) contactBtn.addEventListener('click', openModal);
   if(closeBtn) closeBtn.addEventListener('click', closeModal);
   window.addEventListener('click', (e) => { if (e.target === contactModal) closeModal(); });
+
+
+  // ===== 어순감각챗봇: 키워드 복사 + ChatGPT 열기 =====
+  const GPT_URL = 'https://chatgpt.com/g/g-3XquXOwbM-jungdeungyeongeoseonsaeng';
+
+  async function copyAndOpen(keyword){
+    // 1) 키워드 복사(가능하면)
+    try{
+      await navigator.clipboard.writeText(keyword);
+      alert('복사 완료! ChatGPT 입력창에 붙여넣기 하세요.\n키워드: ' + keyword);
+    }catch(err){
+      // 클립보드 권한/지원 실패 대비: prompt로 제공
+      prompt('아래 키워드를 복사해서 ChatGPT 입력창에 붙여넣기 하세요:', keyword);
+    }
+
+    // 2) ChatGPT 열기 (팝업이 막히면 현재 탭으로 이동)
+    const w = window.open(GPT_URL, '_blank', 'noopener');
+    if(!w){
+      window.location.href = GPT_URL;
+    }
+  }
 </script>
 
 </body>
