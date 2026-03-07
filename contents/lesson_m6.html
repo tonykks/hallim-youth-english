@@ -1,329 +1,325 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mastering Wh-Questions</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammar CHECK CHECK - 조동사 확장</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; }
-        .eng-font { font-family: 'Roboto', sans-serif; }
-        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
-        .hidden-content { display: none; }
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* Step Process Styles */
-        .target-bracket { color: #ef4444; font-weight: 900; } /* Red for ( ) */
-        .wh-change { color: #d97706; font-weight: 900; } /* Amber for Change step */
-        .wh-move { color: #7c3aed; font-weight: 900; text-decoration: underline; } /* Purple for Move step */
-        .verb-highlight { color: #059669; font-weight: 900; } /* Emerald for Verbs */
-        
-        /* Wh-Word Badge */
-        .wh-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; color: white; font-weight: 900; font-size: 0.8rem; margin-right: 0.5rem; }
-        .wh-who { background-color: #f59e0b; } /* Amber */
-        .wh-what { background-color: #3b82f6; } /* Blue */
-        .wh-where { background-color: #10b981; } /* Emerald */
-        .wh-when { background-color: #8b5cf6; } /* Violet */
-        .wh-why { background-color: #ec4899; } /* Pink */
-        .wh-how { background-color: #64748b; } /* Slate */
-
-        /* Answer Loop Style */
-        .answer-box { background-color: #f0fdf4; border: 2px dashed #22c55e; color: #15803d; padding: 0.5rem; border-radius: 0.5rem; margin-top: 0.75rem; font-size: 0.95rem; }
-        .cycle-icon { display: inline-block; margin-right: 0.3rem; font-weight: 900; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        :root {
+            --fs-lg: clamp(1.06rem, 0.98rem + 0.35vw, 1.2rem);
+            --fs-md: clamp(0.96rem, 0.9rem + 0.2vw, 1.05rem);
+            --fs-sm: clamp(0.86rem, 0.82rem + 0.18vw, 0.94rem);
+        }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .content-shell { width: min(100% - 1rem, 1180px); margin-inline: auto; }
+        .lesson-root { font-size: var(--fs-md); line-height: 1.6; }
+        .lesson-root .text-xs { font-size: var(--fs-sm) !important; line-height: 1.45 !important; }
+        .lesson-root .text-sm { font-size: var(--fs-md) !important; line-height: 1.55 !important; }
+        .lesson-root .text-lg { font-size: var(--fs-lg) !important; line-height: 1.45 !important; }
+        .quiz-btn { transition: all 0.2s; }
+        .quiz-btn:active { transform: scale(0.95); }
+        .sentence-box { transition: all 0.2s; border: 1px solid #e2e8f0; }
+        .sentence-box:hover { background-color: #ffffff; transform: translateX(3px); border-color: #818cf8; box-shadow: 0 4px 8px -2px rgb(0 0 0 / 0.12); }
     </style>
 </head>
-<body class="bg-white text-slate-900">
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
 
-    <!-- Header -->
-    <header class="bg-violet-900 text-white p-6 shadow-xl border-b-4 border-violet-600">
-        <div class="max-w-[95%] xl:max-w-[1600px] mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-black tracking-tight">Wh-Questions Logic</h1>
-                <p class="text-violet-100 text-lg mt-1 font-medium">영어 핵심 개념: 의문사가 있는 의문문 만들기 (5단계 논리 완성)</p>
-            </div>
-            <div class="text-right hidden md:block">
-                <span class="bg-white text-violet-900 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest shadow-sm">Advanced Structure</span>
-            </div>
+const Icons = {
+    Zap: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14.71 14.71 4H20v5.29L9.29 20H4z"/><path d="m15.5 6.5 2 2"/></svg>,
+    Microscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>,
+    Volume2: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
+    PlayCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>,
+    CheckCircle2: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+};
+
+const strengthQuiz = [
+    { category: "강도", q: "You ____ return the book by Monday.", ko: "너는 월요일까지 책을 반납해야 한다.", options: ["must", "should", "can", "may"], ansIdx: 0, answer: "You must return the book by Monday.", reason: "강한 의무는 must가 맞습니다." },
+    { category: "강도", q: "We ____ cross at the green light.", ko: "우리는 초록불에서 건너야 한다.", options: ["must", "should", "can", "may"], ansIdx: 1, answer: "We should cross at the green light.", reason: "권고/지침은 should를 씁니다." },
+    { category: "강도", q: "You ____ take pictures here.", ko: "너는 여기서 사진을 찍으면 안 된다.", options: ["must", "should", "cannot", "may"], ansIdx: 2, answer: "You cannot take pictures here.", reason: "금지 상황에서 can의 부정형 cannot을 씁니다." },
+    { category: "강도", q: "____ I watch TV for an hour?", ko: "한 시간 TV를 봐도 될까요?", options: ["Must", "Should", "Can", "May"], ansIdx: 3, answer: "May I watch TV for an hour?", reason: "정중한 허락 표현은 May I ~? 입니다." },
+    { category: "강도", q: "Can you speak Chinese? - Yes, I ____.", ko: "너는 중국어를 말할 수 있니? - 네, 할 수 있어.", options: ["must", "should", "can", "may"], ansIdx: 2, answer: "Can you speak Chinese? Yes, I can.", reason: "can 의문문 긍정 대답은 can을 사용합니다." },
+    { category: "강도", q: "They ____ be interested in my idea.", ko: "그들은 내 아이디어에 관심이 없을지도 모른다.", options: ["must not", "should not", "can not", "may not"], ansIdx: 3, answer: "They may not be interested in my idea.", reason: "약한 추측의 부정은 may not입니다." },
+    { category: "강도", q: "You ____ follow the traffic rules.", ko: "너는 교통 규칙을 따라야 한다.", options: ["must", "should", "can", "may"], ansIdx: 0, answer: "You must follow the traffic rules.", reason: "필수 의무는 must를 씁니다." },
+    { category: "강도", q: "You ____ separate trash.", ko: "너는 쓰레기를 분리배출해야 한다.", options: ["must", "should", "can", "may"], ansIdx: 1, answer: "You should separate trash.", reason: "생활 규범/권고는 should가 자연스럽습니다." },
+    { category: "강도", q: "You ____ use my camera.", ko: "내 카메라를 사용해도 된다.", options: ["must", "should", "can", "may"], ansIdx: 2, answer: "You can use my camera.", reason: "허락의 일상 표현은 can입니다." },
+    { category: "강도", q: "You ____ play computer games now.", ko: "너는 지금 컴퓨터 게임을 해도 된다.", options: ["must", "should", "can", "may"], ansIdx: 3, answer: "You may play computer games now.", reason: "허락을 나타내는 may 표현입니다." }
+];
+
+const canMayQuiz = [
+    { category: "can/may", q: "David ____ ride a horse.", ko: "데이비드는 말을 탈 수 있다.", options: ["can", "cans", "may", "must"], ansIdx: 0, answer: "David can ride a horse.", reason: "조동사 뒤 동사는 원형이므로 can ride가 맞습니다." },
+    { category: "can/may", q: "My father can ____ my computer.", ko: "우리 아버지는 내 컴퓨터를 고칠 수 있다.", options: ["fix", "fixes", "fixed", "fixing"], ansIdx: 0, answer: "My father can fix my computer.", reason: "can 뒤에는 동사원형 fix를 씁니다." },
+    { category: "can/may", q: "May I watch TV for an hour? - No, you ____.", ko: "한 시간 TV를 봐도 될까요? - 아니요, 안 됩니다.", options: ["may not", "don't", "can't not", "mustn't"], ansIdx: 0, answer: "May I watch TV for an hour? No, you may not.", reason: "May 질문의 거절은 may not으로 답합니다." },
+    { category: "can/may", q: "Can I use your eraser? - Yes, you ____.", ko: "네 지우개를 사용해도 될까? - 응, 그래도 돼.", options: ["can", "are", "may not", "do"], ansIdx: 0, answer: "Can I use your eraser? Yes, you can.", reason: "Can 질문의 허락 대답은 can을 씁니다." },
+    { category: "can/may", q: "You ____ leave the classroom now.", ko: "너는 지금 교실을 떠나면 안 된다.", options: ["cannot", "can", "may", "are"], ansIdx: 0, answer: "You cannot leave the classroom now.", reason: "금지 맥락에서는 cannot이 맞습니다." },
+    { category: "can/may", q: "Bill ____ live here any more.", ko: "빌은 더 이상 여기 살지 않을지도 모른다.", options: ["may not", "can not", "must not", "should not"], ansIdx: 0, answer: "Bill may not live here any more.", reason: "약한 추측의 부정은 may not입니다." },
+    { category: "can/may", q: "He ____ ask me for help.", ko: "그는 나에게 도움을 요청할 수 있다.", options: ["can", "cans", "is can", "may to"], ansIdx: 0, answer: "He can ask me for help.", reason: "능력을 나타낼 때 can + 동사원형을 씁니다." },
+    { category: "can/may", q: "Are you able ____ play the drums?", ko: "너는 드럼을 칠 수 있니?", options: ["to", "for", "at", "with"], ansIdx: 0, answer: "Are you able to play the drums?", reason: "be able to + 동사원형 구조입니다." },
+    { category: "can/may", q: "The police were able ____ catch the thief.", ko: "경찰은 그 도둑을 잡을 수 있었다.", options: ["to", "for", "at", "with"], ansIdx: 0, answer: "The police were able to catch the thief.", reason: "were able to + 동사원형으로 과거 능력을 나타냅니다." },
+    { category: "can/may", q: "____ I use your bathroom?", ko: "화장실을 좀 사용해도 될까요?", options: ["Can", "May", "Do", "Am"], ansIdx: 1, answer: "May I use your bathroom?", reason: "May I ~?는 Can I ~?보다 더 정중합니다." }
+];
+
+const mustShouldQuiz = [
+    { category: "must/should", q: "He ____ take this medicine every day.", ko: "그는 이 약을 매일 복용할 필요가 없다.", options: ["doesn't have to", "must not", "should not", "cannot"], ansIdx: 0, answer: "He doesn't have to take this medicine every day.", reason: "불필요는 don't have to를 사용합니다." },
+    { category: "must/should", q: "You ____ walk on the grass.", ko: "잔디밭 위를 걸으면 안 된다.", options: ["must not", "don't have to", "should", "can"], ansIdx: 0, answer: "You must not walk on the grass.", reason: "금지는 must not입니다." },
+    { category: "must/should", q: "I ____ run to catch the bus this morning.", ko: "나는 오늘 아침 버스를 타기 위해 달려야 했다.", options: ["had to", "have to", "must", "should"], ansIdx: 0, answer: "I had to run to catch the bus this morning.", reason: "과거 의무는 had to를 씁니다." },
+    { category: "must/should", q: "Must I wait at the ticket office? - Yes, you ____.", ko: "표사는 곳에서 기다려야 합니까? - 네, 기다려야 합니다.", options: ["must", "should", "have to", "can"], ansIdx: 0, answer: "Must I wait at the ticket office? Yes, you must.", reason: "Must 질문의 긍정 대답은 must를 씁니다." },
+    { category: "must/should", q: "Should we rent a car? - No, you ____.", ko: "우리가 차를 빌려야 할까요? - 아니요, 그럴 필요 없습니다.", options: ["shouldn't", "mustn't", "don't have to", "can't"], ansIdx: 0, answer: "Should we rent a car? No, you shouldn't.", reason: "Should 질문의 부정 대답은 shouldn't가 기본입니다." },
+    { category: "must/should", q: "Must we take off our shoes in this place? - No, you ____.", ko: "이곳에서 신발을 벗어야 합니까? - 아니요, 그럴 필요는 없습니다.", options: ["don't have to", "must not", "should not", "can't"], ansIdx: 0, answer: "Must we take off our shoes in this place? No, you don't have to.", reason: "의무가 없음을 말할 때는 don't have to를 씁니다." },
+    { category: "must/should", q: "Do I have to bring food for the potluck party? - Yes, you ____.", ko: "포트럭 파티에 음식을 가져와야 합니까? - 네, 가져와야 합니다.", options: ["have to", "mustn't", "shouldn't", "can"], ansIdx: 0, answer: "Do I have to bring food for the potluck party? Yes, you have to.", reason: "have to 질문의 긍정 대답은 have to를 씁니다." },
+    { category: "must/should", q: "____ I have to get up early tomorrow?", ko: "나는 내일 일찍 일어나야 하나요?", options: ["Do", "Does", "Must", "May"], ansIdx: 0, answer: "Do I have to get up early tomorrow?", reason: "have to 의문문은 Do/Does로 시작합니다." },
+    { category: "must/should", q: "Someone ____ be there.", ko: "누군가는 거기에 있어야 한다.", options: ["has to", "have to", "mustn't", "may"], ansIdx: 0, answer: "Someone has to be there.", reason: "3인칭 단수 주어 someone은 has to를 씁니다." },
+    { category: "must/should", q: "They ____ work all day long yesterday.", ko: "그들은 어제 하루 종일 일해야 했다.", options: ["had to", "have to", "must", "should"], ansIdx: 0, answer: "They had to work all day long yesterday.", reason: "과거 의무는 had to를 씁니다." }
+];
+
+const allQuizMaster = [...strengthQuiz, ...canMayQuiz, ...mustShouldQuiz];
+
+const shuffleArray = (arr) => [...arr].sort(() => Math.random() - 0.5);
+const buildQuizSequence = () => {
+    const a = shuffleArray(allQuizMaster.filter((q) => q.category === "강도"));
+    const b = shuffleArray(allQuizMaster.filter((q) => q.category === "can/may"));
+    const c = shuffleArray(allQuizMaster.filter((q) => q.category === "must/should"));
+    return [...a, ...b, ...c];
+};
+
+const App = () => {
+    const [quizIndex, setQuizIndex] = useState(0);
+    const [quizFeedback, setQuizFeedback] = useState("");
+    const [shuffledQuiz, setShuffledQuiz] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(false);
+
+    const speak = (text) => {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            const uttr = new SpeechSynthesisUtterance(text);
+            uttr.lang = "en-US";
+            uttr.rate = 0.88;
+            window.speechSynthesis.speak(uttr);
+        }
+    };
+
+    useEffect(() => {
+        setShuffledQuiz(buildQuizSequence());
+    }, []);
+
+    const handleAnswer = (clickedIdx) => {
+        if (isCorrect) return;
+        const current = shuffledQuiz[quizIndex];
+        if (clickedIdx === current.ansIdx) {
+            setIsCorrect(true);
+            setQuizFeedback(`정답입니다! ${current.reason}`);
+            speak(current.answer);
+            return;
+        }
+        setIsCorrect(false);
+        setQuizFeedback("다시 생각해보세요. 조동사 의미(의무/조언/능력/허락)와 뒤 동사원형 규칙을 먼저 확인하세요.");
+    };
+
+    const nextQuestion = () => {
+        if (quizIndex < shuffledQuiz.length - 1) {
+            setQuizIndex(quizIndex + 1);
+            setQuizFeedback("");
+            setIsCorrect(false);
+            return;
+        }
+        setQuizFeedback("30문제를 모두 완료했습니다. 다시 도전해보세요.");
+    };
+
+    const restartQuiz = () => {
+        setShuffledQuiz(buildQuizSequence());
+        setQuizIndex(0);
+        setQuizFeedback("");
+        setIsCorrect(false);
+    };
+
+    const currentQ = shuffledQuiz[quizIndex];
+    const speakingSentences = useMemo(() => allQuizMaster.map((item) => ({ en: item.answer, ko: item.ko })), []);
+    const progressPercent = shuffledQuiz.length ? Math.round((quizIndex / shuffledQuiz.length) * 100) : 0;
+
+    return (
+        <div className="lesson-root min-h-screen bg-slate-50 text-slate-900 pb-12 overflow-x-hidden antialiased">
+            <header className="bg-white border-b sticky top-0 z-50 shadow-sm px-4 py-4">
+                <div className="content-shell flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <div className="bg-indigo-600 text-white p-2 rounded-xl shadow-lg shadow-indigo-100"><Icons.Zap /></div>
+                        <div className="text-left">
+                            <h1 className="text-2xl font-black tracking-tighter italic leading-none">Grammar CHECK CHECK</h1>
+                            <span className="text-indigo-600 font-black text-xs mt-1 block tracking-tight italic">중학영어 1-A / Lesson 6. He Can Speak English.</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main className="content-shell p-4 md:p-6 space-y-8">
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-2xl border border-slate-100 text-left">
+                    <h2 className="text-3xl font-black text-slate-800 italic mb-8 underline decoration-indigo-100 underline-offset-8">핵심 도입: 조동사는 느낌 스위치</h2>
+                    <div className="bg-indigo-50 p-6 rounded-3xl border border-indigo-100">
+                        <p className="font-black text-indigo-800 text-lg">조동사(Modal Verb)는 동사 앞에서 화자의 생각이나 태도를 결정하는 느낌 스위치입니다.</p>
+                        <p className="mt-3 font-bold text-slate-700">같은 행동도 조동사에 따라 의미가 달라집니다.</p>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4 mt-6">
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("You go.") }><p className="font-black">You go. (너는 간다.)</p></div>
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("You must go.") }><p className="font-black">You must go. (너는 꼭 가야 한다.)</p></div>
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("You should go.") }><p className="font-black">You should go. (너는 가는 것이 좋다.)</p></div>
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("You may sit here.") }><p className="font-black">You may sit here. (여기에 앉아도 된다.)</p></div>
+                    </div>
+                    <div className="mt-6 bg-white p-5 rounded-2xl border border-indigo-100">
+                        <p className="font-black text-indigo-700">강도 체계: must → should → can → may</p>
+                        <p className="font-bold text-slate-700 mt-2">꼭 해야 한다 → 하는 것이 좋다 → 할 수 있다 → 해도 좋다</p>
+                    </div>
+                </section>
+
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-xl border border-slate-100 text-left">
+                    <h3 className="text-2xl font-black text-slate-800 italic mb-8">의미 확장: 조동사의 두 얼굴</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100">
+                            <h4 className="text-xl font-black text-blue-700 mb-3">can / may</h4>
+                            <ul className="space-y-2 text-sm font-bold text-slate-700">
+                                <li className="bg-white p-2 rounded-lg border border-blue-100">can: 능력 / 허락</li>
+                                <li className="bg-white p-2 rounded-lg border border-blue-100">may: 허락 / 약한 추측</li>
+                                <li className="bg-white p-2 rounded-lg border border-blue-100">May I ~? 는 Can I ~?보다 더 정중</li>
+                            </ul>
+                            <div className="mt-4 sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("May I use your phone?") }>
+                                <p className="font-black text-blue-800">May I use your phone? (전화기를 사용해도 될까요?)</p>
+                                <p className="text-xs text-slate-500 mt-1">Can I use your phone? (전화기를 써도 될까요?)</p>
+                            </div>
+                        </div>
+                        <div className="bg-indigo-50 p-6 rounded-3xl border border-indigo-100">
+                            <h4 className="text-xl font-black text-indigo-700 mb-3">must / should</h4>
+                            <ul className="space-y-2 text-sm font-bold text-slate-700">
+                                <li className="bg-white p-2 rounded-lg border border-indigo-100">must: 강한 의무 / 강한 추측</li>
+                                <li className="bg-white p-2 rounded-lg border border-indigo-100">must not: 금지</li>
+                                <li className="bg-white p-2 rounded-lg border border-indigo-100">don't have to: ~할 필요가 없다(불필요)</li>
+                                <li className="bg-white p-2 rounded-lg border border-indigo-100">should: 도덕적 의무 / 충고</li>
+                            </ul>
+                            <div className="mt-4 sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("You must not walk on the grass.") }>
+                                <p className="font-black text-indigo-800">You must not walk on the grass. (잔디밭 위를 걸으면 안 된다.)</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-xl border border-slate-100 text-left">
+                    <h3 className="text-2xl font-black text-slate-800 italic mb-8">논리 증명: 조동사 활용 공식</h3>
+                    <div className="overflow-x-auto rounded-3xl border border-slate-200">
+                        <table className="w-full text-sm text-center border-collapse">
+                            <thead className="bg-slate-50 text-slate-600 border-b">
+                                <tr>
+                                    <th className="p-4 border-r">구분</th>
+                                    <th className="p-4 border-r">공식</th>
+                                    <th className="p-4">예문</th>
+                                </tr>
+                            </thead>
+                            <tbody className="font-bold">
+                                <tr className="border-b"><td className="p-4 border-r bg-slate-50">대원칙</td><td className="p-4 border-r text-indigo-700">조동사 + 동사원형</td><td className="p-4 text-left">David can ride a horse. (데이비드는 말을 탈 수 있다.)</td></tr>
+                                <tr className="border-b"><td className="p-4 border-r bg-slate-50">부정문</td><td className="p-4 border-r">주어 + 조동사 + not + 동사원형</td><td className="p-4 text-left">You cannot leave the classroom now. (너는 지금 교실을 떠나면 안 된다.)</td></tr>
+                                <tr><td className="p-4 border-r bg-slate-50">의문문</td><td className="p-4 border-r">조동사 + 주어 + 동사원형?</td><td className="p-4 text-left">Can I use your eraser? (네 지우개를 사용해도 될까?)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="mt-6 bg-amber-50 p-5 rounded-2xl border-l-4 border-amber-500">
+                        <p className="font-bold text-amber-800">Tony's Strategy: 조동사는 동사의 비서입니다! 비서가 오면 사장님(동사)은 원래 모습(동사원형)으로 계셔야 해요!</p>
+                    </div>
+                </section>
+
+                <section className="bg-indigo-600 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12"><Icons.Microscope /></div>
+                    <h3 className="text-2xl font-black mb-4 flex items-center gap-3 italic underline decoration-indigo-300 underline-offset-8"><Icons.Microscope /> 조동사 검증 연구소 (30문항)</h3>
+                    {shuffledQuiz.length > 0 && currentQ && (
+                        <div className="bg-white/10 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/20">
+                            <div className="mb-5">
+                                <div className="h-3 bg-white/20 rounded-full overflow-hidden"><div className="h-full bg-indigo-300 transition-all duration-300" style={{ width: `${progressPercent}%` }}></div></div>
+                                <p className="text-xs text-indigo-100 mt-2 font-bold">진행도 {progressPercent}%</p>
+                            </div>
+                            <div className="mb-4 flex items-center justify-between gap-3">
+                                <div className="px-4 py-1 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest text-indigo-100 font-mono italic">Quest {quizIndex + 1} / {shuffledQuiz.length}</div>
+                                <div className="px-4 py-1 bg-indigo-300 text-slate-900 rounded-full text-xs font-black">{currentQ.category}</div>
+                            </div>
+                            <div className="mb-8 text-left">
+                                <p className="text-sm font-bold text-indigo-100 mb-2 italic">교재 중등 6과 문장을 기반으로 알맞은 조동사를 고르세요.</p>
+                                <div className="bg-indigo-950/40 p-5 rounded-xl border border-white/10 text-indigo-100">
+                                    <p className="text-lg font-black">Q. {currentQ.q}</p>
+                                    <p className="text-sm font-bold mt-2">{currentQ.ko}</p>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {currentQ.options.map((opt, i) => (
+                                    <button
+                                        key={`${quizIndex}-${i}`}
+                                        onClick={() => handleAnswer(i)}
+                                        className={`quiz-btn py-4 rounded-2xl font-black shadow-lg text-base ${isCorrect && i === currentQ.ansIdx ? "bg-indigo-300 text-slate-900" : "bg-white text-indigo-700 hover:bg-indigo-50"}`}
+                                        disabled={isCorrect && i !== currentQ.ansIdx}
+                                    >{opt}</button>
+                                ))}
+                            </div>
+                            {quizFeedback && (
+                                <div className="mt-8 p-6 bg-white/20 rounded-2xl border border-white/30 text-left">
+                                    <p className="text-sm font-bold flex items-center gap-2 leading-relaxed"><Icons.CheckCircle2 /> {quizFeedback}</p>
+                                    <div className="mt-3 p-4 rounded-xl bg-indigo-950/30 border border-white/20"><p className="font-black">{currentQ.answer} ({currentQ.ko})</p></div>
+                                    <div className="flex gap-3 mt-6">
+                                        <button onClick={() => speak(currentQ.answer)} className="flex-1 bg-white/20 text-white py-3 rounded-xl font-black shadow-md flex items-center justify-center gap-2 hover:bg-white/30"><Icons.Volume2 size={16} /> 정답 문장 다시 듣기</button>
+                                        {isCorrect && (
+                                            <button
+                                                onClick={() => {
+                                                    if (quizIndex < shuffledQuiz.length - 1) {
+                                                        nextQuestion();
+                                                    } else {
+                                                        restartQuiz();
+                                                    }
+                                                }}
+                                                className="flex-1 bg-indigo-300 text-slate-900 py-3 rounded-xl font-black shadow-md hover:bg-indigo-200 transition-colors"
+                                            >{quizIndex < shuffledQuiz.length - 1 ? "다음 문항" : "다시 도전"}</button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </section>
+
+                <section className="bg-slate-100 rounded-[3rem] p-10 shadow-inner">
+                    <div className="flex items-center justify-between mb-8">
+                        <h3 className="text-2xl font-black text-slate-800 flex items-center gap-2 italic"><Icons.Volume2 className="text-indigo-600" /> 문장 낭독 훈련 (30문장)</h3>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        {speakingSentences.map((item, idx) => (
+                            <div key={idx} className="bg-white p-5 rounded-2xl flex justify-between items-center border border-slate-200 hover:border-indigo-400 transition-all hover:shadow-lg group cursor-pointer text-left" onClick={() => speak(item.en)}>
+                                <div className="flex-1 pr-4">
+                                    <p className="text-sm font-black text-slate-800 leading-tight group-hover:text-indigo-600">{item.en}</p>
+                                    <p className="text-xs text-slate-500 mt-2 font-medium">({item.ko})</p>
+                                </div>
+                                <div className="text-slate-300 group-hover:text-indigo-500"><Icons.PlayCircle size={24} /></div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </main>
+
+            <footer className="content-shell px-4 mt-20 text-center border-t-2 border-slate-100 pt-10 pb-20">
+                <div className="max-w-4xl mx-auto">
+                    <h3 className="text-2xl font-black text-gray-800 mb-2 italic">Tony's Speaking English Grammar</h3>
+                    <p className="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span className="underline">어순 감각</span>에 있습니다.</p>
+                    <div className="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                    <div className="text-gray-500 text-sm leading-relaxed italic font-bold">
+                        <span>Tony's Speaking English Grammar helps you master the natural sense of English word order.</span>
+                        <span className="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                    </div>
+                </div>
+            </footer>
         </div>
-    </header>
+    );
+};
 
-    <main class="max-w-[95%] xl:max-w-[1600px] mx-auto p-6 space-y-12">
-
-        <!-- 1. The Logic of Wh-Questions -->
-        <section id="logic-intro">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-violet-600 inline-block pb-2 px-6">1. The Logic: 5 Steps + Answer (순환 공식)</h2>
-                <p class="mt-4 text-slate-700 text-lg font-medium"><strong>변환(Change)</strong>과 <strong>이동(Move)</strong> 과정을 분리하여 더 명확하게 이해합니다.</p>
-            </div>
-
-            <!-- 5 Step Visualization -->
-            <div class="bg-white border-2 border-violet-200 p-8 rounded-2xl shadow-lg mb-8 overflow-x-auto">
-                <div class="flex flex-nowrap md:grid md:grid-cols-6 gap-4 text-center items-stretch min-w-[800px]">
-                    <!-- Step 1 -->
-                    <div class="flex-1 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                        <div class="text-violet-600 font-black text-lg mb-1">Step 1</div>
-                        <p class="font-bold text-slate-700 text-sm">평서문</p>
-                        <p class="text-xs text-slate-500 mt-1">기본 문장</p>
-                    </div>
-                    <!-- Step 2 -->
-                    <div class="flex-1 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                        <div class="text-violet-600 font-black text-lg mb-1">Step 2</div>
-                        <p class="font-bold text-slate-700 text-sm">Yes/No 의문문</p>
-                        <p class="text-xs text-slate-500 mt-1">동사 앞으로</p>
-                    </div>
-                    <!-- Step 3 -->
-                    <div class="flex-1 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                        <div class="text-violet-600 font-black text-lg mb-1">Step 3</div>
-                        <p class="font-bold text-slate-700 text-sm">타겟 ( )</p>
-                        <p class="text-xs text-slate-500 mt-1">정보 가리기</p>
-                    </div>
-                    <!-- Step 4 (Added) -->
-                    <div class="flex-1 p-3 bg-amber-50 rounded-xl border border-amber-200">
-                        <div class="text-amber-600 font-black text-lg mb-1">Step 4</div>
-                        <p class="font-bold text-slate-700 text-sm">의문사 변환</p>
-                        <p class="text-xs text-slate-500 mt-1"><span class="wh-change">Change!</span></p>
-                    </div>
-                    <!-- Step 5 (Moved) -->
-                    <div class="flex-1 p-3 bg-violet-100 rounded-xl border-2 border-violet-400 shadow-md">
-                        <div class="text-violet-800 font-black text-lg mb-1">Step 5</div>
-                        <p class="font-bold text-slate-800 text-sm">앞으로 이동</p>
-                        <p class="text-xs text-slate-600 mt-1"><span class="wh-move">Move!</span></p>
-                    </div>
-                    <!-- Answer Loop -->
-                    <div class="flex-1 p-3 bg-green-50 rounded-xl border-2 border-green-400 shadow-md border-dashed">
-                        <div class="text-green-700 font-black text-lg mb-1">Answer</div>
-                        <p class="font-bold text-green-800 text-sm">순환 완성</p>
-                        <p class="text-xs text-green-700 mt-1">평서문 복귀</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Wh-Word Selection Guide -->
-            <div class="bg-slate-800 text-white p-6 rounded-2xl shadow-lg">
-                <h3 class="text-xl font-bold mb-4 text-center">Wh-Word Selector (의문사 선택 가이드)</h3>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
-                    <div class="p-3 bg-slate-700 rounded-lg"><span class="wh-badge wh-who block mx-auto mb-2 w-16">WHO</span><p class="text-sm">사람 (누구)</p></div>
-                    <div class="p-3 bg-slate-700 rounded-lg"><span class="wh-badge wh-what block mx-auto mb-2 w-16">WHAT</span><p class="text-sm">사물 (무엇)</p></div>
-                    <div class="p-3 bg-slate-700 rounded-lg"><span class="wh-badge wh-where block mx-auto mb-2 w-16">WHERE</span><p class="text-sm">장소 (어디)</p></div>
-                    <div class="p-3 bg-slate-700 rounded-lg"><span class="wh-badge wh-when block mx-auto mb-2 w-16">WHEN</span><p class="text-sm">시간 (언제)</p></div>
-                    <div class="p-3 bg-slate-700 rounded-lg"><span class="wh-badge wh-why block mx-auto mb-2 w-16">WHY</span><p class="text-sm">이유 (왜)</p></div>
-                    <div class="p-3 bg-slate-700 rounded-lg"><span class="wh-badge wh-how block mx-auto mb-2 w-16">HOW</span><p class="text-sm">상태/방법 (어떻게)</p></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. Examples: Be Verbs (6 Items) -->
-        <section id="be-wh">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-indigo-600 inline-block pb-2 px-6">2. Be Verb Examples (Be동사)</h2>
-                <p class="mt-4 text-slate-700 text-lg font-medium">규칙: <strong>주어와 Be동사 Swap</strong> + 의문사 변환 & 이동</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                
-                <!-- 1. WHO -->
-                <div class="bg-white border-2 border-indigo-200 rounded-2xl shadow-lg p-6 hover:border-indigo-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-indigo-100">
-                        <span class="wh-badge wh-who">WHO</span> <span class="font-bold text-slate-700">사람</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> That is <span class="font-bold">Tom</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Is</span> that <span class="font-bold">Tom</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Is</span> that <span class="target-bracket">(Tom)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Is</span> that <span class="wh-change">Who</span>?</p>
-                        <div class="bg-indigo-50 p-2 rounded"><span class="text-xs font-black text-indigo-600 w-4 inline-block">5</span> <span class="wh-move">Who</span> <span class="verb-highlight">is</span> that?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>That is <strong>Tom</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 2. WHAT -->
-                <div class="bg-white border-2 border-indigo-200 rounded-2xl shadow-lg p-6 hover:border-indigo-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-indigo-100">
-                        <span class="wh-badge wh-what">WHAT</span> <span class="font-bold text-slate-700">사물</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> This is <span class="font-bold">a camera</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Is</span> this <span class="font-bold">a camera</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Is</span> this <span class="target-bracket">(a camera)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Is</span> this <span class="wh-change">What</span>?</p>
-                        <div class="bg-indigo-50 p-2 rounded"><span class="text-xs font-black text-indigo-600 w-4 inline-block">5</span> <span class="wh-move">What</span> <span class="verb-highlight">is</span> this?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>This is <strong>a camera</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 3. WHERE -->
-                <div class="bg-white border-2 border-indigo-200 rounded-2xl shadow-lg p-6 hover:border-indigo-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-indigo-100">
-                        <span class="wh-badge wh-where">WHERE</span> <span class="font-bold text-slate-700">장소</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> They are <span class="font-bold">in the park</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Are</span> they <span class="font-bold">in the park</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Are</span> they <span class="target-bracket">(in the park)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Are</span> they <span class="wh-change">Where</span>?</p>
-                        <div class="bg-indigo-50 p-2 rounded"><span class="text-xs font-black text-indigo-600 w-4 inline-block">5</span> <span class="wh-move">Where</span> <span class="verb-highlight">are</span> they?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>They are <strong>in the park</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 4. WHEN -->
-                <div class="bg-white border-2 border-indigo-200 rounded-2xl shadow-lg p-6 hover:border-indigo-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-indigo-100">
-                        <span class="wh-badge wh-when">WHEN</span> <span class="font-bold text-slate-700">시간</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> The party is <span class="font-bold">at 7</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Is</span> the party <span class="font-bold">at 7</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Is</span> the party <span class="target-bracket">(at 7)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Is</span> the party <span class="wh-change">When</span>?</p>
-                        <div class="bg-indigo-50 p-2 rounded"><span class="text-xs font-black text-indigo-600 w-4 inline-block">5</span> <span class="wh-move">When</span> <span class="verb-highlight">is</span> the party?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>The party is <strong>at 7</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 5. WHY -->
-                <div class="bg-white border-2 border-indigo-200 rounded-2xl shadow-lg p-6 hover:border-indigo-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-indigo-100">
-                        <span class="wh-badge wh-why">WHY</span> <span class="font-bold text-slate-700">이유</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> She is sad <span class="font-bold">because it rains</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Is</span> she sad <span class="font-bold">because it rains</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Is</span> she sad <span class="target-bracket">(because it rains)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Is</span> she sad <span class="wh-change">Why</span>?</p>
-                        <div class="bg-indigo-50 p-2 rounded"><span class="text-xs font-black text-indigo-600 w-4 inline-block">5</span> <span class="wh-move">Why</span> <span class="verb-highlight">is</span> she sad?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>She is sad <strong>because it rains</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 6. HOW -->
-                <div class="bg-white border-2 border-indigo-200 rounded-2xl shadow-lg p-6 hover:border-indigo-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-indigo-100">
-                        <span class="wh-badge wh-how">HOW</span> <span class="font-bold text-slate-700">상태</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> You are <span class="font-bold">fine</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Are</span> you <span class="font-bold">fine</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Are</span> you <span class="target-bracket">(fine)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Are</span> you <span class="wh-change">How</span>?</p>
-                        <div class="bg-indigo-50 p-2 rounded"><span class="text-xs font-black text-indigo-600 w-4 inline-block">5</span> <span class="wh-move">How</span> <span class="verb-highlight">are</span> you?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>I am <strong>fine</strong>. (You &harr; I)</div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- 3. Examples: General Verbs (6 Items) -->
-        <section id="general-wh">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-emerald-600 inline-block pb-2 px-6">3. General Verb Examples (일반동사)</h2>
-                <p class="mt-4 text-slate-700 text-lg font-medium">규칙: <strong>Do/Does/Did + 주어 + 동사원형</strong> + 의문사 변환 & 이동</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                
-                <!-- 1. WHO -->
-                <div class="bg-white border-2 border-emerald-200 rounded-2xl shadow-lg p-6 hover:border-emerald-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-emerald-100">
-                        <span class="wh-badge wh-who">WHO</span> <span class="font-bold text-slate-700">누구를 (목적어)</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> You like <span class="font-bold">Jane</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Do</span> you like <span class="font-bold">Jane</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Do</span> you like <span class="target-bracket">(Jane)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Do</span> you like <span class="wh-change">Who</span>?</p>
-                        <div class="bg-emerald-50 p-2 rounded"><span class="text-xs font-black text-emerald-600 w-4 inline-block">5</span> <span class="wh-move">Who</span> <span class="verb-highlight">do</span> you like?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>I like <strong>Jane</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 2. WHAT -->
-                <div class="bg-white border-2 border-emerald-200 rounded-2xl shadow-lg p-6 hover:border-emerald-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-emerald-100">
-                        <span class="wh-badge wh-what">WHAT</span> <span class="font-bold text-slate-700">무엇을</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> You want <span class="font-bold">water</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Do</span> you want <span class="font-bold">water</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Do</span> you want <span class="target-bracket">(water)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Do</span> you want <span class="wh-change">What</span>?</p>
-                        <div class="bg-emerald-50 p-2 rounded"><span class="text-xs font-black text-emerald-600 w-4 inline-block">5</span> <span class="wh-move">What</span> <span class="verb-highlight">do</span> you want?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>I want <strong>water</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 3. WHERE -->
-                <div class="bg-white border-2 border-emerald-200 rounded-2xl shadow-lg p-6 hover:border-emerald-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-emerald-100">
-                        <span class="wh-badge wh-where">WHERE</span> <span class="font-bold text-slate-700">어디에</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> You live <span class="font-bold">in Seoul</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Do</span> you live <span class="font-bold">in Seoul</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Do</span> you live <span class="target-bracket">(in Seoul)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Do</span> you live <span class="wh-change">Where</span>?</p>
-                        <div class="bg-emerald-50 p-2 rounded"><span class="text-xs font-black text-emerald-600 w-4 inline-block">5</span> <span class="wh-move">Where</span> <span class="verb-highlight">do</span> you live?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>I live <strong>in Seoul</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 4. WHEN -->
-                <div class="bg-white border-2 border-emerald-200 rounded-2xl shadow-lg p-6 hover:border-emerald-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-emerald-100">
-                        <span class="wh-badge wh-when">WHEN</span> <span class="font-bold text-slate-700">언제</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> She starts <span class="font-bold">at 9</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Does</span> she start <span class="font-bold">at 9</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Does</span> she start <span class="target-bracket">(at 9)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Does</span> she start <span class="wh-change">When</span>?</p>
-                        <div class="bg-emerald-50 p-2 rounded"><span class="text-xs font-black text-emerald-600 w-4 inline-block">5</span> <span class="wh-move">When</span> <span class="verb-highlight">does</span> she start?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>She starts <strong>at 9</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 5. WHY -->
-                <div class="bg-white border-2 border-emerald-200 rounded-2xl shadow-lg p-6 hover:border-emerald-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-emerald-100">
-                        <span class="wh-badge wh-why">WHY</span> <span class="font-bold text-slate-700">왜</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> He cries <span class="font-bold">because he is sad</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Does</span> he cry <span class="font-bold">because he is sad</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Does</span> he cry <span class="target-bracket">(because he is sad)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Does</span> he cry <span class="wh-change">Why</span>?</p>
-                        <div class="bg-emerald-50 p-2 rounded"><span class="text-xs font-black text-emerald-600 w-4 inline-block">5</span> <span class="wh-move">Why</span> <span class="verb-highlight">does</span> he cry?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>He cries <strong>because he is sad</strong>.</div>
-                    </div>
-                </div>
-
-                <!-- 6. HOW -->
-                <div class="bg-white border-2 border-emerald-200 rounded-2xl shadow-lg p-6 hover:border-emerald-400 transition">
-                    <div class="flex items-center mb-4 border-b pb-2 border-emerald-100">
-                        <span class="wh-badge wh-how">HOW</span> <span class="font-bold text-slate-700">방법 (수단)</span>
-                    </div>
-                    <div class="space-y-2 eng-font text-lg">
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">1</span> You go <span class="font-bold">by bus</span>.</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">2</span> <span class="verb-highlight">Do</span> you go <span class="font-bold">by bus</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">3</span> <span class="verb-highlight">Do</span> you go <span class="target-bracket">(by bus)</span>?</p>
-                        <p><span class="text-xs font-bold text-slate-400 w-4 inline-block">4</span> <span class="verb-highlight">Do</span> you go <span class="wh-change">How</span>?</p>
-                        <div class="bg-emerald-50 p-2 rounded"><span class="text-xs font-black text-emerald-600 w-4 inline-block">5</span> <span class="wh-move">How</span> <span class="verb-highlight">do</span> you go?</div>
-                        <div class="answer-box"><span class="cycle-icon">↺</span>I go <strong>by bus</strong>.</div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-slate-500 text-sm pb-8">
-            <p>&copy; 2026 Essential English Grammar (Wh-Questions Mastery). Designed for All Learners.</p>
-        </footer>
-
-    </main>
-
+const container = document.getElementById("root");
+const root = ReactDOM.createRoot(container);
+root.render(<App />);
+</script>
 </body>
 </html>

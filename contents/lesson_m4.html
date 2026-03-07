@@ -1,308 +1,428 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mastering Progressive Tense</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammar CHECK CHECK - 의문사</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; }
-        .eng-font { font-family: 'Roboto', sans-serif; }
-        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
-        .hidden-content { display: none; }
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .example-list li { margin-bottom: 0.5rem; font-size: 1.05rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;}
-        .example-list li:last-child { border-bottom: none; }
-        .example-list .eng { font-family: 'Roboto', sans-serif; font-weight: 600; color: #0f172a; }
-        .example-list .kor { color: #475569; font-size: 0.95rem; margin-left: 0.5rem; font-weight: 500; }
-        .wrong-sentence { text-decoration: line-through; color: #94a3b8; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        :root {
+            --fs-lg: clamp(1.06rem, 0.98rem + 0.35vw, 1.2rem);
+            --fs-md: clamp(0.96rem, 0.9rem + 0.2vw, 1.05rem);
+            --fs-sm: clamp(0.86rem, 0.82rem + 0.18vw, 0.94rem);
+        }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .content-shell { width: min(100% - 1rem, 1180px); margin-inline: auto; }
+        .lesson-root { font-size: var(--fs-md); line-height: 1.6; }
+        .lesson-root .font-serif,
+        .lesson-root .font-mono { font-family: 'Noto Sans KR', sans-serif !important; }
+        .lesson-root [class*="text-[9px]"],
+        .lesson-root [class*="text-[10px]"],
+        .lesson-root [class*="text-[11px]"],
+        .lesson-root .text-xs { font-size: var(--fs-sm) !important; line-height: 1.45 !important; }
+        .lesson-root .text-sm { font-size: var(--fs-md) !important; line-height: 1.55 !important; }
+        .lesson-root .text-lg { font-size: var(--fs-lg) !important; line-height: 1.45 !important; }
+        .quiz-btn { transition: all 0.2s; }
+        .quiz-btn:active { transform: scale(0.95); }
+        .sentence-box { transition: all 0.2s; border: 1px solid #e2e8f0; }
+        .sentence-box:hover { background-color: #ffffff; transform: translateX(3px); border-color: #93c5fd; box-shadow: 0 4px 8px -2px rgb(0 0 0 / 0.12); }
     </style>
 </head>
-<body class="bg-white text-slate-900">
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
 
-    <!-- Header -->
-    <header class="bg-indigo-900 text-white p-6 shadow-xl border-b-4 border-indigo-600">
-        <div class="max-w-[95%] xl:max-w-[1600px] mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-black tracking-tight">Mastering Progressive Tense</h1>
-                <p class="text-indigo-100 text-lg mt-1 font-medium">영어 핵심 개념: 진행형 (현재진행 / 과거진행)</p>
-            </div>
-            <div class="text-right hidden md:block">
-                <span class="bg-white text-indigo-900 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest shadow-sm">Advanced Grammar</span>
-            </div>
-        </div>
-    </header>
+const Icons = {
+    Zap: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14.71 14.71 4H20v5.29L9.29 20H4z"/><path d="m15.5 6.5 2 2"/></svg>,
+    Microscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>,
+    Volume2: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
+    PlayCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>,
+    CheckCircle2: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+};
 
-    <main class="max-w-[95%] xl:max-w-[1600px] mx-auto p-6 space-y-12">
+const coreQuiz = [
+    { category: "who/what/which", q: "A: (   ) is the woman over there?", ko: "저기 있는 저 여자는 누구니?", options: ["Who", "Which", "What", "How"], ansIdx: 0, answer: "Who is the woman over there?", reason: "사람의 신원을 물을 때는 Who를 씁니다." },
+    { category: "who/what/which", q: "A: (   ) is your name?", ko: "네 이름은 무엇이니?", options: ["Who", "What", "Which", "When"], ansIdx: 1, answer: "What is your name?", reason: "이름/사물 정보는 What으로 묻습니다." },
+    { category: "who/what/which", q: "A: (   ) time is it now?", ko: "지금 몇 시니?", options: ["What", "Which", "Who", "Why"], ansIdx: 0, answer: "What time is it now?", reason: "정해진 표현은 What time입니다." },
+    { category: "who/what/which", q: "A: (   ) takes care of the babies?", ko: "아기들을 누가 돌보니?", options: ["Who", "What", "Which", "Where"], ansIdx: 0, answer: "Who takes care of the babies?", reason: "의문사가 주어 역할이면 do/does 없이 동사가 바로 옵니다." },
+    { category: "who/what/which", q: "A: (   ) do you like, summer or winter?", ko: "여름과 겨울 중 어느 것을 좋아하니?", options: ["Who", "Which", "What", "How"], ansIdx: 1, answer: "Which do you like, summer or winter?", reason: "선택 범위가 있으면 Which를 씁니다." },
+    { category: "who/what/which", q: "(   ) season do you like the most?", ko: "너는 무슨 계절을 가장 좋아하니?", options: ["Who", "What", "Where", "When"], ansIdx: 1, answer: "What season do you like the most?", reason: "What + 명사(season) 형태의 의문형용사입니다." },
+    { category: "who/what/which", q: "(   ) does he do after school?", ko: "그는 방과 후에 무엇을 하니?", options: ["Who", "What", "Which", "How"], ansIdx: 1, answer: "What does he do after school?", reason: "행동 내용을 묻는 일반동사 의문문은 What does+주어+동사원형입니다." },
+    { category: "who/what/which", q: "(   ) do you prefer, fish or meat?", ko: "생선과 고기 중 어느 것을 더 선호하니?", options: ["Who", "What", "Which", "Why"], ansIdx: 2, answer: "Which do you prefer, fish or meat?", reason: "둘 중 선택을 묻기 때문에 Which가 맞습니다." },
+    { category: "who/what/which", q: "(   ) sings well in your class?", ko: "너희 반에서 누가 노래를 잘하니?", options: ["Who", "What", "Which", "How"], ansIdx: 0, answer: "Who sings well in your class?", reason: "주어 역할 의문사 Who + 동사(sings) 구조입니다." },
+    { category: "who/what/which", q: "A: (   ) kind of pet do you want?", ko: "너는 어떤 종류의 반려동물을 원하니?", options: ["Who", "What", "Which", "How"], ansIdx: 1, answer: "What kind of pet do you want?", reason: "종류를 묻는 표현은 What kind of + 명사입니다." }
+];
 
-        <!-- 1. Classification Review -->
-        <section id="classification">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-indigo-600 inline-block pb-2 px-6">1. Review: Verb Types (동사의 분류)</h2>
-                <p class="mt-4 text-slate-700 text-lg font-medium">진행형을 만들려면 <strong>동사의 종류</strong>를 먼저 구별해야 합니다.</p>
-            </div>
+const adverbQuiz = [
+    { category: "when/where/why/how", q: "A: (   ) do you do your homework?", ko: "너는 언제 숙제를 하니?", options: ["When", "Where", "Why", "How"], ansIdx: 0, answer: "When do you do your homework?", reason: "시간을 묻는 의문사는 When입니다." },
+    { category: "when/where/why/how", q: "A: (   ) do you study French?", ko: "너는 왜 프랑스어를 공부하니?", options: ["How", "When", "Why", "Where"], ansIdx: 2, answer: "Why do you study French?", reason: "이유를 물으면 Why를 씁니다." },
+    { category: "when/where/why/how", q: "A: (   ) do I get to the police station?", ko: "나는 경찰서에 어떻게 가니?", options: ["When", "Why", "How", "What"], ansIdx: 2, answer: "How do I get to the police station?", reason: "방법/경로는 How로 묻습니다." },
+    { category: "when/where/why/how", q: "A: (   ) do you feel today?", ko: "너는 오늘 기분이 어떠니?", options: ["How", "When", "Why", "Where"], ansIdx: 0, answer: "How do you feel today?", reason: "상태를 묻는 표현은 How do you feel입니다." },
+    { category: "when/where/why/how", q: "A: (   ) time does the shop open?", ko: "가게는 몇 시에 문을 여니?", options: ["When", "Where", "What", "How"], ansIdx: 2, answer: "What time does the shop open?", reason: "시각은 What time으로 묻습니다." },
+    { category: "when/where/why/how", q: "(   ) do you spend your day?", ko: "너는 하루를 어떻게 보내니?", options: ["How", "Why", "When", "Where"], ansIdx: 0, answer: "How do you spend your day?", reason: "행동 방식은 How를 사용합니다." },
+    { category: "when/where/why/how", q: "(   ) is she always busy?", ko: "그녀는 왜 항상 바쁘니?", options: ["How", "Why", "When", "What"], ansIdx: 1, answer: "Why is she always busy?", reason: "be동사 의문문에서도 이유를 물을 때 Why를 씁니다." },
+    { category: "when/where/why/how", q: "(   ) does the class start?", ko: "언제 수업이 시작하니?", options: ["When", "Where", "Why", "How"], ansIdx: 0, answer: "When does the class start?", reason: "시간 질문은 When + does + 주어 + 동사원형입니다." },
+    { category: "when/where/why/how", q: "(   ) are my glasses?", ko: "내 안경은 어디에 있니?", options: ["When", "Where", "Why", "How"], ansIdx: 1, answer: "Where are my glasses?", reason: "장소를 묻는 의문사는 Where입니다." },
+    { category: "when/where/why/how", q: "(   ) time do you get up?", ko: "너는 몇 시에 일어나니?", options: ["Who", "What", "Which", "How"], ansIdx: 1, answer: "What time do you get up?", reason: "시간 표현은 What time을 사용합니다." }
+];
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Be Verbs -->
-                <div class="bg-white border-2 border-indigo-200 border-l-8 border-l-indigo-600 p-8 rounded-xl shadow-lg">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-indigo-800">Be Verb (Be동사)</h3>
-                        <span class="text-sm bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full font-bold border border-indigo-200">Helper</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">진행형을 만들 때 <strong>도우미 역할</strong>을 합니다.</p>
-                    <ul class="list-disc list-inside text-base text-slate-600 space-y-2 font-medium bg-indigo-50 p-4 rounded-lg">
-                        <li>현재: <strong>am, are, is</strong> (~이다/있다)</li>
-                        <li>과거: <strong>was, were</strong> (~이었다/있었다)</li>
-                    </ul>
-                </div>
+const howQuiz = [
+    { category: "how 확장", q: "How (   ) do you exercise?", ko: "너는 얼마나 자주 운동하니?", options: ["old", "often", "many", "long"], ansIdx: 1, answer: "How often do you exercise?", reason: "빈도는 How often으로 묻습니다." },
+    { category: "how 확장", q: "How (   ) is your daughter?", ko: "너의 딸은 몇 살이니?", options: ["old", "much", "tall", "far"], ansIdx: 0, answer: "How old is your daughter?", reason: "나이는 How old를 씁니다." },
+    { category: "how 확장", q: "How (   ) is this computer?", ko: "이 컴퓨터는 얼마니?", options: ["long", "many", "much", "often"], ansIdx: 2, answer: "How much is this computer?", reason: "가격은 How much로 묻습니다." },
+    { category: "how 확장", q: "How (   ) does it take from Seoul to Busan by KTX?", ko: "KTX로 서울에서 부산까지 얼마나 걸리니?", options: ["far", "long", "often", "old"], ansIdx: 1, answer: "How long does it take from Seoul to Busan by KTX?", reason: "걸리는 시간은 How long으로 묻습니다." },
+    { category: "how 확장", q: "How (   ) people are there in your family?", ko: "너희 가족은 몇 명이니?", options: ["much", "many", "long", "tall"], ansIdx: 1, answer: "How many people are there in your family?", reason: "셀 수 있는 명사 people은 How many를 씁니다." },
+    { category: "how 확장", q: "How (   ) is he? - He is 170 centimeters tall.", ko: "그는 키가 얼마나 크니?", options: ["old", "tall", "far", "often"], ansIdx: 1, answer: "How tall is he?", reason: "키를 물을 때는 How tall입니다." },
+    { category: "how 확장", q: "How (   ) is it to the post office?", ko: "우체국까지 얼마나 머니?", options: ["many", "far", "old", "much"], ansIdx: 1, answer: "How far is it to the post office?", reason: "거리는 How far로 묻습니다." },
+    { category: "how 확장", q: "How (   ) subjects do you study?", ko: "너는 과목을 몇 개 공부하니?", options: ["much", "many", "long", "often"], ansIdx: 1, answer: "How many subjects do you study?", reason: "subjects는 셀 수 있는 복수 명사입니다." },
+    { category: "how 확장", q: "How (   ) homework do you have today?", ko: "오늘 숙제가 얼마나 많니?", options: ["much", "many", "old", "far"], ansIdx: 0, answer: "How much homework do you have today?", reason: "homework는 불가산 명사라 How much를 씁니다." },
+    { category: "how 확장", q: "How (   ) does it take to the hotel?", ko: "호텔까지 얼마나 걸리니?", options: ["long", "often", "many", "tall"], ansIdx: 0, answer: "How long does it take to the hotel?", reason: "시간/길이는 How long을 씁니다." }
+];
 
-                <!-- General Verbs -->
-                <div class="bg-white border-2 border-emerald-200 border-l-8 border-l-emerald-600 p-8 rounded-xl shadow-lg">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-emerald-800">General Verb (일반동사)</h3>
-                        <span class="text-sm bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold border border-emerald-200">Main Actor</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">진행형의 <strong>핵심 의미</strong>를 가집니다. 단, 종류가 중요합니다!</p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-emerald-50 p-3 rounded border border-emerald-200 text-center">
-                            <span class="block text-emerald-800 font-bold mb-1">Action (동작)</span>
-                            <span class="text-2xl font-black text-emerald-600">O</span>
-                            <p class="text-xs text-slate-500 mt-1">진행형 가능</p>
-                        </div>
-                        <div class="bg-red-50 p-3 rounded border border-red-200 text-center">
-                            <span class="block text-red-800 font-bold mb-1">Stative (상태)</span>
-                            <span class="text-2xl font-black text-red-600">X</span>
-                            <p class="text-xs text-slate-500 mt-1">진행형 불가</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+const allQuizMaster = [...coreQuiz, ...adverbQuiz, ...howQuiz];
 
-        <!-- 2. Progressive Tenses -->
-        <section id="progressive">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-emerald-500 inline-block pb-2 px-6">2. Making Progressive Sentences (진행형 만들기)</h2>
-                <p class="mt-4 text-slate-700 text-lg font-medium">
-                    공식: <span class="bg-indigo-100 text-indigo-900 px-2 py-1 rounded font-bold mx-1">Subject + Be + V-ing</span>
-                    <br><span class="text-sm text-slate-500">(주어 + Be동사 + 동사원형에 ing)</span>
-                </p>
-            </div>
+const shuffleArray = (arr) => [...arr].sort(() => Math.random() - 0.5);
+const buildQuizSequence = () => {
+    const a = shuffleArray(allQuizMaster.filter((q) => q.category === "who/what/which"));
+    const b = shuffleArray(allQuizMaster.filter((q) => q.category === "when/where/why/how"));
+    const c = shuffleArray(allQuizMaster.filter((q) => q.category === "how 확장"));
+    return [...a, ...b, ...c];
+};
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Present Progressive -->
-                <div class="bg-white border-2 border-blue-200 border-l-8 border-l-blue-500 p-8 rounded-xl shadow-lg card-hover cursor-pointer group" onclick="toggleSection('present-prog-detail')">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-blue-800 group-hover:text-blue-600 transition">Present Progressive</h3>
-                        <span class="text-sm bg-blue-100 text-blue-900 px-3 py-1 rounded-full font-bold border border-blue-200">Current</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">현재진행형: <strong>"지금 ~하고 있는 중이다"</strong></p>
-                    <div class="bg-blue-50 p-4 rounded border border-blue-100 mb-4 text-center">
-                        <p class="font-mono text-blue-900 font-bold text-xl">am / are / is + V-ing</p>
-                    </div>
-                    <div class="mt-6 text-right">
-                        <span class="text-blue-700 text-base font-bold group-hover:translate-x-1 inline-block transition">See Examples (예문 보기) &rarr;</span>
-                    </div>
-                </div>
+const logicTemplates = {
+    "Who is the woman over there?": ["The woman over there is my English teacher.", "Is the woman over there your English teacher?", "Is the woman over there [your English teacher]?", "Replace [your English teacher] with who.", "Who is the woman over there?"],
+    "What is your name?": ["My name is Charlie.", "Is your name Charlie?", "Is your name [Charlie]?", "Replace [Charlie] with what.", "What is your name?"],
+    "What time is it now?": ["It is ten o'clock now.", "Is it ten o'clock now?", "Is it [ten o'clock] now?", "Replace [ten o'clock] with what time.", "What time is it now?"],
+    "Who takes care of the babies?": ["Their grandmother takes care of the babies.", "Does their grandmother take care of the babies?", "Does [their grandmother] take care of the babies?", "Replace [their grandmother] with who.", "Who takes care of the babies? (does take care -> takes care)"],
+    "Which do you like, summer or winter?": ["I like winter.", "Do you like winter?", "Do you like [winter]?", "Replace [winter] with which (summer or winter).", "Which do you like, summer or winter?"],
+    "What season do you like the most?": ["I like spring the most.", "Do you like spring the most?", "Do you like [spring] the most?", "Replace [spring] with what season.", "What season do you like the most?"],
+    "What does he do after school?": ["He plays soccer after school.", "Does he play soccer after school?", "Does he do [something] after school?", "Replace [something] with what.", "What does he do after school?"],
+    "Which do you prefer, fish or meat?": ["I prefer fish.", "Do you prefer fish?", "Do you prefer [fish]?", "Replace [fish] with which (fish or meat).", "Which do you prefer, fish or meat?"],
+    "Who sings well in your class?": ["Mina sings well in my class.", "Does Mina sing well in your class?", "Does [Mina] sing well in your class?", "Replace [Mina] with who.", "Who sings well in your class? (does sing -> sings)"],
+    "What kind of pet do you want?": ["I want a cat.", "Do you want a cat?", "Do you want [a cat]?", "Replace [a cat] with what kind of pet.", "What kind of pet do you want?"],
+    "When do you do your homework?": ["I do my homework after dinner.", "Do you do your homework after dinner?", "Do you do your homework [after dinner]?", "Replace [after dinner] with when.", "When do you do your homework?"],
+    "Why do you study French?": ["I study French because I want to travel to France.", "Do you study French because you want to travel to France?", "Do you study French [because I want to travel to France]?", "Replace [because ...] with why.", "Why do you study French?"],
+    "How do I get to the police station?": ["You go straight two blocks.", "Do I go straight two blocks?", "Do I get there [by going straight two blocks]?", "Replace [by going straight two blocks] with how.", "How do I get to the police station?"],
+    "How do you feel today?": ["I feel really tired today.", "Do you feel really tired today?", "Do you feel [really tired] today?", "Replace [really tired] with how.", "How do you feel today?"],
+    "What time does the shop open?": ["The shop opens at 7:00 a.m.", "Does the shop open at 7:00 a.m.?", "Does the shop open [at 7:00 a.m.]?", "Replace [at 7:00 a.m.] with what time.", "What time does the shop open?"],
+    "How do you spend your day?": ["I spend my day reading books.", "Do you spend your day reading books?", "Do you spend your day [reading books]?", "Replace [reading books] with how.", "How do you spend your day?"],
+    "Why is she always busy?": ["She is always busy because she works two jobs.", "Is she always busy because she works two jobs?", "Is she always busy [because she works two jobs]?", "Replace [because ...] with why.", "Why is she always busy?"],
+    "When does the class start?": ["The class starts at nine.", "Does the class start at nine?", "Does the class start [at nine]?", "Replace [at nine] with when.", "When does the class start?"],
+    "Where are my glasses?": ["Your glasses are on the desk.", "Are your glasses on the desk?", "Are your glasses [on the desk]?", "Replace [on the desk] with where.", "Where are my glasses?"],
+    "What time do you get up?": ["I get up at six.", "Do you get up at six?", "Do you get up [at six]?", "Replace [at six] with what time.", "What time do you get up?"],
+    "How often do you exercise?": ["I exercise twice a week.", "Do you exercise twice a week?", "Do you exercise [twice a week]?", "Replace [twice a week] with how often.", "How often do you exercise?"],
+    "How old is your daughter?": ["My daughter is thirteen years old.", "Is your daughter thirteen years old?", "Is your daughter [thirteen years old]?", "Replace [thirteen years old] with how old.", "How old is your daughter?"],
+    "How much is this computer?": ["This computer is 1,200 dollars.", "Is this computer 1,200 dollars?", "Is this computer [1,200 dollars]?", "Replace [1,200 dollars] with how much.", "How much is this computer?"],
+    "How long does it take from Seoul to Busan by KTX?": ["It takes about two and a half hours from Seoul to Busan by KTX.", "Does it take about two and a half hours from Seoul to Busan by KTX?", "Does it take [about two and a half hours] from Seoul to Busan by KTX?", "Replace [about two and a half hours] with how long.", "How long does it take from Seoul to Busan by KTX?"],
+    "How many people are there in your family?": ["There are four people in my family.", "Are there four people in your family?", "Are there [four] people in your family?", "Replace [four] with how many.", "How many people are there in your family?"],
+    "How tall is he?": ["He is 170 centimeters tall.", "Is he 170 centimeters tall?", "Is he [170 centimeters tall]?", "Replace [170 centimeters tall] with how tall.", "How tall is he?"],
+    "How far is it to the post office?": ["It is about 100 meters to the post office.", "Is it about 100 meters to the post office?", "Is it [about 100 meters] to the post office?", "Replace [about 100 meters] with how far.", "How far is it to the post office?"],
+    "How many subjects do you study?": ["I study ten subjects.", "Do you study ten subjects?", "Do you study [ten] subjects?", "Replace [ten] with how many.", "How many subjects do you study?"],
+    "How much homework do you have today?": ["I have a lot of homework today.", "Do you have a lot of homework today?", "Do you have [a lot of] homework today?", "Replace [a lot of] with how much.", "How much homework do you have today?"],
+    "How long does it take to the hotel?": ["It takes an hour to the hotel.", "Does it take an hour to the hotel?", "Does it take [an hour] to the hotel?", "Replace [an hour] with how long.", "How long does it take to the hotel?"]
+};
 
-                <!-- Past Progressive -->
-                <div class="bg-white border-2 border-purple-200 border-l-8 border-l-purple-500 p-8 rounded-xl shadow-lg card-hover cursor-pointer group" onclick="toggleSection('past-prog-detail')">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-purple-800 group-hover:text-purple-600 transition">Past Progressive</h3>
-                        <span class="text-sm bg-purple-100 text-purple-900 px-3 py-1 rounded-full font-bold border border-purple-200">Past</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">과거진행형: <strong>"그때 ~하고 있는 중이었다"</strong></p>
-                    <div class="bg-purple-50 p-4 rounded border border-purple-100 mb-4 text-center">
-                        <p class="font-mono text-purple-900 font-bold text-xl">was / were + V-ing</p>
-                    </div>
-                    <div class="mt-6 text-right">
-                        <span class="text-purple-700 text-base font-bold group-hover:translate-x-1 inline-block transition">See Examples (예문 보기) &rarr;</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Detail: Present Progressive -->
-        <section id="present-prog-detail" class="hidden-content fade-in bg-blue-50/50 p-8 rounded-3xl shadow-xl border-2 border-blue-100">
-            <div class="flex items-center space-x-4 mb-8 border-b-2 border-blue-200 pb-4">
-                <div class="bg-blue-600 text-white w-10 h-10 flex items-center justify-center rounded-full font-black text-xl">1</div>
-                <h3 class="text-3xl font-black text-blue-900">Present Progressive Rules</h3>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <!-- Action Verbs (Possible) -->
-                <div class="bg-white p-8 rounded-2xl border-2 border-blue-200 shadow-lg">
-                    <h4 class="text-xl font-black text-emerald-600 mb-4 flex items-center">
-                        <span class="bg-emerald-100 px-2 py-1 rounded mr-2">O</span> Action Verbs (동작동사)
-                    </h4>
-                    <p class="text-sm text-slate-500 mb-4">동작이 눈에 보이는 경우, 진행형이 아주 자연스럽습니다.</p>
-                    <ul class="example-list text-left space-y-3">
-                        <li><span class="eng">I <span class="text-blue-600 font-bold">am</span> play<span class="text-blue-600 font-bold">ing</span> soccer.</span> <br><span class="kor">나는 축구를 하고 있는 중이다. (운동장에서 뛰는 모습)</span></li>
-                        <li><span class="eng">She <span class="text-blue-600 font-bold">is</span> eat<span class="text-blue-600 font-bold">ing</span> pizza.</span> <br><span class="kor">그녀는 피자를 먹고 있는 중이다. (입에 넣는 중)</span></li>
-                        <li><span class="eng">They <span class="text-blue-600 font-bold">are</span> study<span class="text-blue-600 font-bold">ing</span> English.</span> <br><span class="kor">그들은 영어를 공부하고 있는 중이다.</span></li>
-                        <li><span class="eng">It <span class="text-blue-600 font-bold">is</span> sleep<span class="text-blue-600 font-bold">ing</span> now.</span> <br><span class="kor">그것은(아기는) 지금 자고 있는 중이다.</span></li>
-                    </ul>
-                </div>
-
-                <!-- Stative Verbs (Impossible) -->
-                <div class="bg-white p-8 rounded-2xl border-2 border-red-200 shadow-lg relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-red-100 text-red-600 font-bold px-3 py-1 rounded-bl-lg text-xs">Caution!</div>
-                    <h4 class="text-xl font-black text-red-600 mb-4 flex items-center">
-                        <span class="bg-red-100 px-2 py-1 rounded mr-2">X</span> Stative Verbs (상태동사)
-                    </h4>
-                    <p class="text-sm text-slate-500 mb-4">마음속 상태나 소유는 '동작'이 아니므로 진행형을 쓰면 어색합니다.</p>
-                    <ul class="example-list text-left space-y-4">
-                        <li>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="eng wrong-sentence">I am knowing him.</span>
-                                <span class="text-xs font-bold text-red-500 border border-red-200 px-1 rounded">WRONG</span>
-                            </div>
-                            <span class="kor text-red-400">나는 그를 아는 중이다? (X) &rarr; 알면 알고 모르면 모르는 것.</span>
-                            <div class="mt-1 text-sm font-bold text-emerald-600">Correct: I know him. (나는 그를 안다.)</div>
-                        </li>
-                        <li>
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="eng wrong-sentence">She is liking apples.</span>
-                                <span class="text-xs font-bold text-red-500 border border-red-200 px-1 rounded">WRONG</span>
-                            </div>
-                            <span class="kor text-red-400">그녀는 사과를 좋아하는 중이다? (X)</span>
-                            <div class="mt-1 text-sm font-bold text-emerald-600">Correct: She likes apples. (좋아한다.)</div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Detail: Past Progressive -->
-        <section id="past-prog-detail" class="hidden-content fade-in bg-purple-50/50 p-8 rounded-3xl shadow-xl border-2 border-purple-100">
-            <div class="flex items-center space-x-4 mb-8 border-b-2 border-purple-200 pb-4">
-                <div class="bg-purple-600 text-white w-10 h-10 flex items-center justify-center rounded-full font-black text-xl">2</div>
-                <h3 class="text-3xl font-black text-purple-900">Past Progressive Rules</h3>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div class="bg-white p-8 rounded-2xl border-2 border-purple-200 shadow-lg">
-                    <h4 class="text-xl font-black text-purple-800 mb-4">Action Verbs in Past</h4>
-                    <p class="text-sm text-slate-500 mb-4">과거의 <strong>특정 순간</strong>에 하고 있었던 행동을 묘사합니다.</p>
-                    <ul class="example-list text-left space-y-3">
-                        <li><span class="eng">I <span class="text-purple-600 font-bold">was</span> run<span class="text-purple-600 font-bold">ning</span> fast.</span> <br><span class="kor">나는 빨리 달리고 있던 중이었다.</span></li>
-                        <li><span class="eng">You <span class="text-purple-600 font-bold">were</span> eat<span class="text-purple-600 font-bold">ing</span> lunch.</span> <br><span class="kor">너는 점심을 먹고 있던 중이었다.</span></li>
-                        <li><span class="eng">We <span class="text-purple-600 font-bold">were</span> play<span class="text-purple-600 font-bold">ing</span> a game.</span> <br><span class="kor">우리는 게임을 하고 있던 중이었다.</span></li>
-                        <li><span class="eng">He <span class="text-purple-600 font-bold">was</span> study<span class="text-purple-600 font-bold">ing</span> math.</span> <br><span class="kor">그는 수학을 공부하고 있던 중이었다.</span></li>
-                    </ul>
-                </div>
-                
-                <div class="bg-white p-8 rounded-2xl border-2 border-purple-100 shadow-lg flex flex-col justify-center items-center text-center">
-                    <div class="bg-purple-100 p-6 rounded-full mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h4 class="text-xl font-black text-purple-900 mb-2">Context Tip</h4>
-                    <p class="text-slate-600">과거진행형은 보통 <strong>"내가 집에 들어갔을 때(When I came home), 그들은 자고 있었다(they were sleeping)"</strong> 처럼 다른 사건과 함께 자주 쓰입니다.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. Expansion: Negative & Question -->
-        <section id="expansion">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-slate-400 inline-block pb-2 px-6">3. Easy Expansion: Negative & Question</h2>
-                <div class="bg-yellow-50 border-2 border-yellow-200 p-4 rounded-xl mt-6 inline-block max-w-3xl">
-                    <p class="text-lg font-bold text-yellow-900">
-                        <span class="text-2xl mr-2">💡</span>
-                        진행형 문장에는 <span class="text-indigo-600 font-black">Be동사(am/are/is/was/were)</span>가 이미 들어있습니다!
-                    </p>
-                    <p class="text-slate-700 mt-2">
-                        따라서, 일반동사의 복잡한 규칙(Do/Does)을 생각할 필요 없이,<br>
-                        <strong>Be동사의 규칙(Not 붙이기 / 자리 바꾸기)</strong>만 그대로 쓰면 됩니다. 아주 쉽죠?
-                    </p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Negative -->
-                <div class="bg-slate-800 text-white p-8 rounded-xl shadow-lg border-2 border-slate-600">
-                    <div class="flex items-center mb-6">
-                        <span class="bg-red-500 text-white font-bold px-3 py-1 rounded mr-3 text-sm">Negative (부정)</span>
-                        <h3 class="text-xl font-bold">Be + <span class="text-red-400">NOT</span> + V-ing</h3>
-                    </div>
-                    <ul class="space-y-4 text-lg">
-                        <li class="border-b border-slate-600 pb-3">
-                            <p class="eng">I <span class="text-indigo-400 font-bold">am</span> <span class="text-red-400 font-black">not</span> sleeping.</p>
-                            <p class="text-sm text-slate-400 mt-1">(나는 자고 있는 중이 아니다.)</p>
-                        </li>
-                        <li class="border-b border-slate-600 pb-3">
-                            <p class="eng">She <span class="text-indigo-400 font-bold">was</span> <span class="text-red-400 font-black">not</span> eating.</p>
-                            <p class="text-sm text-slate-400 mt-1">(그녀는 먹고 있는 중이 아니었다.)</p>
-                        </li>
-                        <li>
-                            <p class="eng">They <span class="text-indigo-400 font-bold">are</span> <span class="text-red-400 font-black">not</span> playing.</p>
-                            <p class="text-sm text-slate-400 mt-1">(그들은 놀고 있는 중이 아니다.)</p>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Question -->
-                <div class="bg-slate-800 text-white p-8 rounded-xl shadow-lg border-2 border-slate-600">
-                    <div class="flex items-center mb-6">
-                        <span class="bg-yellow-500 text-white font-bold px-3 py-1 rounded mr-3 text-sm">Question (의문)</span>
-                        <h3 class="text-xl font-bold"><span class="text-indigo-400">Be</span> + S + V-ing?</h3>
-                    </div>
-                    <ul class="space-y-4 text-lg">
-                        <li class="border-b border-slate-600 pb-3">
-                            <p class="eng"><span class="text-indigo-400 font-black">Are</span> you sleeping?</p>
-                            <p class="text-sm text-slate-400 mt-1">(너 자고 있는 중이니?)</p>
-                        </li>
-                        <li class="border-b border-slate-600 pb-3">
-                            <p class="eng"><span class="text-indigo-400 font-black">Was</span> she eating?</p>
-                            <p class="text-sm text-slate-400 mt-1">(그녀는 먹고 있는 중이었니?)</p>
-                        </li>
-                        <li>
-                            <p class="eng"><span class="text-indigo-400 font-black">Are</span> they playing?</p>
-                            <p class="text-sm text-slate-400 mt-1">(그들은 놀고 있는 중이니?)</p>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-slate-500 text-sm pb-8">
-            <p>&copy; 2026 Essential English Grammar (Progressive Tense Mastery). Designed for All Learners.</p>
-        </footer>
-
-    </main>
-
-    <script>
-        // Section Toggle Logic
-        function toggleSection(id) {
-            // Hide all detail sections in the specific group (if needed, or just toggle individually)
-            // For this design, simpler toggle is better as sections are distinct
-            
-            const element = document.getElementById(id);
-            const isVisible = element.style.display === 'block';
-
-            // Optional: Close others? Let's keep it simple and just toggle the clicked one
-            // To mimic accordion behavior (close others), uncomment below:
-            /*
-            document.querySelectorAll('.hidden-content').forEach(el => {
-                el.style.display = 'none';
-            });
-            */
-
-            if (isVisible) {
-                element.style.display = 'none';
-            } else {
-                element.style.display = 'block';
-                // Smooth scroll to the section
-                setTimeout(() => {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+const buildLogicSteps = (q) => {
+    const steps = logicTemplates[q.answer];
+    if (steps) {
+        return steps.map((line, idx) => {
+            if (idx === 3) {
+                const m = line.match(/^Replace \[(.+)\] with (.+)\.$/i);
+                if (m) {
+                    return `Step 4. [${m[1]}]를 ${m[2]} 의문사(구)로 대체한 후, 문장 맨 앞으로 이동시킵니다.`;
+                }
+                return "Step 4. 의문사가 주어 역할이면 do/does 없이 동사를 바로 두고, 의문사를 문장 맨 앞으로 이동시킵니다.";
             }
+            if (idx === 4 && line.includes("(does")) {
+                return `Step 5. ${line} 즉, 조동사 does + 동사원형 형태가 3인칭 단수 동사 한 단어 형태로 바뀝니다.`;
+            }
+            return `Step ${idx + 1}. ${line}`;
+        });
+    }
+    const keyWord = q.options[q.ansIdx];
+    return [
+        "Step 1. Start with a declarative sentence.",
+        "Step 2. Make a Yes/No question.",
+        "Step 3. Hide the target information in brackets.",
+        `Step 4. Replace the bracket with ${keyWord}.`,
+        `Step 5. Move the wh-word to the front: ${q.answer}`
+    ];
+};
+
+const App = () => {
+    const [quizIndex, setQuizIndex] = useState(0);
+    const [quizFeedback, setQuizFeedback] = useState("");
+    const [shuffledQuiz, setShuffledQuiz] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(false);
+
+    const speak = (text) => {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            const uttr = new SpeechSynthesisUtterance(text);
+            uttr.lang = "en-US";
+            uttr.rate = 0.88;
+            window.speechSynthesis.speak(uttr);
         }
-    </script>
+    };
+
+    useEffect(() => {
+        setShuffledQuiz(buildQuizSequence());
+    }, []);
+
+    const handleAnswer = (clickedIdx) => {
+        if (isCorrect) return;
+        const current = shuffledQuiz[quizIndex];
+        if (clickedIdx === current.ansIdx) {
+            setIsCorrect(true);
+            setQuizFeedback(`정답입니다! ${current.reason}`);
+            speak(current.answer);
+            return;
+        }
+        setIsCorrect(false);
+        setQuizFeedback("다시 생각해보세요. 의문사 의미(사람/사물/선택/시간/이유/방법)와 어순을 함께 확인하세요.");
+    };
+
+    const nextQuestion = () => {
+        if (quizIndex < shuffledQuiz.length - 1) {
+            setQuizIndex(quizIndex + 1);
+            setQuizFeedback("");
+            setIsCorrect(false);
+            return;
+        }
+        setQuizFeedback("30문제를 모두 완료했습니다. 다시 도전해보세요.");
+    };
+
+    const restartQuiz = () => {
+        setShuffledQuiz(buildQuizSequence());
+        setQuizIndex(0);
+        setQuizFeedback("");
+        setIsCorrect(false);
+    };
+
+    const currentQ = shuffledQuiz[quizIndex];
+    const speakingSentences = useMemo(() => allQuizMaster.map((item) => ({ en: item.answer, ko: item.ko })), []);
+    const progressPercent = shuffledQuiz.length ? Math.round((quizIndex / shuffledQuiz.length) * 100) : 0;
+
+    return (
+        <div className="lesson-root min-h-screen bg-slate-50 text-slate-900 pb-12 overflow-x-hidden antialiased">
+            <header className="bg-white border-b sticky top-0 z-50 shadow-sm px-4 py-4">
+                <div className="content-shell flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <div className="bg-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-100"><Icons.Zap /></div>
+                        <div className="text-left">
+                            <h1 className="text-2xl font-black tracking-tighter italic leading-none">Grammar CHECK CHECK</h1>
+                            <span className="text-blue-600 font-black text-xs mt-1 block tracking-tight italic">중학영어 1-A / Lesson 4. What Is Your Hobby?</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main className="content-shell p-4 md:p-6 space-y-8">
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-2xl border border-slate-100 text-left">
+                    <h2 className="text-3xl font-black text-slate-800 italic mb-8 underline decoration-blue-100 underline-offset-8">복습: 의문문의 탄생 원리</h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                            <h3 className="text-xl font-black text-slate-800 mb-3">1. 육하원칙 의문사 6형제</h3>
+                            <ul className="space-y-2 font-bold text-slate-700 text-sm">
+                                <li className="bg-white p-2 rounded-lg border border-slate-200">Who(누가), When(언제), Where(어디서)</li>
+                                <li className="bg-white p-2 rounded-lg border border-slate-200">What(무엇), Why(왜), How(어떻게)</li>
+                            </ul>
+                            <div className="mt-4 bg-white p-4 rounded-2xl border-l-4 border-blue-500">
+                                <p className="font-black text-blue-700">5단계 생성 공식</p>
+                                <p className="text-sm mt-2 font-bold text-slate-700">1) 평서문 → 2) Yes/No 의문문 → 3) 궁금한 정보 가리기 → 4) 의문사 교체 → 5) 의문사 맨 앞으로</p>
+                            </div>
+                        </div>
+                        <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100">
+                            <h3 className="text-xl font-black text-blue-800 mb-3">2. be동사 vs 일반동사</h3>
+                            <div className="space-y-3 text-sm font-bold">
+                                <div className="bg-white p-3 rounded-xl border border-blue-100">
+                                    <p className="text-blue-700">be동사</p>
+                                    <p>Who is the woman over there? (저기 있는 저 여자는 누구니?)</p>
+                                    <p className="text-xs text-slate-500">be동사를 주어 앞으로 보냅니다.</p>
+                                </div>
+                                <div className="bg-white p-3 rounded-xl border border-blue-100">
+                                    <p className="text-blue-700">일반동사</p>
+                                    <p>Why do you study French? (너는 왜 프랑스어를 공부하니?)</p>
+                                    <p className="text-xs text-slate-500">do/does를 앞에 두고 본동사는 원형을 씁니다.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-xl border border-slate-100 text-left">
+                    <h3 className="text-2xl font-black text-slate-800 italic mb-8">심화 1: who / what / which</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="bg-green-50 p-6 rounded-3xl border border-green-100">
+                            <h4 className="text-xl font-black text-green-700 mb-4">What vs Which</h4>
+                            <ul className="space-y-2 font-bold text-slate-700 text-sm">
+                                <li className="bg-white p-2 rounded-lg border border-green-100">What: 범위가 열려 있을 때 (무엇/무슨)</li>
+                                <li className="bg-white p-2 rounded-lg border border-green-100">Which: 정해진 선택지에서 고를 때 (어느/어느 것)</li>
+                            </ul>
+                            <div className="mt-4 bg-white p-4 rounded-2xl border-l-4 border-green-500 sentence-box cursor-pointer" onClick={() => speak("Which do you prefer, fish or meat?") }>
+                                <p className="font-black text-green-800">Which do you prefer, fish or meat? (생선과 고기 중 어느 것을 더 선호하니?)</p>
+                            </div>
+                        </div>
+                        <div className="bg-orange-50 p-6 rounded-3xl border border-orange-100">
+                            <h4 className="text-xl font-black text-orange-700 mb-4">의문형용사 + 주어 의문사</h4>
+                            <ul className="space-y-2 font-bold text-slate-700 text-sm">
+                                <li className="bg-white p-2 rounded-lg border border-orange-100">What/Which + 명사: What season, Which bus</li>
+                                <li className="bg-white p-2 rounded-lg border border-orange-100">Who가 주어인 문장도 5단계를 동일 적용: does 의문문 생성 → [주어]를 who로 대체 → 맨 앞으로 이동 → 최종형에서 does+동사원형이 3인칭 단수 동사로 정리</li>
+                            </ul>
+                            <div className="mt-4 bg-white p-4 rounded-2xl border-l-4 border-orange-500 sentence-box cursor-pointer" onClick={() => speak("Who takes care of the babies?") }>
+                                <p className="font-black text-orange-800">Who takes care of the babies? (아기들을 누가 돌보니?)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-6 bg-amber-50 p-5 rounded-2xl border-l-4 border-amber-500">
+                        <p className="font-bold text-amber-800">Tony's Strategy - 중등 내신 포인트: 의문사가 주어일 때도 공식은 동일합니다. does 의문문을 만든 뒤 [주어]를 who로 바꾸어 앞으로 보내면, 최종 문장에서 3인칭 단수 동사형으로 정리됩니다. (예: does take care → takes care)</p>
+                    </div>
+                </section>
+
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-xl border border-slate-100 text-left">
+                    <h3 className="text-2xl font-black text-slate-800 italic mb-8">심화 2: when / where / why / how + 확장 표현</h3>
+                    <div className="overflow-x-auto rounded-3xl border border-slate-200">
+                        <table className="w-full text-sm text-center border-collapse">
+                            <thead className="bg-slate-50 font-sans text-sm tracking-normal text-slate-500 border-b">
+                                <tr>
+                                    <th className="p-4 border-r">표현</th>
+                                    <th className="p-4 border-r">의미</th>
+                                    <th className="p-4">교재 예문</th>
+                                </tr>
+                            </thead>
+                            <tbody className="font-bold">
+                                <tr className="border-b"><td className="p-4 border-r bg-slate-50">How many</td><td className="p-4 border-r">개수</td><td className="p-4 text-left">How many people are there in your family? (너희 가족은 몇 명이니?)</td></tr>
+                                <tr className="border-b"><td className="p-4 border-r bg-slate-50">How much</td><td className="p-4 border-r">양/가격</td><td className="p-4 text-left">How much is this computer? (이 컴퓨터는 얼마니?)</td></tr>
+                                <tr className="border-b"><td className="p-4 border-r bg-slate-50">How old</td><td className="p-4 border-r">나이</td><td className="p-4 text-left">How old is your daughter? (너의 딸은 몇 살이니?)</td></tr>
+                                <tr className="border-b"><td className="p-4 border-r bg-slate-50">How long</td><td className="p-4 border-r">시간/길이</td><td className="p-4 text-left">How long does it take from Seoul to Busan by KTX? (KTX로 서울에서 부산까지 얼마나 걸리니?)</td></tr>
+                                <tr><td className="p-4 border-r bg-slate-50">How often</td><td className="p-4 border-r">빈도</td><td className="p-4 text-left">How often do you exercise? (너는 얼마나 자주 운동하니?)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-4 mt-6">
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("Why do you study French?") }>
+                            <p className="font-black">Why do you study French? (너는 왜 프랑스어를 공부하니?)</p>
+                        </div>
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("How long does it take from Seoul to Busan by KTX?") }>
+                            <p className="font-black">How long does it take from Seoul to Busan by KTX? (KTX로 서울에서 부산까지 얼마나 걸리니?)</p>
+                        </div>
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("How often do you exercise?") }>
+                            <p className="font-black">How often do you exercise? (너는 얼마나 자주 운동하니?)</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="bg-blue-600 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12"><Icons.Microscope /></div>
+                    <h3 className="text-2xl font-black mb-4 flex items-center gap-3 italic underline decoration-blue-400 underline-offset-8">
+                        <Icons.Microscope /> 의문사 검증 연구소 (30문항)
+                    </h3>
+                    {shuffledQuiz.length > 0 && currentQ && (
+                        <div className="bg-white/10 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/20">
+                            <div className="mb-5">
+                                <div className="h-3 bg-white/20 rounded-full overflow-hidden">
+                                    <div className="h-full bg-yellow-300 transition-all duration-300" style={{ width: `${progressPercent}%` }}></div>
+                                </div>
+                                <p className="text-xs text-blue-100 mt-2 font-bold">진행도 {progressPercent}%</p>
+                            </div>
+                            <div className="mb-4 flex items-center justify-between gap-3">
+                                <div className="px-4 py-1 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest text-blue-100 font-mono italic">Quest {quizIndex + 1} / {shuffledQuiz.length}</div>
+                                <div className="px-4 py-1 bg-yellow-300 text-slate-900 rounded-full text-xs font-black">{currentQ.category}</div>
+                            </div>
+                            <div className="mb-8 text-left">
+                                <p className="text-sm font-bold text-blue-200 mb-2 italic">교재 중등 4과 A/B/C 문장을 기반으로 알맞은 의문사를 고르세요.</p>
+                                <p className="text-lg font-black bg-blue-900/50 p-5 rounded-xl border border-white/10 text-yellow-300">Q. {currentQ.q} ({currentQ.ko})</p>
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {currentQ.options.map((opt, i) => (
+                                    <button
+                                        key={`${quizIndex}-${i}`}
+                                        onClick={() => handleAnswer(i)}
+                                        className={`quiz-btn py-4 rounded-2xl font-black shadow-lg text-base ${isCorrect && i === currentQ.ansIdx ? "bg-yellow-400 text-slate-900" : "bg-white text-blue-600 hover:bg-blue-50"}`}
+                                        disabled={isCorrect && i !== currentQ.ansIdx}
+                                    >{opt}</button>
+                                ))}
+                            </div>
+                            {quizFeedback && (
+                                <div className="mt-8 p-6 bg-white/20 rounded-2xl border border-white/30 text-left">
+                                    <p className="text-sm font-bold flex items-center gap-2 leading-relaxed"><Icons.CheckCircle2 /> {quizFeedback}</p>
+                                    <div className="mt-3 p-4 rounded-xl bg-blue-950/30 border border-white/20">
+                                        <p className="font-black">{currentQ.answer} ({currentQ.ko})</p>
+                                    </div>
+                                    {isCorrect && (
+                                        <div className="mt-4 p-4 rounded-xl bg-white/10 border border-white/20">
+                                            <p className="font-black text-yellow-300 mb-2">생성 논리 Step 1~5</p>
+                                            {buildLogicSteps(currentQ).map((line, idx) => <p key={idx} className="text-xs font-bold leading-relaxed">{line}</p>)}
+                                        </div>
+                                    )}
+                                    <div className="flex gap-3 mt-6">
+                                        <button onClick={() => speak(currentQ.answer)} className="flex-1 bg-white/20 text-white py-3 rounded-xl font-black shadow-md flex items-center justify-center gap-2 hover:bg-white/30">
+                                            <Icons.Volume2 size={16} /> 정답 문장 다시 듣기
+                                        </button>
+                                        {isCorrect && (
+                                            <button
+                                                onClick={() => {
+                                                    if (quizIndex < shuffledQuiz.length - 1) {
+                                                        nextQuestion();
+                                                    } else {
+                                                        restartQuiz();
+                                                    }
+                                                }}
+                                                className="flex-1 bg-yellow-400 text-slate-900 py-3 rounded-xl font-black shadow-md hover:bg-yellow-300 transition-colors"
+                                            >{quizIndex < shuffledQuiz.length - 1 ? "다음 문항" : "다시 도전"}</button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </section>
+
+                <section className="bg-slate-100 rounded-[3rem] p-10 shadow-inner">
+                    <div className="flex items-center justify-between mb-8">
+                        <h3 className="text-2xl font-black text-slate-800 flex items-center gap-2 italic"><Icons.Volume2 className="text-blue-600" /> 문장 낭독 훈련 (30문장)</h3>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        {speakingSentences.map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="bg-white p-5 rounded-2xl flex justify-between items-center border border-slate-200 hover:border-blue-400 transition-all hover:shadow-lg group cursor-pointer text-left"
+                                onClick={() => speak(item.en)}
+                            >
+                                <div className="flex-1 pr-4">
+                                    <p className="text-sm font-black text-slate-800 leading-tight group-hover:text-blue-600">{item.en}</p>
+                                    <p className="text-xs text-slate-400 mt-2 font-medium">({item.ko})</p>
+                                </div>
+                                <div className="text-slate-300 group-hover:text-blue-500"><Icons.PlayCircle size={24} /></div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </main>
+
+            <footer className="content-shell px-4 mt-20 text-center border-t-2 border-slate-100 pt-10 pb-20">
+                <div className="max-w-4xl mx-auto">
+                    <h3 className="text-2xl font-black text-gray-800 mb-2 italic">Tony's Speaking English Grammar</h3>
+                    <p className="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span className="underline">어순 감각</span>에 있습니다.</p>
+                    <div className="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                    <div className="text-gray-500 text-sm leading-relaxed italic font-bold">
+                        <span>Tony's Speaking English Grammar helps you master the natural sense of English word order.</span>
+                        <span className="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    );
+};
+
+const container = document.getElementById("root");
+const root = ReactDOM.createRoot(container);
+root.render(<App />);
+</script>
 </body>
 </html>

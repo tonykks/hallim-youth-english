@@ -3,443 +3,774 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Grammar Formulas</title>
-    
+    <title>Grammar CHECK CHECK - 인칭대명사 Master</title>
+    <!-- React, ReactDOM, Babel for local execution -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- 폰트 설정 -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
-        
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f8fafc;
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        :root {
+            --fs-lg: clamp(1.06rem, 0.98rem + 0.35vw, 1.2rem);
+            --fs-md: clamp(0.96rem, 0.9rem + 0.2vw, 1.05rem);
+            --fs-sm: clamp(0.86rem, 0.82rem + 0.18vw, 0.94rem);
         }
-        .font-mono {
-            font-family: 'Roboto Mono', monospace;
-        }
-        .fade-in {
-            animation: fadeIn 0.4s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .content-shell { width: min(100% - 1rem, 1180px); margin-inline: auto; }
+        .lesson-root { font-size: var(--fs-md); line-height: 1.6; }
+        .lesson-root .font-serif,
+        .lesson-root .font-mono { font-family: 'Noto Sans KR', sans-serif !important; }
+        .lesson-root [class*="text-[9px]"],
+        .lesson-root [class*="text-[10px]"],
+        .lesson-root [class*="text-[11px]"],
+        .lesson-root .text-xs { font-size: var(--fs-sm) !important; line-height: 1.45 !important; }
+        .lesson-root .text-sm { font-size: var(--fs-md) !important; line-height: 1.55 !important; }
+        .lesson-root .text-lg { font-size: var(--fs-lg) !important; line-height: 1.45 !important; }
+        .tab-active { background-color: #2563eb; color: white; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2); }
+        .label-vertical { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 0.2em; font-weight: 900; }
+        .quiz-btn { transition: all 0.2s; }
+        .quiz-btn:active { transform: scale(0.95); }
+        .table-container::-webkit-scrollbar { height: 6px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="root"></div>
 
-    <script>
-        const grammarData = {
-            "partsOfSpeech": {
-                id: "partsOfSpeech",
-                title: "1. 8품사 (The 8 Parts of Speech)",
-                subtitle: "문장을 구성하는 최소 단위의 재료 (Materials)",
-                items: [
-                    { 
-                        term: "명사(Noun)", 
-                        def: "사람, 사물, 장소, 개념의 이름<br>• 사람: Tom(탐), teacher(선생님)<br>• 사물: book(책), apple(사과)<br>• 장소: school(학교), Seoul(서울)<br>• 개념: love(사랑), hope(희망)", 
-                        role: "주어(S), 목적어(O), 보어(C) 역할",
-                        example: "1. <u>Tom</u> is a <u>student</u>. (톰은 학생 입니다.)<br>Tom(주어), student(보어)<br><br>2. <u>Amy</u> likes <u>pizza</u>. (에이미는 피자를 좋아합니다.)<br>Amy(주어), pizza(목적어)"
-                    },
-                    { 
-                        term: "대명사(Pronoun)", 
-                        def: "명사를 대신하여 부르는 말<br>• 1인칭: I(나), We(우리들)<br>• 2인칭: You(너), You(너희들)<br>• 3인칭: He(그), She(그녀), It(그것), They(그들), This(이것), That(저것), These(이것들), Those(저것들)", 
-                        role: "명사와 동일 (주어, 목적어, 보어 역할)",
-                        example: "1. <u>He</u> is my friend. (그는 나의 친구입니다.)<br>He(주어)<br><br>2. <u>I</u> like <u>you</u>. (나는 너를 좋아합니다.)<br>I(주어), you(목적어)"
-                    },
-                    { 
-                        term: "동사(Verb)", 
-                        def: "주어의 동작이나 상태를 서술<br>• <b>동작동사</b>: 시작과 끝이 있어 반복할 수 있고 진행형(~하는 중)을 만들 수 있다. (run: 달리다, walk: 걷다, sing: 노래하다)<br>• <b>상태동사</b>: 움직임이 없는 상태를 나타내며 반복할 수 없고 진행형을 만들 수 없다. (know: 알다, like: 좋아하다, want: 원하다, believe: 믿다)", 
-                        role: "문장의 중심, 서술어(V) 역할",
-                        example: "1. Amy <u>sings</u> a song. (에이미는 노래를 부릅니다.)<br>Amy(주어), sings(동사)<br><br>2. Tom <u>knows</u> the answer. (탐은 답을 압니다.)<br>Tom(주어), knows(동사)"
-                    },
-                    { 
-                        term: "형용사(Adjective)", 
-                        def: "명사의 성질이나 상태를 설명하며 범위를 좁혀주는 말<br>• <b>구체화(한정)</b>: 넓은 범위를 필터링하여 좁혀줌<br>• fresh <u>air</u> (상쾌한 공기): 모든 공기 → 상쾌한 공기<br>• a white <u>cat</u> (흰 고양이): 모든 고양이 → 흰 고양이", 
-                        role: "명사 수식 및 주어의 상태 설명(보어)<br>• <b>명사 보어</b>: 주어의 '자격/신분' (I am a student)<br>• <b>형용사 보어</b>: 주어의 '성질/상태' (I am happy)",
-                        example: "1. Mary is a <u>pretty</u> girl. (메리는 예쁜 소녀다.)<br>pretty(명사 girl을 직접 수식)<br><br>2. Mary is <u>pretty</u>. (메리는 예쁘다.)<br>pretty(주어 Mary의 상태를 보충 설명)"
-                    },
-                    { 
-                        term: "부사(Adverb)", 
-                        def: "명사 이외의 것(동사, 형용사, 다른 부사, 문장 전체)을 수식하는 말입니다. 가장 핵심 기능은 <b>동사 수식</b>입니다.", 
-                        role: "수식어(M) - 문장 성분(S, V, O, C)에는 포함되지 않음",
-                        example: "1. <b>형용사 수식</b> (형용사 앞): She is <u>very</u> kind. (매우 친절하다)<br>2. <b>부사 수식</b> (부사 앞): He runs <u>very</u> fast. (매우 빨리 달린다)<br>3. <b>문장 전체 수식</b> (문장 앞): <u>Honestly</u>, I don’t know. (솔직히 모른다)<br>4. <b>동사 수식 (가장 중요)</b>:<br>• 일반: She runs <u>fast</u>. (빨리 달린다) - 문장 끝<br>• 빈도: He <u>always</u> studies. (항상 공부한다) - 동사 앞 / He is <u>always</u> late. (항상 늦는다) - be동사 뒤"
-                    },
-                    { 
-                        term: "전치사(Preposition)", 
-                        def: "명사 앞에 놓여 명사와의 관계를 설정하는 <b>관계 설정자</b>입니다.<br>• 반드시 뒤에 명사가 오며, 이를 <b>전명구</b>(전치사+명사)라고 부릅니다.<br>• in(안에), on(위에), under(아래에), with(함께), for(~을 위해) 등", 
-                        role: "형용사 또는 부사 역할을 하도록 <b>구를 만드는 장치</b>",
-                        example: "1. <b>형용사 역할</b>: The boy [<u>in the room</u>] is my friend. (그 방 안의 소년은 내 친구다.)<br>→ 명사 boy를 수식<br><br>2. <b>부사 역할(장소)</b>: She lives [<u>in Seoul</u>]. (그녀는 서울에 산다.)<br>→ 동사 lives를 수식<br><br>3. <b>부사 역할(시간)</b>: He came [<u>at night</u>]. (그는 밤에 왔다.)<br>→ 동사 came을 수식"
-                    },
-                    { 
-                        term: "접속사(Conjunction)", 
-                        def: "단어, 구, 절을 연결하는 <b>연결 고리</b>입니다.<br>• <b>등위접속사</b>: 같은 자격끼리 연결 (and, but, or, so)<br>• <b>종속접속사</b>: 한 절을 문장 안의 성분(명사, 형용사, 부사)으로 종속시켜 품사 역할을 하게 함", 
-                        role: "문장 성분을 묶거나 변환하는 논리 연산자",
-                        example: "1. <b>등위접속사 (대등 연결)</b><br>• 단어+단어: Tom <u>and</u> Jerry (톰과 제리)<br>• 구+구: <u>in the room</u> and <u>on the table</u> (방 안과 탁자 위)<br>• 절+절: I like coffee, <u>but</u> she likes tea. (커피를 좋아하지만 차를 좋아한다)<br><br>2. <b>종속접속사 (품사 역할 수행)</b><br>• <b>명사절</b> (~하는 것): I think <u>that</u> he is right. (그가 옳다고 생각한다)<br>• <b>형용사절</b> (명사 수식): The boy <u>who</u> is running is my brother. (달리고 있는 소년은 동생이다)<br>• <b>부사절</b> (이유/시간): I stayed home <u>because</u> it was raining. (비가 와서 집에 있었다)"
-                    },
-                    { 
-                        term: "감탄사(Interjection)", 
-                        def: "기쁨, 슬픔, 놀람 등의 감정을 즉각적으로 표현하는 말입니다.", 
-                        role: "문장의 다른 성분과는 독립적으로 사용됨",
-                        example: "1. <u>Wow</u>! The sunset is beautiful. (와! 노을이 아름답다.)<br>2. <u>Ouch</u>! It hurts. (아야! 아파요.)"
-                    }
-                ]
-            },
-            "components": {
-                id: "components",
-                title: "2. 문장 성분 (Sentence Components)",
-                subtitle: "품사(재료)가 문장에서 맡는 구체적인 역할(보직)",
-                items: [
-                    { 
-                        term: "주어 (Subject - S)", 
-                        def: "문장의 <b>주인공</b>입니다. 동작의 주체이며 우리말로 '~은, ~는, ~이, ~가'가 붙습니다.", 
-                        role: "<b>명사, 대명사만</b> 이 자리에 '주어'로 취업할 수 있습니다.",
-                        example: "1. <u>Tom</u> is a student. (톰은 학생입니다. / Tom: 명사 → 주어)<br>2. <u>He</u> is smart. (그는 똑똑합니다. / He: 대명사 → 주어)"
-                    },
-                    { 
-                        term: "서술어 (Predicate=Verb - V)", 
-                        def: "문장의 <b>엔진</b>입니다. 주어의 동작이나 상태를 설명하며 '~하다, ~이다'로 끝납니다. 서술어가 될 수 있는 품사는 오직 '동사'뿐이라서, 흔히 '주어+동사'라고 부르기도 합니다.", 
-                        role: "<b>동사 품사만</b> 이 자리에 '서술어'로 취업할 수 있습니다.",
-                        example: "He <u>runs</u> fast. (그는 빨리 달린다)<br>runs(서술어/동사)"
-                    },
-                    { 
-                        term: "목적어 (Object - O)", 
-                        def: "동작의 <b>대상(타겟)</b>입니다. 문형에 따라 '~에게' 또는 '~을/를'로 해석됩니다.", 
-                        role: "<b>명사, 대명사만</b> 이 자리에 '목적어'로 취업할 수 있습니다.",
-                        example: "1. I like <u>pizza</u>. (나는 피자를 좋아한다) - [3형식: ~을/를]<br>2. He gave <u>me</u> a <u>gift</u>. (그는 나에게 선물을 주었다) - [4형식: ~에게, ~을/를]"
-                    },
-                    { 
-                        term: "보어 (Complement - C)", 
-                        def: "주어나 목적어를 <b>보충 설명</b>하는 부품입니다. 주어를 보충하면 '주격 보어', 목적어를 보충하면 '목적격 보어'라고 합니다.", 
-                        role: "<b>명사, 형용사만</b> 이 자리에 '보어'로 취업할 수 있습니다.<br>• <b>명사 보어</b>: 대상의 신분/자격 설명<br>• <b>형용사 보어</b>: 대상의 성질/상태 설명",
-                        example: "1. He is a <u>doctor</u>. (주격보어: a doctor(명사) → 주어 He의 신분을 보충 설명)<br>2. You make me <u>happy</u>. (목적격보어: happy(형용사) → 목적어 me의 상태를 보충 설명)"
-                    },
-                    { 
-                        term: "수식어 (Modifier - M)", 
-                        def: "문장의 <b>액세서리</b>입니다. 필수 뼈대는 아니지만 문장을 <b>'더욱'</b> 명확하고, 풍부하게 꾸며줍니다.", 
-                        role: "<b>형용사, 부사만</b> 이 자리에 '수식어'로 취업할 수 있습니다.<br>• <b>형용사(구/절)</b>: 주어, 목적어(명사)를 수식<br>• <b>부사(구/절)</b>: 서술어(동사)를 수식",
-                        example: "1. <b>형용사구</b>: The boy [<u>in the room</u>] is tall. (그 방 안의 소년은 키가 크다)<br>→ 명사 boy를 뒤에서 수식<br>2. <b>부사구</b>: She walks [<u>to school</u>]. (그녀는 학교로 걸어간다)<br>→ 동사 walks를 뒤에서 수식<br>3. <b>형용사절</b>: I know a girl [<u>who likes cats</u>]. (나는 고양이를 좋아하는 소녀를 안다)<br>→ 명사 girl을 뒤에서 수식<br>4. <b>부사절</b>: I left [<u>because it was late</u>]. (늦었기 때문에 나는 떠났다)<br>→ 동사 left를 뒤에서 수식"
-                    }
-                ]
-            },
-            "units": {
-                id: "units",
-                title: "3. 구와 절 (Phrase & Clause)",
-                subtitle: "의미 덩어리(Chunks)를 통한 문장의 논리적 확장",
-                items: [
-                    { 
-                        term: "개념 정의", 
-                        def: "영어 어순 감각은 단어 하나하나가 아닌 <b>의미 단위의 덩어리(Chunks)</b>를 조립하는 과정입니다.", 
-                        role: "이 덩어리는 하나의 품사로 취급되어 문장을 확장시킵니다.<br>• <b>모든 품사 적용</b>: 명사, 형용사, 부사뿐만 아니라 <b>동사, 전치사, 접속사, 감탄사</b> 등 모든 품사가 '구' 또는 '절'의 형태로 존재할 수 있습니다.",
-                        example: "덩어리를 하나의 부품처럼 다룰 때 비로소 문장이 길고 복잡해져도 논리적으로 분석할 수 있습니다."
-                    },
-                    { 
-                        term: "대명사 덩어리는 왜 없나요?", 
-                        def: "대명사는 이미 수식어를 통해 구체화된 <b>명사 덩어리 전체를 압축</b>해서 가리키는 말이기 때문입니다.", 
-                        role: "대명사는 압축된 지시자(Pointer)이므로 다시 덩어리로 확장하는 것은 논리적으로 모순입니다.",
-                        example: "1. [한림에 살고 있는 토니]는 영어 강사였어.<br>2. <b>그</b>는 지금 운동을 열심히 해.<br>→ '그'는 이미 '한림에 사는 토니'라는 <b>모든 정보가 포함된 압축 데이터</b>이므로 추가 수식이 필요 없습니다."
-                    },
-                    { 
-                        term: "구 (Phrase)", 
-                        def: "두 개 이상의 단어가 모여 <b>주어+동사(S+V) 없이</b> 하나의 품사 역할을 하는 덩어리입니다.", 
-                        role: "문장에서 구는 각각의 품사 역할을 수행하기 때문에 주어, 서술어, 보어, 목적어, 수식어 등 다양한 자리에 배치됩니다.",
-                        example: "구체적으로 어떤 품사 역할을 하느냐에 따라 문장의 성분이 결정됩니다."
-                    },
-                    { 
-                        term: "명사구 (Noun Phrase)", 
-                        def: "명사를 중심으로 여러 단어가 뭉쳐 <b>명사 역할</b>을 하는 덩어리입니다.", 
-                        role: "문장에서 <b>주어, 목적어, 보어</b> 자리에 취업합니다.",
-                        example: "<u>The tall thin boy</u> is smart. (키 크고 마른 그 소년은 똑똑하다)<br>→ 'The tall thin' 3개의 형용사가 boy를 수식하여, 덩어리 전체가 <b>주어(명사구)</b> 역할을 수행"
-                    },
-                    { 
-                        term: "동사구 (Verb Phrase)", 
-                        def: "조동사나 시제 등이 합쳐져 <b>하나의 동사</b>처럼 작동하는 덩어리입니다.", 
-                        role: "문장의 <b>서술어</b> 자리에 취업하여 동작의 의미를 정밀하게 전달합니다.",
-                        example: "She <u>will be able to solve</u> the problem. (그녀는 그 문제를 해결할 수 있을 것이다)<br>→ 5개의 단어가 뭉쳐 하나의 <b>서술어(동사구)</b> 역할을 수행"
-                    },
-                    { 
-                        term: "형용사구 & 부사구", 
-                        def: "단어들이 뭉쳐 명사를 꾸미거나(형용사구), 동사/형용사/문장을 꾸미는(부사구) 역할을 합니다.", 
-                        role: "주로 전치사와 명사가 결합한 <b>전명구</b> 형태가 많습니다.",
-                        example: "1. <b>형용사구</b>: The book <u>on the desk</u> is mine. (책상 위의 그 책은 내 것이다)<br>→ 'on the desk'가 앞의 <b>명사 book을 수식</b> (형용사 역할)<br>2. <b>부사구</b>: I study <u>at five o'clock</u>. (나는 5시에 공부한다)<br>→ 'at five o'clock'이 <b>동사 study를 수식</b> (부사 역할)"
-                    },
-                    { 
-                        term: "특수 기능구 (Prep/Conj/Intj)", 
-                        def: "전치사, 접속사, 감탄사 역시 여러 단어가 뭉쳐 <b>하나의 품사</b>처럼 작동할 수 있습니다.", 
-                        role: "문장의 논리적 연결과 감정 표현을 담당하는 <b>기능적 모듈</b>입니다.",
-                        example: "1. <b>전치사구</b>: The dog is <u>in front of</u> the house. (그 개는 집 앞에 있다)<br>→ 'in front of' 3단어가 하나의 <b>전치사</b> 역할<br>2. <b>접속사구</b>: <u>As soon as</u> I arrived, the class started. (내가 도착하자마자 수업이 시작되었다)<br>→ 'As soon as' 3단어가 하나의 <b>접속사</b> 역할<br>3. <b>감탄사구</b>: <u>Oh my goodness</u>! That dog is big. (어머나! 저 개는 정말 크다)<br>→ 3단어가 하나의 <b>감탄사</b> 역할"
-                    },
-                    { 
-                        term: "절 (Clause) 체계", 
-                        def: "두 개 이상의 단어가 모여 <b>주어+동사(S+V)를 갖추고</b> 하나의 품사 역할을 하는 덩어리입니다.", 
-                        role: "접속사는 크게 두 종류로 나뉩니다.<br>• <b>등위접속사</b>: and, but, or, so, for (앞뒤 대등 연결)<br>• <b>종속접속사</b>: 절을 문장의 한 성분(명사, 형용사, 부사)으로 만들어 전체 핵심내용을 나타내는 문장인 주절에 종속시킴",
-                        example: "종속접속사가 이끄는 절은 접속사부터 절 끝까지의 단어 덩어리가 하나의 품사 역할을 수행하기 때문에 문장에서 각 품사의 기능을 수행합니다.<br>• <b>명사절</b>: 주어, 보어, 목적어 역할<br>• <b>형용사절</b>: 명사 뒤에서 앞의 명사(선행사) 수식<br>• <b>부사절</b>: 문장 앞이나 뒤에서 서술어(동사) 수식"
-                    },
-                    { 
-                        term: "① 명사절 (Noun Clause)", 
-                        def: "문장에서 <b>주어, 목적어, 보어</b> 역할을 하는 S+V 덩어리입니다.", 
-                        role: "• <b>that</b>: ~라는 것<br>• <b>whether/if</b>: ~인지 아닌지<br>• <b>의문사</b>: who, what, when, where, how, why 등 (각 의문사의 뜻)",
-                        example: "I think <u>that he is right</u>. (나는 <b>그가 옳다는 것</b>을 생각한다 / 목적어 역할)"
-                    },
-                    { 
-                        term: "② 형용사절 (Adjective Clause)", 
-                        def: "앞에 있는 명사(선행사)를 수식하는 S+V 덩어리입니다. <b>관계사절</b>이라고도 부릅니다.", 
-                        role: "• <b>관계대명사</b>: who, which, that<br>• <b>관계부사</b>: where, when, why, how",
-                        example: "The boy <u>who is running</u> is my brother. (<b>달리고 있는</b> 그 소년은 내 동생이다 / 명사 boy 수식)"
-                    },
-                    { 
-                        term: "③ 부사절 (Adverb Clause)", 
-                        def: "문장의 <b>동사</b>를 수식하여 시간, 이유, 조건 등을 설명하는 S+V 덩어리입니다.", 
-                        role: "• <b>if</b> (만약), <b>because</b> (때문에), <b>when</b> (때), <b>before/after</b> (전/후) 등",
-                        example: "I stayed home <u><b>because</b> it was raining</u>. (비가 왔기 때문에 나는 집에 있었다 / 동사 stayed 수식)"
-                    }
-                ]
-            },
-            "structures": {
-                id: "structures",
-                title: "4. 문장의 5형식 (The 5 Sentence Structures)",
-                subtitle: "영어 문장이 조립되는 5가지 절대 공식 (Formulas)",
-                items: [
-                    { 
-                        term: "1형식 (S + V)", 
-                        def: "주어와 서술어만으로 완전한 의미를 전달하는 구조입니다.", 
-                        role: "추가 부품이 필요 없는 <b>완전자동사</b> 모델",
-                        example: "<b>L0 (단문)</b>: Birds fly. (새들은 난다)<br><b>L1 (수식어)</b>: Many birds fly high. (많은 새들이 높이 난다)<br><b>L2 (구 확장)</b>: Birds <u>in the sky</u> fly <u>to the tree</u>. (하늘에 있는 새들이 나무로 날아간다)<br><b>L3 (절 확장)</b>: Birds fly <u>when spring comes</u>. (봄이 오면 새들이 난다)"
-                    },
-                    { 
-                        term: "2형식 (S + V + C)", 
-                        def: "주어의 신분이나 상태를 보충하는 보어(C)가 필요한 구조입니다.", 
-                        role: "S = C 관계가 성립하는 <b>상태 기술</b> 모델",
-                        example: "<b>L0 (단문)</b>: He is a doctor. (그는 의사이다)<br><b>L1 (수식어)</b>: The young man is a great doctor. (그 젊은 남자는 훌륭한 의사이다)<br><b>L2 (구 확장)</b>: The man <u>in our town</u> is a doctor <u>for kids</u>. (우리 마을의 그 남자는 아이들을 위한 의사이다)<br><b>L3 (절 확장)</b>: He is a doctor <u>who helps people</u>. (그는 사람들을 돕는 의사이다)"
-                    },
-                    { 
-                        term: "3형식 (S + V + O)", 
-                        def: "동작의 대상인 목적어(O)가 필요한 구조입니다.", 
-                        role: "동작의 에너지가 대상에 도달하는 <b>완전타동사</b> 모델",
-                        example: "<b>L0 (단문)</b>: I like pizza. (나는 피자를 좋아한다)<br><b>L1 (수식어)</b>: I really like delicious pizza. (나는 정말 맛있는 피자를 좋아한다)<br><b>L2 (구 확장)</b>: I like pizza <u>with lots of cheese</u>. (나는 치즈가 많이 들어간 피자를 좋아한다)<br><b>L3 (절 확장)</b>: I like pizza <u>that you made yesterday</u>. (나는 네가 어제 만든 피자를 좋아한다)"
-                    },
-                    { 
-                        term: "4형식 (S + V + I.O + D.O)", 
-                        def: "수여 대상(~에게)과 수여 내용(~을)을 가지는 구조입니다.", 
-                        role: "누군가에게 무언가를 주는 <b>수여동사</b> 모델",
-                        example: "<b>L0 (단문)</b>: He gave me a book. (그는 나에게 책을 주었다)<br><b>L1 (수식어)</b>: My friend gave me an interesting book. (내 친구가 나에게 흥미로운 책을 주었다)<br><b>L2 (구 확장)</b>: He gave me a book <u>about drones</u>. (그는 나에게 드론에 관한 책을 주었다)<br><b>L3 (절 확장)</b>: He gave me the book <u>which I wanted to read</u>. (그는 내가 읽고 싶었던 그 책을 주었다)"
-                    },
-                    { 
-                        term: "5형식 (S + V + O + O.C)", 
-                        def: "목적어의 상태나 동작을 보충하는 목적격보어(O.C)가 필요한 구조입니다.", 
-                        role: "목적어의 변화나 속성을 정의하는 <b>불완전타동사</b> 모델",
-                        example: "<b>L0 (단문)</b>: You make me happy. (너는 나를 행복하게 만든다)<br><b>L1 (수식어)</b>: Your kind words make me very happy. (너의 친절한 말들이 나를 매우 행복하게 만든다)<br><b>L2 (구 확장)</b>: Traveling <u>with you</u> makes me happy. (너와 여행하는 것은 나를 행복하게 만든다)<br><b>L3 (절 확장)</b>: You make me happy <u>because you always smile</u>. (네가 항상 웃기 때문에 너는 나를 행복하게 만든다)"
-                    }
-                ]
-            }
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const Icons = {
+            Zap: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14.71 14.71 4H20v5.29L9.29 20H4z"/><path d="m15.5 6.5 2 2"/></svg>,
+            User: () => <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+            Cpu: () => <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>,
+            Microscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>,
+            Volume2: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
+            PlayCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>,
+            CheckCircle2: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"/><path d="m9 12 2 2 4-4"/></svg>,
+            BookOpen: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
+            RefreshCcw: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21v-5h5"/></svg>,
+            Sparkles: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
         };
 
-        let appState = {
-            activeTab: "partsOfSpeech",
-            memorizationMode: false,
-            revealedItems: {}
+        const pronounSingular = [
+            { p: "1인칭 (나)", s: "I", poss: "my", o: "me", pd: "mine", r: "myself" },
+            { p: "2인칭 (너)", s: "you", poss: "your", o: "you", pd: "yours", r: "yourself" },
+            { p: "3인칭 (남성)", s: "he", poss: "his", o: "him", pd: "his", r: "himself" },
+            { p: "3인칭 (여성)", s: "she", poss: "her", o: "her", pd: "hers", r: "herself" },
+            { p: "3인칭 (중성)", s: "it", poss: "its", o: "it", pd: "-", r: "itself" }
+        ];
+
+        const pronounPlural = [
+            { p: "1인칭 (우리)", s: "we", poss: "our", o: "us", pd: "ours", r: "ourselves" },
+            { p: "2인칭 (너희)", s: "you", poss: "your", o: "you", pd: "yours", r: "yourselves" },
+            { p: "3인칭 (그들)", s: "they", poss: "their", o: "them", pd: "theirs", r: "themselves" }
+        ];
+
+        const pronounSets = {
+            "1s": ["I", "my", "me", "mine", "myself"],
+            "2s": ["you", "your", "you", "yours", "yourself"],
+            "3sm": ["he", "his", "him", "his", "himself"],
+            "3sf": ["she", "her", "her", "hers", "herself"],
+            "3sn": ["it", "its", "it", "-", "itself"],
+            "1p": ["we", "our", "us", "ours", "ourselves"],
+            "2p": ["you", "your", "you", "yours", "yourselves"],
+            "3p": ["they", "their", "them", "theirs", "themselves"]
         };
 
-        function updateState(newState) {
-            appState = { ...appState, ...newState };
-            renderApp();
-        }
+        const quizDataMaster = [
+            { q: "Brian is my best friend. ( ) is smart.", ans: "he", ansIdx: 0, ko: "브라이언은 나의 가장 친한 친구입니다. 그는 영리합니다.", set: "3sm", reason: "주어 자리에 위치한 대명사이므로 주격 모양이 필요합니다." },
+            { q: "Julia is my best friend. ( ) is kind.", ans: "she", ansIdx: 0, ko: "줄리아는 나의 가장 친한 친구입니다. 그녀는 친절합니다.", set: "3sf", reason: "명사 '줄리아'를 대신하여 주어 자리에 온 주격입니다." },
+            { q: "Tom and I are at home. ( ) are busy.", ans: "we", ansIdx: 0, ko: "톰과 나는 집에 있습니다. 우리들은 바쁩니다.", set: "1p", reason: "나를 포함한 여러 명은 1인칭 복수 주격인 '우리'입니다." },
+            { q: "Look at the birds. ( ) are flying.", ans: "they", ansIdx: 0, ko: "저 새들을 보십시오. 그것들은 날고 있습니다.", set: "3p", reason: "복수형 사물을 대신하는 주격 부품입니다." },
+            { q: "This is ( ) dog. Its name is Max.", ans: "my", ansIdx: 1, ko: "이것은 나의 개입니다. 그것의 이름은 맥스입니다.", set: "1s", reason: "명사 개(dog)의 소유를 나타내는 형용사 역할의 소유격입니다." },
+            { q: "Do you like ( ) new school?", ans: "your", ansIdx: 1, ko: "당신은 당신의 새로운 학교를 좋아합니까?", set: "2s", reason: "학교라는 명사 앞에서 범위를 좁혀주는 소유격 한정사입니다." },
+            { q: "The boy lost ( ) bag yesterday.", ans: "his", ansIdx: 1, ko: "그 소년은 어제 그의 가방을 잃어버렸습니다.", set: "3sm", reason: "소년의 소유(his bag)를 나타내는 소유격 모양입니다." },
+            { q: "The girls wear ( ) coats in winter.", ans: "their", ansIdx: 1, ko: "그 소녀들은 겨울에 그들의 코트를 입습니다.", set: "3p", reason: "복수 명사를 꾸미는 소유격 부품입니다." },
+            { q: "Julia is nice. I like ( ) very much.", ans: "her", ansIdx: 2, ko: "줄리아는 멋집니다. 나는 그녀를 아주 많이 좋아합니다.", set: "3sf", reason: "좋아하는 대상(과녁)이 되는 목적어 자리이므로 목적격 모양입니다." },
+            { q: "Kevin is kind. Everybody likes ( ).", ans: "him", ansIdx: 2, ko: "케빈은 친절합니다. 모든 사람이 그를 좋아합니다.", set: "3sm", reason: "동작의 대상인 목적어 자리의 인칭대명사 목적격입니다." },
+            { q: "Here is the ball. Catch ( )!", ans: "it", ansIdx: 2, ko: "여기 공이 있습니다. 그것을 잡으십시오!", set: "3sn", reason: "사물을 가리키는 목적어 자리의 목적격입니다." },
+            { q: "We are here. Please help ( ).", ans: "us", ansIdx: 2, ko: "우리는 여기에 있습니다. 부디 우리들을 도와주십시오.", set: "1p", reason: "도움의 대상이 되는 목적어 자리의 인칭대명사 목적격입니다." },
+            { q: "That book is ( ). It's not yours.", ans: "mine", ansIdx: 3, ko: "저 책은 나의 것입니다. 당신의 것이 아닙니다.", set: "1s", reason: "소유격+명사를 한 단어로 압축한 소유대명사입니다." },
+            { q: "Those earphones are ( ).", ans: "ours", ansIdx: 3, ko: "저 이어폰들은 우리들의 것입니다.", set: "1p", reason: "'우리들의 것'을 뜻하는 고효율 소유대명사 부품입니다." },
+            { q: "This red car is ( ).", ans: "hers", ansIdx: 3, ko: "이 빨간 차는 그녀의 것입니다.", set: "3sf", reason: "그녀의 소유임을 나타내는 압축 대명사입니다." },
+            { q: "Are these pens ( )?", ans: "yours", ansIdx: 3, ko: "이 펜들은 당신의 것입니까?", set: "2s", reason: "당신의 소유물인지 묻는 소유대명사 자리입니다." },
+            { q: "I love ( ) so much.", ans: "myself", ansIdx: 4, ko: "나는 나 자신을 매우 많이 사랑합니다.", set: "1s", reason: "주어와 목적어가 같을 때 다시 돌아오는 재귀대명사입니다." },
+            { q: "She made this cake by ( ).", ans: "herself", ansIdx: 4, ko: "그녀는 이 케이크를 그녀 스스로의 힘으로 만들었습니다.", set: "3sf", reason: "스스로/혼자서라는 의미의 숙어 표현 재귀대명사입니다." },
+            { q: "Introduce ( ) to your classmates.", ans: "yourself", ansIdx: 4, ko: "당신 자신을 당신의 반 친구들에게 소개하십시오.", set: "2s", reason: "명령문의 주어 You와 목적어가 같으므로 재귀 형태를 씁니다." },
+            { q: "They did the project by ( ).", ans: "themselves", ansIdx: 4, ko: "그들은 그 프로젝트를 그들 스스로의 힘으로 했습니다.", set: "3p", reason: "주어와 목적어가 일치하는 자격의 재귀대명사입니다." }
+        ];
 
-        function switchTab(tabId) {
-            updateState({ 
-                activeTab: tabId, 
-                revealedItems: {} 
-            });
-        }
+        const beQuizMaster = [
+            { category: "인칭 매칭", q: "I (   ) from Busan, Korea.", ko: "나는 부산 출신이다.", options: ["am", "are", "is", "be"], ansIdx: 0, answer: "I am from Busan, Korea.", reason: "I는 1인칭 단수이므로 am을 씁니다." },
+            { category: "인칭 매칭", q: "My uncle (   ) a police officer.", ko: "우리 삼촌은 경찰관이다.", options: ["am", "are", "is", "be"], ansIdx: 2, answer: "My uncle is a police officer.", reason: "My uncle은 3인칭 단수이므로 is가 맞습니다." },
+            { category: "인칭 매칭", q: "Tom and I (   ) good at math.", ko: "톰과 나는 수학을 잘한다.", options: ["am", "are", "is", "be"], ansIdx: 1, answer: "Tom and I are good at math.", reason: "Tom and I는 복수 주어(we)이므로 are를 씁니다." },
+            { category: "인칭 매칭", q: "Helen and Chris (   ) in the classroom.", ko: "헬렌과 크리스는 교실에 있다.", options: ["am", "are", "is", "be"], ansIdx: 1, answer: "Helen and Chris are in the classroom.", reason: "두 사람은 복수 주어이므로 are가 맞습니다." },
+            { category: "인칭 매칭", q: "My mother (   ) always busy.", ko: "우리 엄마는 항상 바쁘다.", options: ["am", "are", "is", "be"], ansIdx: 2, answer: "My mother is always busy.", reason: "My mother는 3인칭 단수이므로 is를 씁니다." },
+            { category: "인칭 매칭", q: "Look at the picture! It (   ) beautiful.", ko: "저 그림을 봐! 그것은 아름답다.", options: ["am", "are", "is", "be"], ansIdx: 2, answer: "Look at the picture! It is beautiful.", reason: "It은 3인칭 단수이므로 is가 정답입니다." },
+            { category: "인칭 매칭", q: "I (   ) a middle school student.", ko: "나는 중학생이다.", options: ["am", "are", "is", "be"], ansIdx: 0, answer: "I am a middle school student.", reason: "I와 함께 쓰는 be동사는 am입니다." },
+            { category: "인칭 매칭", q: "We (   ) in the same class.", ko: "우리는 같은 반이다.", options: ["am", "are", "is", "be"], ansIdx: 1, answer: "We are in the same class.", reason: "We는 1인칭 복수이므로 are를 씁니다." },
+            { category: "인칭 매칭", q: "The exam (   ) very difficult.", ko: "시험은 매우 어렵다.", options: ["am", "are", "is", "be"], ansIdx: 2, answer: "The exam is very difficult.", reason: "The exam은 3인칭 단수이므로 is가 맞습니다." },
+            { category: "인칭 매칭", q: "It (   ) her new bicycle.", ko: "그것은 그녀의 새 자전거이다.", options: ["am", "are", "is", "be"], ansIdx: 2, answer: "It is her new bicycle.", reason: "It 주어에는 is를 사용합니다." },
+            { category: "부정문", q: "I (   ) tired.", ko: "나는 피곤하지 않다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 0, answer: "I am not tired.", reason: "I의 부정은 am not 형태를 씁니다." },
+            { category: "부정문", q: "He (   ) an elementary school student.", ko: "그는 초등학생이 아니다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 2, answer: "He is not an elementary school student.", reason: "He의 be동사 부정은 is not입니다." },
+            { category: "부정문", q: "We (   ) interested in computer games.", ko: "우리는 컴퓨터 게임에 관심이 없다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 1, answer: "We are not interested in computer games.", reason: "We는 복수 주어이므로 are not을 씁니다." },
+            { category: "부정문", q: "We are bored. -> We (   ) bored.", ko: "우리는 지루하지 않다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 1, answer: "We are not bored.", reason: "We 주어의 be동사는 are이므로 are not이 정답입니다." },
+            { category: "부정문", q: "He is Chinese. -> He (   ) Chinese.", ko: "그는 중국인이 아니다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 2, answer: "He is not Chinese.", reason: "He에는 is를 쓰고 부정은 is not으로 만듭니다." },
+            { category: "부정문", q: "I am ready for the test. -> I (   ) ready for the test.", ko: "나는 시험 준비가 되어 있지 않다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 0, answer: "I am not ready for the test.", reason: "I의 be동사 부정은 am not입니다." },
+            { category: "부정문", q: "It is my cell phone. -> It (   ) my cell phone.", ko: "그것은 내 휴대전화가 아니다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 2, answer: "It is not my cell phone.", reason: "It 주어의 부정문은 is not을 씁니다." },
+            { category: "부정문", q: "They are in the same class. -> They (   ) in the same class.", ko: "그들은 같은 반이 아니다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 1, answer: "They are not in the same class.", reason: "They는 복수 주어이므로 are not이 맞습니다." },
+            { category: "부정문", q: "You are lazy. -> You (   ) lazy.", ko: "너는 게으르지 않다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 1, answer: "You are not lazy.", reason: "You의 be동사 부정은 are not입니다." },
+            { category: "부정문", q: "It is on the table. -> It (   ) on the table.", ko: "그것은 탁자 위에 있지 않다.", options: ["am not", "are not", "is not", "be not"], ansIdx: 2, answer: "It is not on the table.", reason: "It + is의 부정은 is not입니다." },
+            { category: "의문문", q: "(   ) you good at swimming?", ko: "너는 수영을 잘하니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 1, answer: "Are you good at swimming?", reason: "You 주어의 be동사 의문문은 Are you ~? 형태입니다." },
+            { category: "의문문", q: "(   ) she on vacation?", ko: "그녀는 휴가 중이니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 2, answer: "Is she on vacation?", reason: "She는 3인칭 단수라서 Is she ~?가 맞습니다." },
+            { category: "의문문", q: "(   ) I right on track?", ko: "내가 제대로 하고 있니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 0, answer: "Am I right on track?", reason: "I의 의문문은 Am I ~? 형태입니다." },
+            { category: "의문문", q: "(   ) they in the library?", ko: "그들은 도서관에 있니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 1, answer: "Are they in the library?", reason: "They는 복수 주어라서 Are they ~?를 씁니다." },
+            { category: "의문문", q: "(   ) the book interesting?", ko: "그 책은 흥미롭니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 2, answer: "Is the book interesting?", reason: "The book은 단수이므로 Is the book ~?이 맞습니다." },
+            { category: "의문문", q: "(   ) your parents well?", ko: "너의 부모님은 잘 지내시니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 1, answer: "Are your parents well?", reason: "parents는 복수 명사이므로 Are를 씁니다." },
+            { category: "의문문", q: "(   ) the key on the table?", ko: "그 열쇠는 탁자 위에 있니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 2, answer: "Is the key on the table?", reason: "the key는 단수 명사라서 Is가 맞습니다." },
+            { category: "의문문", q: "(   ) your brother tall and handsome?", ko: "네 형은 키 크고 잘생겼니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 2, answer: "Is your brother tall and handsome?", reason: "your brother는 3인칭 단수이므로 Is를 씁니다." },
+            { category: "의문문", q: "(   ) Daniel and his wife from Germany?", ko: "다니엘과 그의 아내는 독일 출신이니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 1, answer: "Are Daniel and his wife from Germany?", reason: "두 사람을 묶은 복수 주어라서 Are가 맞습니다." },
+            { category: "의문문", q: "(   ) the game exciting?", ko: "그 경기는 신나니?", options: ["Am", "Are", "Is", "Be"], ansIdx: 2, answer: "Is the game exciting?", reason: "the game은 단수 명사이므로 Is를 사용합니다." }
+        ];
 
-        function toggleMode() {
-            updateState({ 
-                memorizationMode: !appState.memorizationMode,
-                revealedItems: {} 
-            });
-        }
+        const shuffleArray = (arr) => [...arr].sort(() => Math.random() - 0.5);
+        const buildQuizSequence = () => {
+            const match = shuffleArray(beQuizMaster.filter((q) => q.category === "인칭 매칭"));
+            const negative = shuffleArray(beQuizMaster.filter((q) => q.category === "부정문"));
+            const question = shuffleArray(beQuizMaster.filter((q) => q.category === "의문문"));
+            return [...match, ...negative, ...question];
+        };
 
-        function toggleReveal(index) {
-            if (!appState.memorizationMode) return;
-            const newRevealed = { ...appState.revealedItems };
-            if (newRevealed[index]) {
-                delete newRevealed[index];
-            } else {
-                newRevealed[index] = true;
-            }
-            updateState({ revealedItems: newRevealed });
-        }
+        const MiniIcon = ({ symbol, size = 18, className = "" }) => (
+            <span className={className} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: size, height: size, lineHeight: 1, fontSize: Math.max(12, Math.floor(size * 0.75)) }}>{symbol}</span>
+        );
+        const Repeat = (props) => <MiniIcon symbol="↻" {...props} />;
+        const Target = (props) => <MiniIcon symbol="◎" {...props} />;
+        const HelpCircle = (props) => <MiniIcon symbol="?" {...props} />;
+        const UserCheck = (props) => <MiniIcon symbol="✓" {...props} />;
+        const Search = (props) => <MiniIcon symbol="⌕" {...props} />;
+        const Zap = (props) => <MiniIcon symbol="⚡" {...props} />;
 
-        function renderApp() {
-            const app = document.getElementById('app');
-            const currentData = grammarData[appState.activeTab];
-            const isDrillMode = appState.memorizationMode;
-
-            const headerHTML = `
-                <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-10 transition-colors">
-                    <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div class="bg-blue-600 p-2 rounded-lg shadow-lg">
-                                <i data-lucide="calculator" class="text-white w-6 h-6"></i>
-                            </div>
-                            <div>
-                                <h1 class="text-lg sm:text-xl font-bold leading-tight">English Grammar Formulas</h1>
-                                <p class="hidden sm:block text-xs text-slate-400 font-mono">Prerequisite for Logic & Composition</p>
-                            </div>
-                        </div>
-                        
-                        <button onclick="toggleMode()" 
-                            class="flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 transform active:scale-95 ${isDrillMode ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-200 shadow-md' : 'bg-slate-700 hover:bg-slate-600 text-slate-200'}">
-                            <i data-lucide="${isDrillMode ? 'eye-off' : 'eye'}" class="w-4 h-4"></i>
-                            <span class="text-sm font-medium">${isDrillMode ? 'Drill Mode On' : 'Study Mode'}</span>
-                        </button>
+        const HanjaBox = ({ hanja, hangul, meaning, etymology }) => (
+            <div className="bg-white border-2 border-slate-200 p-5 my-4 rounded-2xl shadow-sm hover:border-blue-400 transition-all group">
+                <div className="flex items-start gap-4 text-left">
+                    <div className="flex flex-col items-center justify-center bg-blue-600 min-w-[64px] h-16 rounded-xl shadow-inner group-hover:scale-105 transition-transform">
+                        <span className="text-2xl font-black text-white">{hanja}</span>
+                        <span className="text-[10px] text-blue-100 font-bold uppercase">{hangul}</span>
                     </div>
-                </header>
-            `;
-
-            const tabsHTML = Object.values(grammarData).map(data => {
-                const isActive = appState.activeTab === data.id;
-                const cleanTitle = data.title.split('.')[1].split('(')[0].trim(); 
-                return `
-                    <button onclick="switchTab('${data.id}')"
-                        class="flex-1 min-w-0 px-1 sm:px-4 py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-200 truncate ${isActive ? 'bg-blue-600 text-white shadow-md transform scale-105 z-10' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}">
-                        ${cleanTitle}
-                    </button>
-                `;
-            }).join('');
-
-            const cardsHTML = currentData.items.map((item, index) => {
-                const isRevealed = appState.revealedItems[index];
-                const showContent = !isDrillMode || isRevealed;
-
-                let borderClass = "border-slate-100 shadow-sm hover:border-slate-300";
-                if (isDrillMode) {
-                    borderClass = isRevealed 
-                        ? "border-green-500 shadow-md" 
-                        : "border-slate-200 hover:border-blue-400 hover:shadow-lg cursor-pointer";
-                }
-
-                let iconHTML = '';
-                if (isDrillMode && !isRevealed) {
-                    iconHTML = `<span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded flex items-center gap-1"><i data-lucide="mouse-pointer-click" class="w-3 h-3"></i> Click</span>`;
-                } else if (isDrillMode && isRevealed) {
-                    iconHTML = `<i data-lucide="check-circle" class="text-green-500 w-5 h-5"></i>`;
-                }
-
-                let contentHTML = '';
-                if (showContent) {
-                    let extraSectionsHTML = '';
-                    if (item.role) {
-                        extraSectionsHTML += `
-                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 mb-2">
-                                <span class="text-xs font-bold text-blue-600 tracking-wider block mb-1">역할(Role)</span>
-                                <div class="text-slate-900 font-mono text-sm break-keep leading-relaxed">${item.role}</div>
-                            </div>
-                        `;
-                    }
-                    if (item.formula) {
-                        extraSectionsHTML += `
-                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 mb-2">
-                                <span class="text-xs font-bold text-blue-600 tracking-wider block mb-1">공식(Formula)</span>
-                                <div class="text-slate-900 font-mono text-sm break-keep leading-relaxed">${item.formula}</div>
-                            </div>
-                        `;
-                    }
-                    if (item.example) {
-                        extraSectionsHTML += `
-                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 mb-2">
-                                <span class="text-xs font-bold text-blue-700 tracking-wider block mb-1">예시(Example)</span>
-                                <div class="text-slate-900 font-mono text-sm break-keep leading-relaxed">${item.example}</div>
-                            </div>
-                        `;
-                    }
-                    if (item.note) {
-                        extraSectionsHTML += `<p class="text-slate-500 text-xs mt-1 italic">💡 ${item.note}</p>`;
-                    }
-                    
-                    contentHTML = `
-                        <div class="space-y-3 fade-in">
-                            <div>
-                                <span class="text-xs font-bold text-slate-400 tracking-wider block mb-1">정의(Definition)</span>
-                                <div class="text-slate-700 font-medium break-keep leading-snug">${item.def}</div>
-                            </div>
-                            ${extraSectionsHTML}
+                    <div className="flex-1">
+                        <span className="text-lg font-black text-slate-800 underline decoration-blue-200 decoration-2 underline-offset-4">{meaning}</span>
+                        <div className="text-sm text-slate-600 leading-relaxed mt-2 whitespace-pre-wrap font-medium italic text-justify">
+                            {etymology}
                         </div>
-                    `;
+                    </div>
+                </div>
+            </div>
+        );
+
+        const LogicCard = ({ formula, explanation, title = "설계 원칙" }) => (
+            <div className="bg-slate-900 text-white p-6 rounded-[2rem] shadow-2xl my-6 border-b-8 border-slate-700 relative overflow-hidden font-sans">
+                <div className="absolute top-0 right-0 p-4 opacity-10"><Icons.Cpu /></div>
+                <div className="flex items-center gap-2 mb-4 text-blue-400">
+                    <Icons.Zap />
+                    <span className="text-xs font-mono uppercase tracking-widest font-bold italic">{title}</span>
+                </div>
+                <div className="text-xl md:text-2xl font-mono mb-4 text-center border-y border-slate-700 py-6 bg-slate-800/50 rounded-xl tracking-tighter text-blue-100 italic">
+                    {formula}
+                </div>
+                <div className="text-sm leading-relaxed text-slate-300 font-medium px-2 whitespace-pre-wrap text-justify">
+                    {explanation}
+                </div>
+            </div>
+        );
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('pronoun');
+            const [quizIndex, setQuizIndex] = useState(0);
+            const [quizFeedback, setQuizFeedback] = useState('');
+            const [shuffledQuiz, setShuffledQuiz] = useState([]);
+            const [isCorrect, setIsCorrect] = useState(false);
+            const [beQuizIndex, setBeQuizIndex] = useState(0);
+            const [beQuizFeedback, setBeQuizFeedback] = useState("");
+            const [beShuffledQuiz, setBeShuffledQuiz] = useState([]);
+            const [beIsCorrect, setBeIsCorrect] = useState(false);
+
+            const caseLabels = ["주격", "소유격", "목적격", "소유대명사", "재귀대명사"];
+
+            const speak = (text) => {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.85;
+                    window.speechSynthesis.speak(utterance);
+                }
+            };
+
+            const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
+            useEffect(() => {
+                const shuffled = [...quizDataMaster].sort(() => Math.random() - 0.5);
+                setShuffledQuiz(shuffled);
+                setBeShuffledQuiz(buildQuizSequence());
+            }, []);
+
+            const handleAnswer = (clickedIdx) => {
+                if (isCorrect) return;
+                const current = shuffledQuiz[quizIndex];
+                if (clickedIdx === current.ansIdx) {
+                    setIsCorrect(true);
+                    setQuizFeedback(`정답입니다! 👏 ${current.reason}`);
+                    const fullSentence = current.q.replace("( )", current.ans);
+                    speak(capitalize(fullSentence));
                 } else {
-                    contentHTML = `
-                        <div class="flex flex-col items-center justify-center h-full text-slate-300 space-y-2 py-4">
-                            <i data-lucide="brain" class="w-8 h-8 opacity-50"></i>
-                            <span class="text-sm font-medium">정의를 떠올려보세요</span>
-                        </div>
-                    `;
+                    setQuizFeedback("앗, 자리에 맞는 격의 형태를 다시 생각해보세요! 🤔");
+                    setIsCorrect(false);
                 }
+            };
 
-                return `
-                    <div onclick="toggleReveal(${index})" class="relative group bg-white rounded-xl border-2 transition-all overflow-hidden ${borderClass}">
-                        <div class="bg-slate-50 px-5 py-3 border-b border-slate-100 flex justify-between items-center">
-                            <span class="font-bold text-slate-800 text-base sm:text-lg">${item.term}</span>
-                            ${iconHTML}
+            const nextQuestion = () => {
+                if (quizIndex < shuffledQuiz.length - 1) {
+                    setQuizIndex(quizIndex + 1);
+                    setQuizFeedback('');
+                    setIsCorrect(false);
+                } else {
+                    setQuizFeedback("축하합니다! 인칭대명사를 완벽하게 이해하셨습니다.");
+                }
+            };
+
+            const restartQuiz = () => {
+                const shuffled = [...quizDataMaster].sort(() => Math.random() - 0.5);
+                setShuffledQuiz(shuffled);
+                setQuizIndex(0);
+                setQuizFeedback('');
+                setIsCorrect(false);
+            };
+
+            const currentQ = shuffledQuiz[quizIndex];
+
+            const beHandleAnswer = (clickedIdx) => {
+                if (beIsCorrect) return;
+                const current = beShuffledQuiz[beQuizIndex];
+                if (clickedIdx === current.ansIdx) {
+                    setBeIsCorrect(true);
+                    setBeQuizFeedback(`정답입니다! ${current.reason}`);
+                    speak(current.answer);
+                    return;
+                }
+                setBeIsCorrect(false);
+                setBeQuizFeedback("다시 생각해보세요. 주어(인칭)와 be동사 형태를 먼저 맞춰보면 쉬워집니다.");
+            };
+
+            const beNextQuestion = () => {
+                if (beQuizIndex < beShuffledQuiz.length - 1) {
+                    setBeQuizIndex(beQuizIndex + 1);
+                    setBeQuizFeedback("");
+                    setBeIsCorrect(false);
+                    return;
+                }
+                setBeQuizFeedback("30문제를 모두 완료했습니다. 다시 도전해도 좋습니다.");
+            };
+
+            const beRestartQuiz = () => {
+                setBeShuffledQuiz(buildQuizSequence());
+                setBeQuizIndex(0);
+                setBeQuizFeedback("");
+                setBeIsCorrect(false);
+            };
+
+            const currentBeQ = beShuffledQuiz[beQuizIndex];
+            const beSpeakingSentences = useMemo(
+                () => beQuizMaster.map((item) => ({ en: item.answer, ko: item.ko })),
+                []
+            );
+
+            return (
+                <div className="lesson-root min-h-screen bg-slate-50 text-slate-900 pb-12 overflow-x-hidden antialiased">
+                    <header className="bg-white border-b sticky top-0 z-50 shadow-sm px-4 py-4">
+                        <div className="content-shell flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <div className="bg-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-100">
+                                    <Icons.Zap />
+                                </div>
+                                <div className="text-left">
+                                    <h1 className="text-2xl font-black tracking-tighter italic leading-none">Grammar CHECK CHECK</h1>
+                                    <span className="text-blue-600 font-black text-xs mt-1 block tracking-tight italic">중학영어 1-A / Lesson 1. They Are Students.</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="p-5 min-h-[140px] flex flex-col justify-center">
-                            ${contentHTML}
+                    </header>
+
+                    <main className="content-shell p-4 md:p-6 space-y-8">
+                        <div className="flex bg-white p-2 rounded-[2rem] shadow-xl border border-slate-100 overflow-x-auto gap-2">
+                            {[
+                                { key: "pronoun", name: "인칭대명사" },
+                                { key: "be", name: "be동사" }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.key}
+                                    onClick={() => setActiveTab(tab.key)}
+                                    className={`flex-1 min-w-[140px] py-4 rounded-3xl text-sm font-black transition-all ${activeTab === tab.key ? 'tab-active' : 'text-slate-500 hover:bg-slate-50'}`}
+                                >
+                                    {tab.name}
+                                </button>
+                            ))}
                         </div>
-                    </div>
-                `;
-            }).join('');
 
-            app.innerHTML = `
-                ${headerHTML}
-                <main class="max-w-4xl mx-auto px-4 mt-8">
-                    <div class="bg-white border-l-4 border-blue-600 rounded-r-lg shadow-sm p-6 mb-8 transition-all hover:shadow-md">
-                        <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
-                            <i data-lucide="book-open" class="w-5 h-5 text-blue-600"></i>
-                            토니샘의 학습 가이드
-                        </h2>
-                        <p class="text-slate-600 text-sm leading-relaxed">
-                            영어 문법은 <strong>수학 공식</strong>과 같습니다. 문장의 논리적 어순을 이해하기 전에, 
-                            이 페이지에 있는 <strong>기본 용어(Variables)</strong>와 <strong>공식(Functions)</strong>을 
-                            구구단처럼 먼저 암기해야 합니다. 우측 상단의 <strong class="text-slate-800">'Drill Mode'</strong>를 켜고 빈칸을 스스로 채워보세요.
-                        </p>
-                    </div>
+                        {activeTab === 'pronoun' && (
+                        <div className="bg-white rounded-[3rem] shadow-2xl p-8 md:p-12 border border-slate-100">
+                            <div className="space-y-10">
+                                {/* 원리 설명 섹션 */}
+                                <div className="flex items-center gap-4 border-b-4 border-blue-50 pb-6">
+                                    <div className="p-3 bg-blue-100 text-blue-600 rounded-2xl shadow-inner"><Icons.User /></div>
+                                    <h2 className="text-3xl font-black text-slate-800 tracking-tight italic text-blue-900 underline decoration-blue-100 underline-offset-8">인칭대명사의 핵심 정의</h2>
+                                </div>
 
-                    <div class="flex flex-nowrap gap-1 sm:gap-2 mb-6 scrollbar-hide">
-                        ${tabsHTML}
-                    </div>
+                                <div className="space-y-4">
+                                    <HanjaBox hanja="人稱" hangul="인칭" meaning="사람 인, 일컬을 칭" etymology={`말하는 이(1인칭), 듣는 이(2인칭), 제3자(3인칭)를 구분하여 일컫는 체계입니다.`} />
+                                    <HanjaBox hanja="代名詞" hangul="대명사" meaning="대신할 대, 이름 명" etymology={`반복을 피하기 위해 앞에서 언급된 명사를 대신하는 부품입니다. 영어는 반복을 매우 싫어하는 언어입니다.`} />
+                                    <HanjaBox hanja="格" hangul="격" meaning="자리 격" etymology={`단어가 문장 내에서 차지하는 '위치'가 곧 그 단어의 성격(은/는 vs 을/를)을 결정합니다. 자리가 바뀌면 모양도 바뀌어야 합니다.`} />
+                                </div>
 
-                    <div class="fade-in">
-                        <div class="mb-6">
-                            <h2 class="text-2xl font-bold text-slate-800">${currentData.title}</h2>
-                            <p class="text-slate-500 mt-1 text-sm sm:text-base">${currentData.subtitle}</p>
+                                {/* 격 변화 표 */}
+                                <div className="mt-12 table-container overflow-x-auto rounded-[2rem] border-2 border-slate-200 shadow-xl">
+                                    <table className="w-full text-sm text-center border-collapse">
+                                        <thead className="bg-slate-800 text-white font-mono text-[10px] uppercase tracking-tighter">
+                                            <tr className="divide-x divide-slate-700 font-black">
+                                                <th className="p-4 bg-slate-900 min-w-[50px]">수</th>
+                                                <th className="p-4">인칭</th>
+                                                <th className="p-4 bg-blue-900/30">주격<br/><span className="text-[9px] text-slate-400 font-normal">~은/는/이/가</span></th>
+                                                <th className="p-4">소유격<br/><span className="text-[9px] text-slate-400 font-normal">~의</span></th>
+                                                <th className="p-4">목적격<br/><span className="text-[9px] text-slate-400 font-normal">~을/를/에게</span></th>
+                                                <th className="p-4">소유대명사<br/><span className="text-[9px] text-slate-400 font-normal">~의 것</span></th>
+                                                <th className="p-4">재귀대명사<br/><span className="text-[9px] text-slate-400 font-normal">~자신</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="font-bold divide-y divide-slate-100">
+                                            {pronounSingular.map((row, idx) => (
+                                                <tr key={`s-${idx}`} className="divide-x divide-slate-100 hover:bg-blue-50/40 transition-colors">
+                                                    {idx === 0 && <td rowSpan={5} className="p-3 bg-blue-50 text-blue-700 text-xs font-black label-vertical border-r border-slate-200 text-center">단수</td>}
+                                                    <td className="p-3 text-[11px] bg-slate-50/50">{row.p}</td>
+                                                    <td className="p-3 text-blue-600 font-black">{row.s}</td>
+                                                    <td className="p-3 text-slate-600 italic font-medium">{row.poss}</td>
+                                                    <td className="p-3 text-slate-600 italic font-medium">{row.o}</td>
+                                                    <td className="p-3 text-slate-600 font-medium">{row.pd}</td>
+                                                    <td className="p-3 text-slate-600 font-medium">{row.r}</td>
+                                                </tr>
+                                            ))}
+                                            {pronounPlural.map((row, idx) => (
+                                                <tr key={`p-${idx}`} className="divide-x divide-slate-100 hover:bg-orange-50/40 transition-colors">
+                                                    {idx === 0 && <td rowSpan={3} className="p-3 bg-orange-50 text-orange-700 text-xs font-black label-vertical border-t border-slate-200 text-center">복수</td>}
+                                                    <td className="p-3 text-[11px] bg-slate-50/50">{row.p}</td>
+                                                    <td className="p-3 text-blue-600 font-black">{row.s}</td>
+                                                    <td className="p-3 text-slate-600 italic font-medium">{row.poss}</td>
+                                                    <td className="p-3 text-slate-600 italic font-medium">{row.o}</td>
+                                                    <td className="p-3 text-slate-600 font-medium">{row.pd}</td>
+                                                    <td className="p-3 text-slate-600 font-medium">{row.r}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                {/* 상세 논리 분석 */}
+                                <div className="mt-16 space-y-12 bg-slate-50/40 p-8 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                                    <div className="flex items-center gap-3 border-b-2 border-slate-200 pb-4">
+                                        <Icons.BookOpen />
+                                        <h3 className="text-2xl font-black text-slate-800">격(자리)의 정밀 분석</h3>
+                                    </div>
+
+                                    <div className="grid md:grid-cols-2 gap-10">
+                                        <div className="space-y-6">
+                                            <h4 className="text-xl font-black text-blue-800 flex items-center gap-2">
+                                                <span className="bg-blue-600 w-1.5 h-6 rounded-full"></span>
+                                                주격과 목적격의 질서
+                                            </h4>
+                                            <p className="text-sm text-slate-600 leading-relaxed font-bold italic text-justify">
+                                                주격은 문장의 1번 자리(주어)에, 목적격은 3번 자리(목적어)에 위치합니다. 이 질서가 무너지면 문장의 설계 자체가 붕괴됩니다.
+                                            </p>
+                                            <div className="bg-white p-5 rounded-2xl border-l-4 border-red-400 shadow-sm">
+                                                <p className="text-sm font-bold text-slate-700 leading-relaxed">
+                                                    영어는 '조사'가 없으므로 오직 위치로 관계를 정의합니다. 위치에 맞는 정확한 형태(격)를 사용하는 것이 영어 설계의 핵심입니다.
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-6">
+                                            <h4 className="text-xl font-black text-amber-800 flex items-center gap-2">
+                                                <span className="bg-amber-600 w-1.5 h-6 rounded-full"></span>
+                                                소유격: 명사의 한정
+                                            </h4>
+                                            <p className="text-sm text-slate-600 leading-relaxed font-bold italic text-justify">
+                                                소유격은 명사 앞에서 그 대상을 특정(한정)합니다. "막연한 명사"를 "특정인의 소유물"로 범위를 좁히는 형용사적 역할을 수행합니다.
+                                            </p>
+                                            <LogicCard 
+                                                title="명사 한정의 공식"
+                                                formula="[소유격] + [명사] = 구체적 대상"
+                                                explanation={`'a dog'는 막연하지만, 'my dog'는 세상에 단 하나뿐인 나의 강아지가 됩니다.`}
+                                            />
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="bg-white border-4 border-blue-500/20 p-8 rounded-[2.5rem] shadow-lg relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 p-6 opacity-5"><Icons.RefreshCcw /></div>
+                                        <div className="flex items-center gap-3 border-b-2 border-slate-100 pb-4 mb-6 text-left">
+                                            <div className="p-2 bg-blue-600 text-white rounded-xl">
+                                                <Icons.RefreshCcw />
+                                            </div>
+                                            <h4 className="text-2xl font-black text-slate-800">재귀대명사 (Reflexive)</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed font-bold italic mb-6 text-justify">
+                                            동작의 대상이 주어 자신에게 다시 돌아올 때(A=A) 사용합니다. 주격이 주어 자리가 아닌 곳에 다시 나타날 때의 변신 형태입니다.
+                                        </p>
+                                        <div className="grid md:grid-cols-2 gap-4 text-left">
+                                            <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                                                <p className="text-xs font-black text-blue-600 mb-2 uppercase">Self-Identity</p>
+                                                <p className="text-base font-bold text-slate-800">I love myself.</p>
+                                            </div>
+                                            <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100">
+                                                <p className="text-xs font-black text-amber-600 mb-2 uppercase">By oneself (혼자서)</p>
+                                                <p className="text-base font-bold text-slate-800">She did it by herself.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 퀴즈 섹션 */}
+                                <div className="bg-blue-600 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden mt-12">
+                                    <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12"><Icons.Zap /></div>
+                                    <h3 className="text-2xl font-black mb-8 flex items-center gap-3 italic underline decoration-blue-400 underline-offset-8">
+                                        <Icons.Microscope /> 인칭대명사 검증 연구소
+                                    </h3>
+                                    
+                                    {shuffledQuiz.length > 0 && (
+                                        <div className="bg-white/10 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/20">
+                                            <div className="mb-4 flex items-center justify-between">
+                                                <div className="px-4 py-1 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest text-blue-100 font-mono italic text-left">
+                                                    Quest {quizIndex + 1} / {shuffledQuiz.length}
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="mb-8 text-left">
+                                                <p className="text-sm font-bold text-blue-200 mb-2 italic">알맞은 대명사 형태를 고르세요.</p>
+                                                <p className="text-lg font-black bg-blue-900/50 p-5 rounded-xl border border-white/10 text-yellow-300">
+                                                    {currentQ.ko}
+                                                </p>
+                                            </div>
+
+                                            <p className="text-xl font-black mb-8 font-serif tracking-tight text-left">Q. {capitalize(currentQ.q)}</p>
+                                            
+                                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                                {pronounSets[currentQ.set].map((opt, i) => (
+                                                    <div key={`${quizIndex}-${i}`} className="flex flex-col gap-2">
+                                                        <span className="text-[10px] text-blue-200 font-black text-center uppercase tracking-tighter opacity-80">
+                                                            {caseLabels[i]}
+                                                        </span>
+                                                        <button 
+                                                            onClick={() => handleAnswer(i)} 
+                                                            className={`quiz-btn py-4 rounded-2xl font-black shadow-lg text-lg ${isCorrect && i === currentQ.ansIdx ? 'bg-yellow-400 text-slate-900' : 'bg-white text-blue-600 hover:bg-blue-50'}`}
+                                                            disabled={isCorrect && i !== currentQ.ansIdx}
+                                                        >
+                                                            {opt === "-" ? "없음" : opt}
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            
+                                            {quizFeedback && (
+                                                <div className="mt-8 p-6 bg-white/20 rounded-2xl animate-in fade-in zoom-in duration-300 border border-white/30 text-left">
+                                                    <p className="text-sm font-bold flex items-center gap-2 leading-relaxed"><Icons.CheckCircle2 /> {quizFeedback}</p>
+                                                    <div className="flex gap-3 mt-6">
+                                                        <button 
+                                                            onClick={() => speak(capitalize(currentQ.q.replace("( )", currentQ.ans)))}
+                                                            className="flex-1 bg-white/20 text-white py-3 rounded-xl font-black shadow-md flex items-center justify-center gap-2 hover:bg-white/30"
+                                                        >
+                                                            <Icons.Volume2 size={16} /> 다시 듣기
+                                                        </button>
+                                                        {isCorrect && (
+                                                            <button 
+                                                                onClick={() => {
+                                                                    if (quizIndex < shuffledQuiz.length - 1) {
+                                                                        nextQuestion();
+                                                                    } else {
+                                                                        restartQuiz();
+                                                                    }
+                                                                }}
+                                                                className="flex-1 bg-yellow-400 text-slate-900 py-3 rounded-xl font-black shadow-md hover:bg-yellow-300 transition-colors"
+                                                            >
+                                                                {quizIndex < shuffledQuiz.length - 1 ? "다음 문항 ➔" : "다시 도전"}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* 낭독 연습 섹션 */}
+                                <div className="bg-slate-100 rounded-[3rem] p-10 shadow-inner mt-12">
+                                    <div className="flex items-center justify-between mb-8">
+                                        <h3 className="text-2xl font-black text-slate-800 flex items-center gap-2 italic">
+                                            <Icons.Volume2 className="text-blue-600" /> 문장 낭독 훈련 (Speaking)
+                                        </h3>
+                                    </div>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        {quizDataMaster.map((item, idx) => (
+                                            <div key={idx} className="bg-white p-5 rounded-2xl flex justify-between items-center border border-slate-200 hover:border-blue-400 transition-all hover:shadow-lg group cursor-pointer text-left" onClick={() => speak(capitalize(item.q.replace("( )", item.ans)))}>
+                                                <div className="flex-1 pr-4">
+                                                    <p className="text-sm font-black text-slate-800 leading-tight group-hover:text-blue-600 font-serif">
+                                                        {capitalize(item.q.replace("( )", item.ans))}
+                                                    </p>
+                                                    <p className="text-[10px] text-slate-400 mt-2 font-medium">{item.ko}</p>
+                                                </div>
+                                                <div className="text-slate-300 group-hover:text-blue-500">
+                                                    <Icons.PlayCircle size={28} />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
-                            ${cardsHTML}
+                        )}
+
+                        {activeTab === 'be' && (
+                        <div className="space-y-12">
+                            <section className="bg-white rounded-[3rem] p-10 shadow-2xl border border-slate-100 relative overflow-hidden text-center">
+                                <h2 className="text-3xl font-black text-blue-900 mb-10 italic underline decoration-blue-100 underline-offset-8">
+                                    왜 Be동사를 특별하게 배우나요?
+                                </h2>
+                                <div className="grid lg:grid-cols-2 gap-12 items-center mb-10">
+                                    <div className="flex flex-col items-center">
+                                        <div className="relative w-56 h-56 flex items-center justify-center">
+                                            <div className="w-full h-full rounded-full bg-blue-50 border-4 border-blue-200 shadow-inner relative">
+                                                <div className="absolute top-[55%] left-0 w-full text-center px-4">
+                                                    <span className="text-blue-400 font-black text-base">
+                                                        일반동사<br />
+                                                        <span className="text-[10px] font-bold text-slate-400">(Be 동사 뺀 나머지 전체)</span>
+                                                    </span>
+                                                </div>
+                                                <div className="absolute top-[20%] left-[50%] -translate-x-1/2 flex items-center gap-2 z-30">
+                                                    <div className="w-2.5 h-2.5 bg-orange-500 rounded-full shadow-lg border border-white"></div>
+                                                    <div className="bg-orange-500 text-white px-3 py-1 rounded-lg text-xs font-black shadow-md font-sans">Be</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="mt-2 bg-blue-50 p-6 rounded-[2rem] border-l-8 border-blue-500 w-full max-w-md text-left">
+                                            <h4 className="text-lg font-black text-blue-800 mb-2 italic flex items-center gap-2 font-sans">
+                                                <Target size={20} /> 핵심 기능: 연결과 존재
+                                            </h4>
+                                            <div className="space-y-3 font-sans">
+                                                <p className="text-sm font-bold text-slate-700 leading-relaxed italic text-justify break-keep">
+                                                    1. <span className="text-blue-600">연결 (linking):</span> 주어와 보어를 잇는 다리가 되어 <span className="underline decoration-blue-200 decoration-2">주어 = 보어</span>라는 등식을 완성합니다.
+                                                </p>
+                                                <p className="text-sm font-bold text-slate-700 leading-relaxed italic text-justify border-t border-blue-100 pt-2">
+                                                    2. <span className="text-orange-600">존재 (existence):</span> "I am at home"처럼 주인공이 특정 장소에 <span className="underline decoration-orange-200 decoration-2">존재함(~에 있다)</span>을 선언합니다.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-6 text-left">
+                                        <h4 className="text-xl font-black text-slate-800 flex items-center gap-2 italic font-sans">
+                                            <Zap className="text-orange-500" /> 문법 설계의 결정적 차이 (Contrast)
+                                        </h4>
+                                        <div className="overflow-hidden rounded-2xl border-2 border-slate-100 shadow-sm bg-white">
+                                            <table className="w-full text-sm text-center border-collapse">
+                                                <thead className="bg-slate-800 text-white font-mono text-[10px] tracking-tighter">
+                                                    <tr>
+                                                        <th className="p-3 border-r border-slate-700 font-sans whitespace-nowrap min-w-[80px]">문장 형태</th>
+                                                        <th className="p-3 bg-orange-900/40 border-r border-slate-700 text-orange-200 font-sans">Be동사 (자체 해결)</th>
+                                                        <th className="p-3 font-sans">일반동사 (조동사 보조)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="font-bold divide-y divide-slate-100 italic">
+                                                    <tr className="font-sans">
+                                                        <td className="p-4 bg-slate-50 text-[11px] border-r border-slate-100 whitespace-nowrap">긍정문</td>
+                                                        <td className="p-4 text-blue-700 border-r border-slate-100">You <span className="underline decoration-blue-300 decoration-2">are</span> a student.</td>
+                                                        <td className="p-4 text-slate-600">You <span className="underline decoration-slate-300 decoration-2">run</span> fast.</td>
+                                                    </tr>
+                                                    <tr className="font-sans">
+                                                        <td className="p-4 bg-slate-50 text-[11px] border-r border-slate-100 whitespace-nowrap">부정문</td>
+                                                        <td className="p-4 text-blue-700 border-r border-slate-100">You are <span className="text-red-500 bg-red-50 px-1 rounded font-black italic">not</span> a student.</td>
+                                                        <td className="p-4 text-slate-600">You <span className="text-red-500 bg-red-50 px-1 rounded font-black italic">do not</span> run fast.</td>
+                                                    </tr>
+                                                    <tr className="font-sans">
+                                                        <td className="p-4 bg-slate-50 text-[11px] border-r border-slate-100 whitespace-nowrap">의문문</td>
+                                                        <td className="p-4 text-blue-700 border-r border-slate-100"><span className="text-blue-600 bg-blue-50 px-1 rounded font-black italic">Are</span> you a student?</td>
+                                                        <td className="p-4 text-slate-600"><span className="text-orange-500 bg-orange-50 px-1 rounded font-black italic">Do</span> you run fast?</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section className="space-y-12">
+                                <div className="bg-white rounded-[3rem] p-10 shadow-xl border border-slate-100 text-left">
+                                    <h3 className="text-2xl font-black text-slate-800 italic mb-8 flex items-center gap-3">
+                                        <UserCheck className="text-blue-600" /> Be동사 현재형 (am, are, is)
+                                    </h3>
+                                    <div className="overflow-x-auto rounded-3xl border border-slate-200">
+                                        <table className="w-full text-sm text-center border-collapse">
+                                            <thead className="bg-slate-50 font-sans text-sm tracking-normal text-slate-500 border-b">
+                                                <tr>
+                                                    <th className="p-4 border-r">수</th><th className="p-4 border-r">인칭</th><th className="p-4 border-r">주어</th><th className="p-4 border-r text-blue-600">Be동사</th><th className="p-4">줄임말</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="font-bold">
+                                                <tr className="border-b"><td rowSpan="3" className="p-4 border-r bg-slate-50/50">단수</td><td className="p-4 border-r">1인칭</td><td className="p-4 border-r">I</td><td className="p-4 border-r text-blue-600">am</td><td className="p-4 italic font-sans">I'm</td></tr>
+                                                <tr className="border-b"><td className="p-4 border-r">2인칭</td><td className="p-4 border-r">You</td><td className="p-4 border-r text-blue-600">are</td><td className="p-4 italic font-sans">You're</td></tr>
+                                                <tr className="border-b"><td className="p-4 border-r">3인칭</td><td className="p-4 border-r text-red-500 font-sans italic underline">He / She / It</td><td className="p-4 border-r text-blue-600">is</td><td className="p-4 italic font-sans">He's / She's / It's</td></tr>
+                                                <tr><td className="p-4 border-r bg-slate-50/50">복수</td><td className="p-4 border-r">1/2/3인칭</td><td className="p-4 border-r font-sans italic">We / You / They</td><td className="p-4 border-r text-blue-600">are</td><td className="p-4 italic font-sans">We're / You're / They're</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white rounded-[3rem] p-10 shadow-xl border border-red-50 text-left">
+                                    <h3 className="text-2xl font-black text-slate-800 italic mb-8 flex items-center gap-3">
+                                        <Repeat className="text-red-600" /> Be동사 부정문 (Be + Not)
+                                    </h3>
+                                    <div className="overflow-x-auto rounded-3xl border border-slate-200">
+                                        <table className="w-full text-sm text-center border-collapse">
+                                            <thead className="bg-slate-50 font-sans text-sm tracking-normal text-slate-500 border-b">
+                                                <tr><th className="p-4 border-r">인칭</th><th className="p-4 border-r">부정형</th><th className="p-4">줄임말</th></tr>
+                                            </thead>
+                                            <tbody className="font-bold">
+                                                <tr className="border-b"><td className="p-4 border-r">1인칭</td><td className="p-4 border-r font-sans italic">I am not</td><td className="p-4 italic font-sans">I'm not</td></tr>
+                                                <tr className="border-b"><td className="p-4 border-r">2인칭</td><td className="p-4 border-r font-sans italic">You are not</td><td className="p-4 italic font-sans">You're not / You aren't</td></tr>
+                                                <tr className="border-b"><td className="p-4 border-r">3인칭 (단수)</td><td className="p-4 border-r font-sans italic">He / She / It is not</td><td className="p-4 italic font-sans">He's not / He isn't</td></tr>
+                                                <tr><td className="p-4 border-r">복수</td><td className="p-4 border-r font-sans italic">We / You / They are not</td><td className="p-4 italic font-sans">We're not / We aren't</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white rounded-[3rem] p-10 shadow-xl border border-blue-50 text-left">
+                                    <h3 className="text-2xl font-black text-slate-800 italic mb-8 flex items-center gap-3">
+                                        <HelpCircle className="text-blue-600" /> Be동사 의문문 (Be + 주어 ~?)
+                                    </h3>
+                                    <div className="overflow-x-auto rounded-3xl border border-slate-200">
+                                        <table className="w-full text-sm text-center border-collapse">
+                                            <thead className="bg-slate-50 font-sans text-sm tracking-normal text-slate-500 border-b">
+                                                <tr><th className="p-4 border-r">인칭</th><th className="p-4 border-r">의문문 형태</th><th className="p-4 border-r text-blue-600">긍정의 대답</th><th className="p-4 text-red-600">부정의 대답</th></tr>
+                                            </thead>
+                                            <tbody className="font-bold font-sans italic">
+                                                <tr className="border-b"><td className="p-4 border-r not-italic">1인칭</td><td className="p-4 border-r">Am I ~?</td><td className="p-4 border-r">Yes, you are.</td><td className="p-4">No, you aren't.</td></tr>
+                                                <tr className="border-b"><td className="p-4 border-r not-italic">2인칭</td><td className="p-4 border-r">Are you ~?</td><td className="p-4 border-r">Yes, I am.</td><td className="p-4">No, I'm not.</td></tr>
+                                                <tr className="border-b"><td className="p-4 border-r not-italic">3인칭 (단수)</td><td className="p-4 border-r">Is He / She / It ~?</td><td className="p-4 border-r">Yes, he is.</td><td className="p-4">No, he isn't.</td></tr>
+                                                <tr><td className="p-4 border-r not-italic">복수</td><td className="p-4 border-r">Are We / You / They ~?</td><td className="p-4 border-r">Yes, they are.</td><td className="p-4">No, they aren't.</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section className="bg-blue-600 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12"><Icons.Microscope /></div>
+                                <h3 className="text-2xl font-black mb-8 flex items-center gap-3 italic underline decoration-blue-400 underline-offset-8">
+                                    <Icons.Microscope /> Be동사 검증 연구소 (30문항)
+                                </h3>
+                                {beShuffledQuiz.length > 0 && currentBeQ && (
+                                    <div className="bg-white/10 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/20">
+                                        <div className="mb-4 flex items-center justify-between gap-3">
+                                            <div className="px-4 py-1 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest text-blue-100 font-mono italic">
+                                                Quest {beQuizIndex + 1} / {beShuffledQuiz.length}
+                                            </div>
+                                            <div className="px-4 py-1 bg-yellow-300 text-slate-900 rounded-full text-xs font-black">{currentBeQ.category}</div>
+                                        </div>
+                                        <div className="mb-8 text-left">
+                                            <p className="text-sm font-bold text-blue-200 mb-2 italic">교과서 문장을 기반으로 알맞은 형태를 고르세요.</p>
+                                            <p className="text-lg font-black bg-blue-900/50 p-5 rounded-xl border border-white/10 text-yellow-300">{currentBeQ.ko}</p>
+                                        </div>
+                                        <p className="text-xl font-black mb-8 font-serif tracking-tight text-left">Q. {currentBeQ.q}</p>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                            {currentBeQ.options.map((opt, i) => (
+                                                <button
+                                                    key={`${beQuizIndex}-${i}`}
+                                                    onClick={() => beHandleAnswer(i)}
+                                                    className={`quiz-btn py-4 rounded-2xl font-black shadow-lg text-base ${beIsCorrect && i === currentBeQ.ansIdx ? "bg-yellow-400 text-slate-900" : "bg-white text-blue-600 hover:bg-blue-50"}`}
+                                                    disabled={beIsCorrect && i !== currentBeQ.ansIdx}
+                                                >
+                                                    {opt}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {beQuizFeedback && (
+                                            <div className="mt-8 p-6 bg-white/20 rounded-2xl border border-white/30 text-left">
+                                                <p className="text-sm font-bold leading-relaxed">{beQuizFeedback}</p>
+                                                <div className="flex gap-3 mt-6">
+                                                    <button onClick={() => speak(currentBeQ.answer)} className="flex-1 bg-white/20 text-white py-3 rounded-xl font-black shadow-md flex items-center justify-center gap-2 hover:bg-white/30">
+                                                        <Icons.Volume2 size={16} /> 정답 문장 다시 듣기
+                                                    </button>
+                                                    {beIsCorrect && (
+                                                        <button
+                                                            onClick={() => {
+                                                                if (beQuizIndex < beShuffledQuiz.length - 1) {
+                                                                    beNextQuestion();
+                                                                } else {
+                                                                    beRestartQuiz();
+                                                                }
+                                                            }}
+                                                            className="flex-1 bg-yellow-400 text-slate-900 py-3 rounded-xl font-black shadow-md hover:bg-yellow-300 transition-colors"
+                                                        >
+                                                            {beQuizIndex < beShuffledQuiz.length - 1 ? "다음 문항" : "다시 도전"}
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </section>
+
+                            <section className="bg-slate-100 rounded-[3rem] p-10 shadow-inner">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h3 className="text-2xl font-black text-slate-800 flex items-center gap-2 italic">
+                                        <Icons.Volume2 className="text-blue-600" /> 문장 낭독 훈련 (30문장)
+                                    </h3>
+                                </div>
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    {beSpeakingSentences.map((item, idx) => (
+                                        <div key={idx} className="bg-white p-5 rounded-2xl flex justify-between items-center border border-slate-200 hover:border-blue-400 transition-all hover:shadow-lg group cursor-pointer text-left" onClick={() => speak(item.en)}>
+                                            <div className="flex-1 pr-4">
+                                                <p className="text-sm font-black text-slate-800 leading-tight group-hover:text-blue-600 font-serif">{item.en}</p>
+                                                <p className="text-[10px] text-slate-400 mt-2 font-medium">{item.ko}</p>
+                                            </div>
+                                            <div className="text-slate-300 group-hover:text-blue-500">
+                                                <Icons.PlayCircle size={24} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
                         </div>
-                    </div>
-                </main>
+                        )}
+                    </main>
 
-                <footer class="max-w-4xl mx-auto px-4 mt-12 text-center text-slate-400 text-sm pb-8">
-                    <p>© 2026. Designed for Logical Grammar Learning.</p>
-                </footer>
-            `;
+                    <footer className="content-shell px-4 mt-20 text-center border-t-2 border-slate-100 pt-10 pb-20">
+                        <div className="max-w-4xl mx-auto">
+                            <h3 className="text-2xl font-black text-gray-800 mb-2 italic">Tony's Speaking English Grammar</h3>
+                            <p className="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span className="underline">어순 감각</span>에 있습니다.</p>
+                            <div className="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                            <div className="text-gray-500 text-sm leading-relaxed italic font-bold">
+                                <span>Tony's Speaking English Grammar helps you master the natural sense of English word order.</span>
+                                <span className="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
 
-            lucide.createIcons();
-        }
-
-        renderApp();
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
     </script>
 </body>
 </html>

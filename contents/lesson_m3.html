@@ -1,675 +1,395 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Structure of English Verbs</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammar CHECK CHECK - 명사와 관사</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; }
-        .eng-font { font-family: 'Roboto', sans-serif; }
-        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
-        .hidden-content { display: none; }
-        .fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .verb-row:nth-child(even) { background-color: #f1f5f9; } /* Darker alternative row for contrast */
-        .highlight-s { color: #b45309; font-weight: 900; } /* Stronger Dark Orange for -s */
-        .example-list li { margin-bottom: 0.35rem; font-size: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.25rem;} /* Increased size & separator */
-        .example-list li:last-child { border-bottom: none; }
-        .example-list .eng { font-family: 'Roboto', sans-serif; font-weight: 600; color: #0f172a; } /* Slate-900 for English */
-        .example-list .kor { color: #475569; font-size: 0.9rem; margin-left: 0.5rem; font-weight: 500; } /* Slate-600 for Korean */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
+        :root {
+            --fs-lg: clamp(1.06rem, 0.98rem + 0.35vw, 1.2rem);
+            --fs-md: clamp(0.96rem, 0.9rem + 0.2vw, 1.05rem);
+            --fs-sm: clamp(0.86rem, 0.82rem + 0.18vw, 0.94rem);
+        }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; }
+        .content-shell { width: min(100% - 1rem, 1180px); margin-inline: auto; }
+        .lesson-root { font-size: var(--fs-md); line-height: 1.6; }
+        .lesson-root .font-serif,
+        .lesson-root .font-mono { font-family: 'Noto Sans KR', sans-serif !important; }
+        .lesson-root [class*="text-[9px]"],
+        .lesson-root [class*="text-[10px]"],
+        .lesson-root [class*="text-[11px]"],
+        .lesson-root .text-xs { font-size: var(--fs-sm) !important; line-height: 1.45 !important; }
+        .lesson-root .text-sm { font-size: var(--fs-md) !important; line-height: 1.55 !important; }
+        .lesson-root .text-lg { font-size: var(--fs-lg) !important; line-height: 1.45 !important; }
+        .quiz-btn { transition: all 0.2s; }
+        .quiz-btn:active { transform: scale(0.95); }
+        .sentence-box { transition: all 0.2s; border: 1px solid #e2e8f0; }
+        .sentence-box:hover { background-color: #ffffff; transform: translateX(3px); border-color: #93c5fd; box-shadow: 0 4px 8px -2px rgb(0 0 0 / 0.12); }
     </style>
 </head>
-<body class="bg-white text-slate-900">
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
 
-    <!-- Header -->
-    <header class="bg-blue-900 text-white p-6 shadow-xl border-b-4 border-blue-600">
-        <!-- Width Changed: max-w-6xl -> max-w-[95%] xl:max-w-[1600px] -->
-        <div class="max-w-[95%] xl:max-w-[1600px] mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-black tracking-tight">English Verbs Structure</h1>
-                <p class="text-blue-100 text-lg mt-1 font-medium">영어 핵심 개념: 동사의 분류와 활용</p>
-            </div>
-            <div class="text-right hidden md:block">
-                <span class="bg-white text-blue-900 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest shadow-sm">Essential Grammar</span>
-            </div>
-        </div>
-    </header>
+const Icons = {
+    Zap: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14.71 14.71 4H20v5.29L9.29 20H4z"/><path d="m15.5 6.5 2 2"/></svg>,
+    Microscope: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14h2"/><path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/></svg>,
+    Volume2: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
+    PlayCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>,
+    CheckCircle2: () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"/><path d="m9 12 2 2 4-4"/></svg>
+};
 
-    <!-- Main Container -->
-    <!-- Width Changed: max-w-6xl -> max-w-[95%] xl:max-w-[1600px] -->
-    <main class="max-w-[95%] xl:max-w-[1600px] mx-auto p-6 space-y-12">
+const nounQuiz = [
+    { category: "명사", q: "There are three (   ) on the table.", ko: "식탁 위에 감자 세 개가 있다.", options: ["potatos", "potatoes", "potato", "potato's"], ansIdx: 1, answer: "There are three potatoes on the table.", reason: "-o 끝 명사 potato의 복수형은 potatoes입니다." },
+    { category: "명사", q: "The (   ) are sleeping in the room.", ko: "그 아기들이 방에서 자고 있다.", options: ["babys", "babies", "babyes", "baby"], ansIdx: 1, answer: "The babies are sleeping in the room.", reason: "baby는 자음+y로 끝나 복수형이 babies가 됩니다." },
+    { category: "명사", q: "We need two (   ) in the kitchen.", ko: "우리는 부엌에 칼 두 자루가 필요하다.", options: ["knifes", "knivies", "knives", "knifees"], ansIdx: 2, answer: "We need two knives in the kitchen.", reason: "knife는 -fe가 -ves로 바뀌어 knives가 됩니다." },
+    { category: "명사", q: "Two (   ) live in the hole.", ko: "생쥐 두 마리가 구멍 안에 살고 있다.", options: ["mouses", "mice", "mouse", "mices"], ansIdx: 1, answer: "Two mice live in the hole.", reason: "mouse의 복수형은 불규칙하게 mice입니다." },
+    { category: "명사", q: "Their (   ) are very tall.", ko: "그들의 아이들은 매우 키가 크다.", options: ["childs", "childes", "children", "child"], ansIdx: 2, answer: "Their children are very tall.", reason: "child의 복수형은 children입니다." },
+    { category: "명사", q: "These (   ) are delicious.", ko: "이 토마토들은 맛있다.", options: ["tomatos", "tomatoes", "tomato", "tomato's"], ansIdx: 1, answer: "These tomatoes are delicious.", reason: "tomato는 복수형으로 tomatoes를 씁니다." },
+    { category: "명사", q: "Emma always takes many (   ).", ko: "엠마는 항상 사진을 많이 찍는다.", options: ["photo", "photoes", "photos", "photoss"], ansIdx: 2, answer: "Emma always takes many photos.", reason: "photo의 복수형은 photos입니다." },
+    { category: "명사", q: "There are 48 (   ) in Asia.", ko: "아시아에는 48개의 나라가 있다.", options: ["country", "countrys", "countries", "countres"], ansIdx: 2, answer: "There are 48 countries in Asia.", reason: "country는 복수형으로 countries를 씁니다." },
+    { category: "명사", q: "Two (   ) are waiting outside.", ko: "남자 두 명이 밖에서 기다리고 있다.", options: ["mans", "men", "manes", "mens"], ansIdx: 1, answer: "Two men are waiting outside.", reason: "man의 복수형은 불규칙하게 men입니다." },
+    { category: "명사", q: "The child has two loose (   ).", ko: "그 아이는 흔들리는 이가 두 개 있다.", options: ["tooths", "toothes", "teeth", "teeths"], ansIdx: 2, answer: "The child has two loose teeth.", reason: "tooth의 복수형은 불규칙하게 teeth입니다." }
+];
 
-        <!-- 1. Top Level Classification -->
-        <section id="classification">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-blue-600 inline-block pb-2 px-6">1. Classification of Verbs (동사의 분류)</h2>
-                <p class="mt-4 text-slate-700 text-lg font-medium">영어의 동사는 크게 두 가지 줄기로 나뉩니다.</p>
-            </div>
+const quantifierQuiz = [
+    { category: "수량", q: "He gives me (   ) every day.", ko: "그는 매일 나에게 꽃 한 송이를 준다.", options: ["a flower", "flower", "flowers", "some flower"], ansIdx: 0, answer: "He gives me a flower every day.", reason: "셀 수 있는 단수 명사 앞에는 a/an을 씁니다." },
+    { category: "수량", q: "I put some (   ) in a bowl.", ko: "나는 그릇에 밀가루를 좀 넣는다.", options: ["flours", "flour", "a flour", "many flour"], ansIdx: 1, answer: "I put some flour in a bowl.", reason: "flour는 셀 수 없는 명사입니다." },
+    { category: "수량", q: "Her favorite (   ) is pizza.", ko: "그녀가 가장 좋아하는 음식은 피자다.", options: ["foods", "food", "a food", "many food"], ansIdx: 1, answer: "Her favorite food is pizza.", reason: "여기서는 food를 불가산 개념으로 사용합니다." },
+    { category: "수량", q: "She doesn't have (   ) questions.", ko: "그녀는 질문이 하나도 없다.", options: ["some", "many", "any", "a little"], ansIdx: 2, answer: "She doesn't have any questions.", reason: "부정문에서는 any를 씁니다." },
+    { category: "수량", q: "My brother has (   ) toys.", ko: "내 남동생은 장난감을 많이 가지고 있다.", options: ["much", "many", "a little", "little"], ansIdx: 1, answer: "My brother has many toys.", reason: "toys는 셀 수 있는 복수 명사입니다." },
+    { category: "수량", q: "I need (   ).", ko: "나는 조언 한 마디가 필요하다.", options: ["an advice", "a advice", "a piece of advice", "many advices"], ansIdx: 2, answer: "I need a piece of advice.", reason: "advice는 불가산 명사라 단위 표현이 필요합니다." },
+    { category: "수량", q: "Would you like (   )?", ko: "차 한 잔 드시겠어요?", options: ["a tea", "a cup of tea", "two teas", "many tea"], ansIdx: 1, answer: "Would you like a cup of tea?", reason: "tea는 보통 불가산이라 cup 단위를 씁니다." },
+    { category: "수량", q: "She drinks (   ) every day.", ko: "그녀는 매일 물 여덟 잔을 마신다.", options: ["eight waters", "eight glasses of water", "many water", "a water"], ansIdx: 1, answer: "She drinks eight glasses of water every day.", reason: "water는 불가산이라 glasses of water로 셉니다." },
+    { category: "수량", q: "My brother puts (   ) on his sandwich.", ko: "내 남동생은 샌드위치에 치즈 두 장을 넣는다.", options: ["two cheeses", "two slices of cheese", "a cheese", "many cheese"], ansIdx: 1, answer: "My brother puts two slices of cheese on his sandwich.", reason: "cheese는 slices 단위로 세어야 자연스럽습니다." },
+    { category: "수량", q: "Would you like some (   )?", ko: "빵 좀 드시겠어요?", options: ["breads", "bread", "a bread", "many bread"], ansIdx: 1, answer: "Would you like some bread?", reason: "bread는 불가산 명사로 사용됩니다." }
+];
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Be Verbs -->
-                <div class="bg-white border-2 border-indigo-200 border-l-8 border-l-indigo-600 p-8 rounded-xl shadow-lg card-hover cursor-pointer group" onclick="toggleSection('be-verb-detail')">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-indigo-800 group-hover:text-indigo-600 transition">Be Verb (Be동사)</h3>
-                        <span class="text-sm bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full font-bold border border-indigo-200">Static / Link</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">주어의 <strong>상태, 신분, 존재</strong>를 나타냅니다.</p>
-                    <ul class="list-disc list-inside text-base text-slate-600 space-y-2 font-medium">
-                        <li>am, are, is (현재)</li>
-                        <li>was, were (과거)</li>
-                    </ul>
-                    <div class="mt-6 text-right">
-                        <span class="text-indigo-700 text-base font-bold group-hover:translate-x-1 inline-block transition">Details (자세히 보기) &rarr;</span>
-                    </div>
-                </div>
+const articleQuiz = [
+    { category: "관사", q: "I want (   ) new cell phone.", ko: "나는 새 휴대전화를 원한다.", options: ["a", "an", "the", "x"], ansIdx: 0, answer: "I want a new cell phone.", reason: "처음 언급하는 단수 명사는 a/an을 씁니다." },
+    { category: "관사", q: "My uncle is (   ) English teacher.", ko: "우리 삼촌은 영어 교사다.", options: ["a", "an", "the", "x"], ansIdx: 1, answer: "My uncle is an English teacher.", reason: "English는 모음 소리로 시작해 an을 씁니다." },
+    { category: "관사", q: "Do you have (   ) MP3 player?", ko: "너는 MP3 플레이어가 있니?", options: ["a", "an", "the", "x"], ansIdx: 1, answer: "Do you have an MP3 player?", reason: "MP3의 첫소리는 모음 소리라 an을 씁니다." },
+    { category: "관사", q: "Brad plays (   ) guitar very well.", ko: "브래드는 기타를 매우 잘 친다.", options: ["a", "an", "the", "x"], ansIdx: 2, answer: "Brad plays the guitar very well.", reason: "악기명 앞에는 the를 씁니다." },
+    { category: "관사", q: "We usually go for a walk in (   ) morning.", ko: "우리는 보통 아침에 산책한다.", options: ["a", "an", "the", "x"], ansIdx: 2, answer: "We usually go for a walk in the morning.", reason: "in the morning이 고정 표현입니다." },
+    { category: "관사", q: "Does Emma go to (   ) school by (   ) bus?", ko: "엠마는 버스로 등교하니?", options: ["the / a", "a / the", "x / x", "the / x"], ansIdx: 2, answer: "Does Emma go to school by bus?", reason: "go to school, by bus는 무관사 표현입니다." },
+    { category: "관사", q: "It is (   ) unlucky day today.", ko: "오늘은 운이 없는 날이다.", options: ["a", "an", "the", "x"], ansIdx: 1, answer: "It is an unlucky day today.", reason: "unlucky는 모음 소리로 시작합니다." },
+    { category: "관사", q: "I want to go to (   ) moon.", ko: "나는 달에 가고 싶다.", options: ["a", "an", "the", "x"], ansIdx: 2, answer: "I want to go to the moon.", reason: "유일한 대상 앞에는 the를 씁니다." },
+    { category: "관사", q: "My niece plays (   ) violin.", ko: "내 조카는 바이올린을 연주한다.", options: ["a", "an", "the", "x"], ansIdx: 2, answer: "My niece plays the violin.", reason: "악기명 앞에는 the를 씁니다." },
+    { category: "관사", q: "My father is (   ) honest man.", ko: "우리 아버지는 정직한 분이다.", options: ["a", "an", "the", "x"], ansIdx: 1, answer: "My father is an honest man.", reason: "honest의 h는 묵음이라 an을 씁니다." }
+];
 
-                <!-- General Verbs -->
-                <div class="bg-white border-2 border-emerald-200 border-l-8 border-l-emerald-600 p-8 rounded-xl shadow-lg card-hover cursor-pointer group" onclick="toggleSection('general-verb-detail')">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-emerald-800 group-hover:text-emerald-600 transition">General Verb (일반동사)</h3>
-                        <span class="text-sm bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold border border-emerald-200">Dynamic / Action</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">Be동사를 제외한 <strong>거의 모든 동작과 상태</strong>를 나타냅니다.</p>
-                    <ul class="list-disc list-inside text-base text-slate-600 space-y-2 font-medium">
-                        <li>Action Verbs (동작)</li>
-                        <li>Stative Verbs (상태)</li>
-                    </ul>
-                    <div class="mt-6 text-right">
-                        <span class="text-emerald-700 text-base font-bold group-hover:translate-x-1 inline-block transition">Details (자세히 보기) &rarr;</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+const allQuizMaster = [...nounQuiz, ...quantifierQuiz, ...articleQuiz];
+const shuffleArray = (arr) => [...arr].sort(() => Math.random() - 0.5);
+const buildQuizSequence = () => {
+    const nouns = shuffleArray(allQuizMaster.filter((q) => q.category === "명사"));
+    const quant = shuffleArray(allQuizMaster.filter((q) => q.category === "수량"));
+    const article = shuffleArray(allQuizMaster.filter((q) => q.category === "관사"));
+    return [...nouns, ...quant, ...article];
+};
 
-        <!-- 2. Detailed View: Be Verbs -->
-        <section id="be-verb-detail" class="hidden-content fade-in bg-indigo-50/50 p-8 rounded-3xl shadow-xl border-2 border-indigo-100">
-            <div class="flex items-center space-x-4 mb-8 border-b-2 border-indigo-200 pb-4">
-                <div class="bg-indigo-700 text-white w-10 h-10 flex items-center justify-center rounded-full font-black text-xl">A</div>
-                <h2 class="text-3xl font-black text-indigo-900">Logic of Be Verbs</h2>
-            </div>
+const App = () => {
+    const [quizIndex, setQuizIndex] = useState(0);
+    const [quizFeedback, setQuizFeedback] = useState("");
+    const [shuffledQuiz, setShuffledQuiz] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(false);
 
-            <!-- Conjugation Table -->
-            <div class="mb-12 bg-white p-8 rounded-2xl border-2 border-indigo-200 shadow-sm">
-                <h3 class="text-xl font-bold text-indigo-900 mb-6 flex items-center">
-                    <span class="bg-indigo-600 text-white px-2 py-1 rounded mr-2 text-sm">Rule</span> 
-                    Subject-Verb Agreement (짝꿍 찾기)
-                </h3>
-                <p class="text-base text-slate-700 mb-4 font-medium">주어가 누구냐에 따라 Be동사의 옷(형태)이 바뀝니다.</p>
-                
-                <div class="overflow-hidden rounded-lg border border-indigo-200">
-                    <table class="w-full text-base text-left text-slate-700">
-                        <thead class="text-sm text-white uppercase bg-indigo-700">
-                            <tr>
-                                <th scope="col" class="px-6 py-4 font-bold">Subject (주어)</th>
-                                <th scope="col" class="px-6 py-4 font-bold bg-indigo-600">Present (현재)</th>
-                                <th scope="col" class="px-6 py-4 font-bold">Past (과거)</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-indigo-100 bg-white">
-                            <tr class="hover:bg-indigo-50 transition">
-                                <th scope="row" class="px-6 py-4 font-black text-slate-900 whitespace-nowrap bg-indigo-50/30">I (1인칭/나)</th>
-                                <td class="px-6 py-4 font-black text-indigo-700 text-lg">am</td>
-                                <td class="px-6 py-4 font-medium text-slate-600">was</td>
-                            </tr>
-                            <tr class="hover:bg-indigo-50 transition">
-                                <th scope="row" class="px-6 py-4 font-black text-slate-900 whitespace-nowrap bg-indigo-50/30">You (2인칭/너)</th>
-                                <td class="px-6 py-4 font-black text-indigo-700 text-lg">are</td>
-                                <td class="px-6 py-4 font-medium text-slate-600">were</td>
-                            </tr>
-                            <tr class="hover:bg-indigo-50 transition">
-                                <th scope="row" class="px-6 py-4 font-black text-slate-900 whitespace-nowrap bg-indigo-50/30">He / She / It (3인칭 단수)</th>
-                                <td class="px-6 py-4 font-black text-indigo-700 text-lg">is</td>
-                                <td class="px-6 py-4 font-medium text-slate-600">was</td>
-                            </tr>
-                            <tr class="bg-indigo-100/40 hover:bg-indigo-100 transition">
-                                <th scope="row" class="px-6 py-4 font-black text-slate-900 whitespace-nowrap">We / You / They (복수)</th>
-                                <td class="px-6 py-4 font-black text-indigo-700 text-lg">are</td>
-                                <td class="px-6 py-4 font-medium text-slate-600">were</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <p class="mb-6 text-slate-800 text-lg font-bold bg-white inline-block px-4 py-2 rounded shadow-sm border border-slate-200">Be동사는 뒤에 <span class="text-indigo-700 underline decoration-2">무엇이 오느냐</span>에 따라 해석이 완전히 달라집니다.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Linking Verb Meaning -->
-                <div class="bg-white p-6 rounded-2xl border-2 border-indigo-300 shadow-md">
-                    <h3 class="text-xl font-bold text-indigo-900 mb-3 border-b-2 border-indigo-100 pb-2">1. Linking Verb (연결 동사)</h3>
-                    <p class="text-base text-indigo-900 mb-4 font-mono bg-indigo-100 p-2 rounded font-bold border border-indigo-200">Subject = Complement</p>
-                    <p class="mb-4 text-slate-800 text-lg"><strong>해석: ~이다 (Identity/State)</strong></p>
-                    
-                    <div class="space-y-4">
-                        <div class="bg-slate-50 p-4 rounded-lg border-l-8 border-indigo-500 shadow-sm">
-                            <span class="text-xs text-indigo-800 font-bold block mb-1 uppercase tracking-wide">Pattern: Be + Noun (명사)</span>
-                            <p class="eng-font text-xl font-bold text-slate-900">She <span class="text-indigo-700">is</span> a teacher.</p>
-                            <p class="text-slate-600 font-medium">(그녀는 선생님<span class="text-indigo-700 font-bold">이다</span>.)</p>
-                        </div>
-                        <div class="bg-slate-50 p-4 rounded-lg border-l-8 border-indigo-500 shadow-sm">
-                            <span class="text-xs text-indigo-800 font-bold block mb-1 uppercase tracking-wide">Pattern: Be + Adjective (형용사)</span>
-                            <p class="eng-font text-xl font-bold text-slate-900">They <span class="text-indigo-700">are</span> happy.</p>
-                            <p class="text-slate-600 font-medium">(그들은 행복한 상태<span class="text-indigo-700 font-bold">이다</span>.)</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Existence Meaning -->
-                <div class="bg-white p-6 rounded-2xl border-2 border-slate-300 shadow-md">
-                    <h3 class="text-xl font-bold text-slate-900 mb-3 border-b-2 border-slate-200 pb-2">2. Existence (존재)</h3>
-                    <p class="text-base text-slate-900 mb-4 font-mono bg-slate-100 p-2 rounded font-bold border border-slate-200">Subject exists at Location</p>
-                    <p class="mb-4 text-slate-800 text-lg"><strong>해석: ~있다 (Location)</strong></p>
-                    
-                    <div class="space-y-4">
-                        <div class="bg-slate-50 p-4 rounded-lg border-l-8 border-slate-600 shadow-sm">
-                            <span class="text-xs text-slate-700 font-bold block mb-1 uppercase tracking-wide">Pattern: Be + Preposition (전치사)</span>
-                            <p class="eng-font text-xl font-bold text-slate-900">The book <span class="text-slate-700">is</span> on the desk.</p>
-                            <p class="text-slate-600 font-medium">(그 책은 책상 위에 <span class="text-slate-700 font-bold">있다</span>.)</p>
-                        </div>
-                        <div class="bg-slate-50 p-4 rounded-lg border-l-8 border-slate-600 shadow-sm">
-                            <span class="text-xs text-slate-700 font-bold block mb-1 uppercase tracking-wide">Pattern: Be + Preposition Phrase</span>
-                            <p class="eng-font text-xl font-bold text-slate-900">I <span class="text-slate-700">am</span> in my room.</p>
-                            <p class="text-slate-600 font-medium">(나는 내 방 안에 <span class="text-slate-700 font-bold">있다</span>.)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- 3. Detailed View: General Verbs -->
-        <section id="general-verb-detail" class="hidden-content fade-in bg-emerald-50/50 p-8 rounded-3xl shadow-xl border-2 border-emerald-100">
-            <div class="flex items-center space-x-4 mb-8 border-b-2 border-emerald-200 pb-4">
-                <div class="bg-emerald-700 text-white w-10 h-10 flex items-center justify-center rounded-full font-black text-xl">B</div>
-                <h2 class="text-3xl font-black text-emerald-900">Logic of General Verbs</h2>
-            </div>
-
-            <!-- 3rd Person Singular Rule -->
-            <div class="mb-12 bg-yellow-50 p-8 rounded-2xl border-2 border-yellow-400 shadow-sm">
-                <div class="flex items-start">
-                    <div class="flex-1">
-                        <h3 class="text-xl font-bold text-yellow-900 mb-4 flex items-center">
-                            <span class="bg-yellow-500 text-white px-2 py-1 rounded mr-2 text-sm">Rule</span>
-                            3rd Person Singular (3인칭 단수)
-                        </h3>
-                        <p class="text-slate-900 text-base font-medium mb-6 leading-relaxed">
-                            주어가 <strong>나(I)</strong>도 아니고 <strong>너(You)</strong>도 아닌 <strong>제3자 하나</strong>일 때,<br>
-                            현재형 동사 뒤에 <span class="bg-yellow-200 text-yellow-900 border border-yellow-400 px-1 rounded font-black">-s</span> 또는 <span class="bg-yellow-200 text-yellow-900 border border-yellow-400 px-1 rounded font-black">-es</span>를 붙입니다.<br>
-                            <span class="text-sm text-red-700 font-bold mt-2 block bg-white p-2 border border-red-200 rounded inline-block">※ 중요: He/She/It 뿐만 아니라 [Tom, My Mom, The Desk, A Cat] 등 모든 "하나의 명사"가 3인칭 단수입니다!</span>
-                        </p>
-                        
-                        <div class="bg-white p-6 rounded-xl shadow-md border-2 border-yellow-200 space-y-3">
-                            <div class="flex items-center space-x-4">
-                                <span class="w-24 text-xs font-black text-slate-500 uppercase tracking-widest text-right">1st Person</span>
-                                <p class="eng-font text-xl text-slate-900">I <span class="font-bold text-emerald-700">like</span> pizza.</p>
-                            </div>
-                            <div class="flex items-center space-x-4">
-                                <span class="w-24 text-xs font-black text-slate-500 uppercase tracking-widest text-right">2nd Person</span>
-                                <p class="eng-font text-xl text-slate-900">You <span class="font-bold text-emerald-700">like</span> pizza.</p>
-                            </div>
-                            <div class="flex items-center space-x-4 bg-yellow-100 -mx-4 px-4 py-2 rounded-lg border border-yellow-300">
-                                <span class="w-24 text-xs font-black text-yellow-900 uppercase tracking-widest text-right">3rd Person</span>
-                                <p class="eng-font text-xl text-slate-900">My brother <span class="font-bold text-emerald-700">like<span class="highlight-s text-2xl">s</span></span> pizza.</p>
-                                <span class="text-xs bg-red-600 text-white font-bold px-2 py-0.5 rounded ml-2 animate-pulse">Special!</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <p class="mb-6 text-slate-800 text-lg font-bold bg-white inline-block px-4 py-2 rounded shadow-sm border border-slate-200">일반동사의 핵심 구분 기준은 <span class="text-emerald-700 underline decoration-2">"진행형(V-ing)을 만들 수 있는가?"</span> 입니다.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <!-- Action Verbs -->
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-emerald-800">1. Action Verbs (동작동사)</h3>
-                        <span class="bg-emerald-100 text-emerald-900 border border-emerald-300 text-sm px-3 py-1 rounded-full font-bold">Progressive OK (O)</span>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border-2 border-emerald-200 shadow-md space-y-6">
-                        <p class="text-base text-slate-700 font-medium mb-2">시작과 끝이 있는 <strong>움직임</strong>입니다. (진행형 가능)</p>
-                        
-                        <!-- 5 Examples List -->
-                        <div class="space-y-4">
-                            <!-- Item 1 -->
-                            <div class="bg-emerald-50/50 p-3 rounded-lg border-l-8 border-emerald-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-emerald-800 eng-font">Play</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">play / played</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">He <span class="font-bold text-emerald-700">play<span class="highlight-s text-xl">s</span></span> soccer.</p>
-                                <p class="text-slate-600 font-medium text-sm">(그는 축구를 한다.)</p>
-                            </div>
-
-                            <!-- Item 2 -->
-                            <div class="bg-emerald-50/50 p-3 rounded-lg border-l-8 border-emerald-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-emerald-800 eng-font">Eat</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">eat / ate</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">She <span class="font-bold text-emerald-700">eat<span class="highlight-s text-xl">s</span></span> pizza.</p>
-                                <p class="text-slate-600 font-medium text-sm">(그녀는 피자를 먹는다.)</p>
-                            </div>
-
-                            <!-- Item 3 -->
-                            <div class="bg-emerald-50/50 p-3 rounded-lg border-l-8 border-emerald-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-emerald-800 eng-font">Study</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">study / studied</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">I <span class="font-bold text-emerald-700">study</span> English.</p>
-                                <p class="text-slate-600 font-medium text-sm">(나는 영어를 공부한다.)</p>
-                            </div>
-
-                            <!-- Item 4 -->
-                            <div class="bg-emerald-50/50 p-3 rounded-lg border-l-8 border-emerald-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-emerald-800 eng-font">Run</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">run / ran</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">It <span class="font-bold text-emerald-700">run<span class="highlight-s text-xl">s</span></span> fast.</p>
-                                <p class="text-slate-600 font-medium text-sm">(그것은 빨리 달린다.)</p>
-                            </div>
-
-                            <!-- Item 5 -->
-                            <div class="bg-emerald-50/50 p-3 rounded-lg border-l-8 border-emerald-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-emerald-800 eng-font">Sleep</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">sleep / slept</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">The baby <span class="font-bold text-emerald-700">sleep<span class="highlight-s text-xl">s</span></span> much.</p>
-                                <p class="text-slate-600 font-medium text-sm">(그 아기는 많이 잔다.)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stative Verbs -->
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-red-800">2. Stative Verbs (상태동사)</h3>
-                        <span class="bg-red-100 text-red-900 border border-red-300 text-sm px-3 py-1 rounded-full font-bold">Progressive NO (X)</span>
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border-2 border-red-200 shadow-md space-y-6">
-                        <p class="text-base text-slate-700 font-medium mb-2">감정, 소유, 인지 등 <strong>지속적인 상태</strong>입니다. (진행형 불가)</p>
-                        
-                        <!-- 5 Examples List -->
-                        <div class="space-y-4">
-                            <!-- Item 1 -->
-                            <div class="bg-red-50/50 p-3 rounded-lg border-l-8 border-red-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-red-800 eng-font">Like</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">like / liked</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">He <span class="font-bold text-red-700">like<span class="highlight-s text-xl">s</span></span> apples.</p>
-                                <p class="text-slate-600 font-medium text-sm">(그는 사과를 좋아한다.)</p>
-                            </div>
-
-                            <!-- Item 2 -->
-                            <div class="bg-red-50/50 p-3 rounded-lg border-l-8 border-red-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-red-800 eng-font">Love</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">love / loved</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">She <span class="font-bold text-red-700">love<span class="highlight-s text-xl">s</span></span> cats.</p>
-                                <p class="text-slate-600 font-medium text-sm">(그녀는 고양이를 사랑한다.)</p>
-                            </div>
-
-                            <!-- Item 3 -->
-                            <div class="bg-red-50/50 p-3 rounded-lg border-l-8 border-red-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-red-800 eng-font">Know</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">know / knew</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">We <span class="font-bold text-red-700">know</span> him.</p>
-                                <p class="text-slate-600 font-medium text-sm">(우리는 그를 안다.)</p>
-                            </div>
-
-                            <!-- Item 4 -->
-                            <div class="bg-red-50/50 p-3 rounded-lg border-l-8 border-red-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-red-800 eng-font">Have</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">have / had</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">They <span class="font-bold text-red-700">have</span> a car.</p>
-                                <p class="text-slate-600 font-medium text-sm">(그들은 차를 가지고 있다.)</p>
-                            </div>
-
-                            <!-- Item 5 -->
-                            <div class="bg-red-50/50 p-3 rounded-lg border-l-8 border-red-500">
-                                <div class="flex justify-between items-end mb-1">
-                                    <span class="text-xl font-black text-red-800 eng-font">Want</span>
-                                    <span class="text-xs font-bold text-slate-500 uppercase">want / wanted</span>
-                                </div>
-                                <p class="eng-font text-lg text-slate-900">She <span class="font-bold text-red-700">want<span class="highlight-s text-xl">s</span></span> water.</p>
-                                <p class="text-slate-600 font-medium text-sm">(그녀는 물을 원한다.)</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- 2. Negative Sentences -->
-        <section id="negation">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-slate-200 inline-block pb-2 px-6">2. Making Negative Sentences (부정문 만들기)</h2>
-                <p class="mt-4 text-slate-700 text-lg font-medium">"Be동사"와 "일반동사"는 부정문(아니다)을 만드는 방법이 완전히 다릅니다.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Be Verb Card -->
-                <div class="bg-white border-2 border-indigo-200 border-l-8 border-l-indigo-600 p-8 rounded-xl shadow-lg card-hover cursor-pointer group" onclick="toggleSection('be-verb-negative-detail')">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-indigo-800 group-hover:text-indigo-600 transition">Be Verb Negation</h3>
-                        <span class="text-sm bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full font-bold border border-indigo-200">Easy</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">Be동사 뒤에 <span class="text-red-600 font-black">NOT</span>만 붙이면 됩니다.</p>
-                    <div class="bg-indigo-50 p-3 rounded border border-indigo-100 mb-4">
-                        <p class="font-mono text-indigo-900 font-bold text-center">Subject + Be + <span class="text-red-600">NOT</span></p>
-                    </div>
-                    <div class="mt-6 text-right">
-                        <span class="text-indigo-700 text-base font-bold group-hover:translate-x-1 inline-block transition">See Examples (예문 보기) &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- General Verb Card -->
-                <div class="bg-white border-2 border-emerald-200 border-l-8 border-l-emerald-600 p-8 rounded-xl shadow-lg card-hover cursor-pointer group" onclick="toggleSection('general-verb-negative-detail')">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-emerald-800 group-hover:text-emerald-600 transition">General Verb Negation</h3>
-                        <span class="text-sm bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold border border-emerald-200">Careful!</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">도우미 동사 <span class="text-yellow-600 font-black">DO/DOES</span>가 필요합니다.</p>
-                    <div class="bg-emerald-50 p-3 rounded border border-emerald-100 mb-4">
-                        <p class="font-mono text-emerald-900 font-bold text-center">DO/DOES + <span class="text-red-600">NOT</span> + Root</p>
-                    </div>
-                    <div class="mt-6 text-right">
-                        <span class="text-emerald-700 text-base font-bold group-hover:translate-x-1 inline-block transition">See Examples (예문 보기) &rarr;</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- A. Be Verb Negation Detail -->
-        <section id="be-verb-negative-detail" class="hidden-content fade-in bg-indigo-50/50 p-8 rounded-3xl shadow-xl border-2 border-indigo-100">
-             <div class="flex items-center space-x-4 mb-8 border-b-2 border-indigo-200 pb-4">
-                <div class="bg-indigo-700 text-white w-10 h-10 flex items-center justify-center rounded-full font-black text-xl">A</div>
-                <h3 class="text-3xl font-black text-indigo-900">Be Verb Negative Rules</h3>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl border-2 border-indigo-100 shadow-lg">
-                <h3 class="text-2xl font-black text-indigo-900 mb-6 border-b border-indigo-100 pb-4 flex items-center">
-                    <span class="bg-indigo-600 text-white text-sm px-3 py-1 rounded mr-3">Rule</span> 
-                    Subject + Be + <span class="text-red-500 mx-2 bg-indigo-50 px-2 rounded font-black">NOT</span> ~ (뒤에 붙임)
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <!-- Present Tense -->
-                    <div>
-                        <h4 class="text-lg font-black text-indigo-800 mb-4 uppercase tracking-widest border-b-2 border-indigo-100 inline-block pb-1">Present (현재)</h4>
-                        <ul class="example-list text-left space-y-3">
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">1st Sing</span> <span class="eng text-slate-900">I am <span class="text-red-600 font-black">not</span> a student.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(나는 학생이 아니다.)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">2nd Sing</span> <span class="eng text-slate-900">You are <span class="text-red-600 font-black">not</span> busy.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너는 바쁘지 않다.)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900">Tom is <span class="text-red-600 font-black">not</span> my brother.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(Tom은 내 형제가 아니다.)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900">The bag is <span class="text-red-600 font-black">not</span> heavy.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 가방은 무겁지 않다.)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900">The dog is <span class="text-red-600 font-black">not</span> hungry.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 개는 배고프지 않다.)</span></li>
-                            <li class="border-t border-indigo-100 my-4 pt-2 border-dashed"></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">1st Plural</span> <span class="eng text-slate-900">We are <span class="text-red-600 font-black">not</span> tired.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(우리는 피곤하지 않다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">2nd Plural</span> <span class="eng text-slate-900">You are <span class="text-red-600 font-black">not</span> late.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너희들은 늦지 않았다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900">My friends are <span class="text-red-600 font-black">not</span> here.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(내 친구들은 여기에 없다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900">The cars are <span class="text-red-600 font-black">not</span> fast.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 차들은 빠르지 않다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900">Lions are <span class="text-red-600 font-black">not</span> pets.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(사자는 애완동물이 아니다.)</span></li>
-                        </ul>
-                    </div>
-                    <!-- Past Tense -->
-                    <div>
-                        <h4 class="text-lg font-black text-indigo-800 mb-4 uppercase tracking-widest border-b-2 border-indigo-100 inline-block pb-1">Past (과거)</h4>
-                        <ul class="example-list text-left space-y-3">
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">1st Sing</span> <span class="eng text-slate-900">I was <span class="text-red-600 font-black">not</span> happy then.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(나는 그때 행복하지 않았다.)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">2nd Sing</span> <span class="eng text-slate-900">You were <span class="text-red-600 font-black">not</span> at home.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너는 집에 없었다.)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900">She was <span class="text-red-600 font-black">not</span> a doctor.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그녀는 의사가 아니었다.)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900">The computer was <span class="text-red-600 font-black">not</span> new.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 컴퓨터는 새것이 아니었다.)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900">The cat was <span class="text-red-600 font-black">not</span> small.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 고양이는 작지 않았다.)</span></li>
-                            <li class="border-t border-indigo-100 my-4 pt-2 border-dashed"></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">1st Plural</span> <span class="eng text-slate-900">We were <span class="text-red-600 font-black">not</span> ready.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(우리는 준비되지 않았었다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">2nd Plural</span> <span class="eng text-slate-900">You were <span class="text-red-600 font-black">not</span> loud.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너희들은 시끄럽지 않았다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900">They were <span class="text-red-600 font-black">not</span> students.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그들은 학생이 아니었다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900">Those books were <span class="text-red-600 font-black">not</span> mine.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(저 책들은 내 것이 아니었다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900">Birds were <span class="text-red-600 font-black">not</span> in the cage.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(새들은 새장 안에 없었다.)</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- B. General Verb Negation Detail -->
-        <section id="general-verb-negative-detail" class="hidden-content fade-in bg-emerald-50/50 p-8 rounded-3xl shadow-xl border-2 border-emerald-100">
-             <div class="flex items-center space-x-4 mb-8 border-b-2 border-emerald-200 pb-4">
-                <div class="bg-emerald-700 text-white w-10 h-10 flex items-center justify-center rounded-full font-black text-xl">B</div>
-                <h3 class="text-3xl font-black text-emerald-900">General Verb Negative Rules</h3>
-            </div>
-            
-            <div class="bg-yellow-50 p-6 rounded-xl mb-10 text-center border-2 border-yellow-200">
-                <p class="text-lg font-bold text-yellow-900 mb-2">★ 중요 개념: 3인칭 단수란?</p>
-                <p class="text-base text-slate-800">He/She/It 뿐만 아니라 <strong>나(I)와 너(You)가 아닌 모든 "하나의 명사"</strong><br>(Tom, The desk, The dog)를 말합니다.</p>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl border-2 border-emerald-100 shadow-lg">
-                <h3 class="text-2xl font-black text-emerald-900 mb-6 border-b border-emerald-100 pb-4 flex items-center">
-                    <span class="bg-emerald-600 text-white text-sm px-3 py-1 rounded mr-3">Rule</span> 
-                    Sub + <span class="text-yellow-600 mx-2 bg-yellow-50 px-2 rounded font-black">DO/DOES</span> + NOT + <span class="text-emerald-600 border-b-2 border-emerald-600 mx-2 font-black">Root</span> (앞에 붙임)
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <!-- Present Tense -->
-                    <div>
-                        <h4 class="text-lg font-black text-emerald-800 mb-4 uppercase tracking-widest border-b-2 border-emerald-100 inline-block pb-1">Present (현재)</h4>
-                        <ul class="example-list text-left space-y-3">
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">1st Sing</span> <span class="eng text-slate-900">I <span class="text-yellow-600 font-black">do not</span> like onions.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(나는 양파를 좋아하지 않는다.)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">2nd Sing</span> <span class="eng text-slate-900">You <span class="text-yellow-600 font-black">do not</span> play piano.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너는 피아노를 치지 않는다.)</span></li>
-                            <li class="bg-yellow-50 -mx-2 px-2 rounded border border-yellow-200"><span class="text-xs text-yellow-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900">My father <span class="text-yellow-600 font-black">does not</span> smoke.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(내 아버지는 담배를 피우지 않는다.)</span></li>
-                            <li class="bg-yellow-50 -mx-2 px-2 rounded border border-yellow-200"><span class="text-xs text-yellow-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900">The bus <span class="text-yellow-600 font-black">does not</span> stop here.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 버스는 여기서 멈추지 않는다.)</span></li>
-                            <li class="bg-yellow-50 -mx-2 px-2 rounded border border-yellow-200"><span class="text-xs text-yellow-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900">A rabbit <span class="text-yellow-600 font-black">does not</span> eat meat.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(토끼는 고기를 먹지 않는다.)</span></li>
-                            <li class="border-t border-emerald-100 my-4 pt-2 border-dashed"></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">1st Plural</span> <span class="eng text-slate-900">We <span class="text-yellow-600 font-black">do not</span> want trouble.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(우리는 문제를 원하지 않는다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">2nd Plural</span> <span class="eng text-slate-900">You <span class="text-yellow-600 font-black">do not</span> know the answer.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너희들은 정답을 모른다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900">Teachers <span class="text-yellow-600 font-black">do not</span> run in school.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(선생님들은 학교에서 뛰지 않는다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900">Computers <span class="text-yellow-600 font-black">do not</span> sleep.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(컴퓨터는 잠을 자지 않는다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900">Fish <span class="text-yellow-600 font-black">do not</span> fly.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(물고기는 날지 않는다.)</span></li>
-                        </ul>
-                    </div>
-                    <!-- Past Tense -->
-                    <div>
-                        <h4 class="text-lg font-black text-emerald-800 mb-4 uppercase tracking-widest border-b-2 border-emerald-100 inline-block pb-1">Past (과거)</h4>
-                        <ul class="example-list text-left space-y-3">
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">1st Sing</span> <span class="eng text-slate-900">I <span class="text-yellow-600 font-black">did not</span> study yesterday.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(나는 어제 공부하지 않았다.)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">2nd Sing</span> <span class="eng text-slate-900">You <span class="text-yellow-600 font-black">did not</span> call me.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너는 나에게 전화하지 않았다.)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900">Tom <span class="text-yellow-600 font-black">did not</span> eat breakfast.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(Tom은 아침을 먹지 않았다.)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900">The rain <span class="text-yellow-600 font-black">did not</span> stop.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(비가 그치지 않았다.)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900">The dog <span class="text-yellow-600 font-black">did not</span> bark.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 개는 짖지 않았다.)</span></li>
-                            <li class="border-t border-emerald-100 my-4 pt-2 border-dashed"></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">1st Plural</span> <span class="eng text-slate-900">We <span class="text-yellow-600 font-black">did not</span> play soccer.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(우리는 축구를 하지 않았다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">2nd Plural</span> <span class="eng text-slate-900">You <span class="text-yellow-600 font-black">did not</span> lose the game.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너희들은 게임에서 지지 않았다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900">My parents <span class="text-yellow-600 font-black">did not</span> agree.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(내 부모님은 동의하지 않았다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900">Stores <span class="text-yellow-600 font-black">did not</span> open.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(상점들이 문을 열지 않았다.)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900">Dinosaurs <span class="text-yellow-600 font-black">did not</span> survive.</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(공룡들은 살아남지 못했다.)</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. Question Sentences (New Section) -->
-        <section id="question">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 border-b-4 border-slate-200 inline-block pb-2 px-6">3. Making Questions (의문문 만들기)</h2>
-                <p class="mt-4 text-slate-700 text-lg font-medium">"물어보는 문장"을 만들 때도 두 동사의 규칙은 완전히 다릅니다.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Be Verb Question Card -->
-                <div class="bg-white border-2 border-indigo-200 border-l-8 border-l-indigo-600 p-8 rounded-xl shadow-lg card-hover cursor-pointer group" onclick="toggleSection('be-verb-question-detail')">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-indigo-800 group-hover:text-indigo-600 transition">Be Verb Question</h3>
-                        <span class="text-sm bg-indigo-100 text-indigo-900 px-3 py-1 rounded-full font-bold border border-indigo-200">Swap!</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">주어와 Be동사의 <span class="text-indigo-600 font-black">자리만 바꾸면</span> 됩니다.</p>
-                    <div class="bg-indigo-50 p-3 rounded border border-indigo-100 mb-4">
-                        <p class="font-mono text-indigo-900 font-bold text-center"><span class="text-indigo-600">Be</span> + Subject + ...?</p>
-                    </div>
-                    <div class="mt-6 text-right">
-                        <span class="text-indigo-700 text-base font-bold group-hover:translate-x-1 inline-block transition">See Examples (예문 보기) &rarr;</span>
-                    </div>
-                </div>
-
-                <!-- General Verb Question Card -->
-                <div class="bg-white border-2 border-emerald-200 border-l-8 border-l-emerald-600 p-8 rounded-xl shadow-lg card-hover cursor-pointer group" onclick="toggleSection('general-verb-question-detail')">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-2xl font-black text-emerald-800 group-hover:text-emerald-600 transition">General Verb Question</h3>
-                        <span class="text-sm bg-emerald-100 text-emerald-900 px-3 py-1 rounded-full font-bold border border-emerald-200">Add Do!</span>
-                    </div>
-                    <p class="text-slate-700 text-lg mb-4 font-medium">문장 맨 앞에 <span class="text-yellow-600 font-black">DO/DOES</span>를 붙입니다.</p>
-                    <div class="bg-emerald-50 p-3 rounded border border-emerald-100 mb-4">
-                        <p class="font-mono text-emerald-900 font-bold text-center"><span class="text-yellow-600">DO/DOES</span> + Subject + Root?</p>
-                    </div>
-                    <div class="mt-6 text-right">
-                        <span class="text-emerald-700 text-base font-bold group-hover:translate-x-1 inline-block transition">See Examples (예문 보기) &rarr;</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- A. Be Verb Question Detail -->
-        <section id="be-verb-question-detail" class="hidden-content fade-in bg-indigo-50/50 p-8 rounded-3xl shadow-xl border-2 border-indigo-100">
-             <div class="flex items-center space-x-4 mb-8 border-b-2 border-indigo-200 pb-4">
-                <div class="bg-indigo-700 text-white w-10 h-10 flex items-center justify-center rounded-full font-black text-xl">A</div>
-                <h3 class="text-3xl font-black text-indigo-900">Be Verb Question Rules</h3>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl border-2 border-indigo-100 shadow-lg">
-                <h3 class="text-2xl font-black text-indigo-900 mb-6 border-b border-indigo-100 pb-4 flex items-center">
-                    <span class="bg-indigo-600 text-white text-sm px-3 py-1 rounded mr-3">Rule</span> 
-                    <span class="text-indigo-600 mx-1 font-black">Be</span> + Subject + ... ? (앞으로 이동)
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <!-- Present Tense -->
-                    <div>
-                        <h4 class="text-lg font-black text-indigo-800 mb-4 uppercase tracking-widest border-b-2 border-indigo-100 inline-block pb-1">Present (현재)</h4>
-                        <ul class="example-list text-left space-y-3">
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">1st Sing</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Am</span> I late?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(내가 늦었니?)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">2nd Sing</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Are</span> you okay?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너 괜찮니?)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Is</span> Tom your brother?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(Tom이 네 형제니?)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Is</span> the bag heavy?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 가방 무겁니?)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Is</span> the dog hungry?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 개 배고프니?)</span></li>
-                            <li class="border-t border-indigo-100 my-4 pt-2 border-dashed"></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">1st Plural</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Are</span> we ready?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(우리 준비됐니?)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">2nd Plural</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Are</span> you students?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너희들은 학생이니?)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Are</span> they friends?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그들은 친구니?)</span></li>
-                        </ul>
-                    </div>
-                    <!-- Past Tense -->
-                    <div>
-                        <h4 class="text-lg font-black text-indigo-800 mb-4 uppercase tracking-widest border-b-2 border-indigo-100 inline-block pb-1">Past (과거)</h4>
-                        <ul class="example-list text-left space-y-3">
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">1st Sing</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Was</span> I wrong?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(내가 틀렸었니?)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">2nd Sing</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Were</span> you at home?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너 집에 있었니?)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Was</span> she a doctor?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그녀는 의사였니?)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Was</span> the movie good?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 영화 좋았니?)</span></li>
-                            <li><span class="text-xs text-indigo-800 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Was</span> the cat small?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 고양이는 작았니?)</span></li>
-                            <li class="border-t border-indigo-100 my-4 pt-2 border-dashed"></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">1st Plural</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Were</span> we loud?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(우리가 시끄러웠니?)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900"><span class="text-indigo-600 font-black">Were</span> they happy?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그들은 행복했니?)</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- B. General Verb Question Detail -->
-        <section id="general-verb-question-detail" class="hidden-content fade-in bg-emerald-50/50 p-8 rounded-3xl shadow-xl border-2 border-emerald-100">
-             <div class="flex items-center space-x-4 mb-8 border-b-2 border-emerald-200 pb-4">
-                <div class="bg-emerald-700 text-white w-10 h-10 flex items-center justify-center rounded-full font-black text-xl">B</div>
-                <h3 class="text-3xl font-black text-emerald-900">General Verb Question Rules</h3>
-            </div>
-            
-            <div class="bg-yellow-50 p-6 rounded-xl mb-10 text-center border-2 border-yellow-200">
-                <p class="text-lg font-bold text-yellow-900 mb-2">★ 핵심 주의사항: 3인칭 단수</p>
-                <p class="text-base text-slate-800">
-                    <span class="bg-yellow-200 px-2 py-1 rounded font-bold">Does</span>가 앞에 나오면, 뒤에 있는 동사는 반드시 
-                    <span class="text-emerald-700 font-black underline decoration-2">원형(Root)</span>으로 돌아갑니다! (s 빼기)
-                </p>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl border-2 border-emerald-100 shadow-lg">
-                <h3 class="text-2xl font-black text-emerald-900 mb-6 border-b border-emerald-100 pb-4 flex items-center">
-                    <span class="bg-emerald-600 text-white text-sm px-3 py-1 rounded mr-3">Rule</span> 
-                    <span class="text-yellow-600 mx-2 bg-yellow-50 px-2 rounded font-black">DO/DOES</span> + Sub + <span class="text-emerald-600 border-b-2 border-emerald-600 mx-2 font-black">Root</span> ?
-                </h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <!-- Present Tense -->
-                    <div>
-                        <h4 class="text-lg font-black text-emerald-800 mb-4 uppercase tracking-widest border-b-2 border-emerald-100 inline-block pb-1">Present (현재)</h4>
-                        <ul class="example-list text-left space-y-3">
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">1st Sing</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Do</span> I look okay?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(나 괜찮아 보이니?)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">2nd Sing</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Do</span> you like pizza?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너 피자 좋아하니?)</span></li>
-                            <li class="bg-yellow-50 -mx-2 px-2 rounded border border-yellow-200"><span class="text-xs text-yellow-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Does</span> he <span class="text-emerald-600 font-black underline">play</span> soccer?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그는 축구를 하니?)</span></li>
-                            <li class="bg-yellow-50 -mx-2 px-2 rounded border border-yellow-200"><span class="text-xs text-yellow-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Does</span> it work?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그거 작동하니?)</span></li>
-                            <li class="bg-yellow-50 -mx-2 px-2 rounded border border-yellow-200"><span class="text-xs text-yellow-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Does</span> the cat <span class="text-emerald-600 font-black underline">sleep</span> much?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 고양이는 많이 자니?)</span></li>
-                            <li class="border-t border-emerald-100 my-4 pt-2 border-dashed"></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">1st Plural</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Do</span> we need this?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(우리 이게 필요하니?)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Do</span> they speak English?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그들은 영어를 하니?)</span></li>
-                        </ul>
-                    </div>
-                    <!-- Past Tense -->
-                    <div>
-                        <h4 class="text-lg font-black text-emerald-800 mb-4 uppercase tracking-widest border-b-2 border-emerald-100 inline-block pb-1">Past (과거)</h4>
-                        <ul class="example-list text-left space-y-3">
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">1st Sing</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Did</span> I say that?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(내가 그렇게 말했니?)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">2nd Sing</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Did</span> you finish?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(너 끝냈니?)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Did</span> Tom <span class="text-emerald-600 font-black underline">eat</span> lunch?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(Tom은 점심 먹었니?)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Thing</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Did</span> the bus stop?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(버스가 멈췄었니?)</span></li>
-                            <li><span class="text-xs text-emerald-700 w-20 inline-block font-bold uppercase tracking-wider">3rd Animal</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Did</span> the dog <span class="text-emerald-600 font-black underline">bark</span>?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그 개가 짖었니?)</span></li>
-                            <li class="border-t border-emerald-100 my-4 pt-2 border-dashed"></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">1st Plural</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Did</span> we win?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(우리가 이겼니?)</span></li>
-                            <li><span class="text-xs text-slate-500 w-20 inline-block font-bold uppercase tracking-wider">3rd Person</span> <span class="eng text-slate-900"><span class="text-yellow-600 font-black">Did</span> they agree?</span> <span class="kor text-slate-500 font-normal block md:inline md:ml-2">(그들이 동의했니?)</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-slate-500 text-sm pb-8">
-            <p>&copy; 2026 Essential English Grammar (Statement / Negative / Question). Designed for All Learners.</p>
-        </footer>
-
-    </main>
-
-    <script>
-        // Section Toggle Logic
-        function toggleSection(id) {
-            // Hide all detail sections first
-            document.querySelectorAll('.hidden-content').forEach(el => {
-                if (el.id !== id) el.style.display = 'none';
-            });
-
-            const element = document.getElementById(id);
-            if (element.style.display === 'block') {
-                element.style.display = 'none';
-            } else {
-                element.style.display = 'block';
-                // Smooth scroll to the section
-                setTimeout(() => {
-                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
-            }
+    const speak = (text) => {
+        if ("speechSynthesis" in window) {
+            window.speechSynthesis.cancel();
+            const uttr = new SpeechSynthesisUtterance(text);
+            uttr.lang = "en-US";
+            uttr.rate = 0.88;
+            window.speechSynthesis.speak(uttr);
         }
-    </script>
+    };
+
+    useEffect(() => {
+        setShuffledQuiz(buildQuizSequence());
+    }, []);
+
+    const handleAnswer = (clickedIdx) => {
+        if (isCorrect) return;
+        const current = shuffledQuiz[quizIndex];
+        if (clickedIdx === current.ansIdx) {
+            setIsCorrect(true);
+            setQuizFeedback(`정답입니다! ${current.reason}`);
+            speak(current.answer);
+            return;
+        }
+        setIsCorrect(false);
+        setQuizFeedback("다시 생각해보세요. 가산/불가산과 관사 규칙을 먼저 점검하세요.");
+    };
+
+    const nextQuestion = () => {
+        if (quizIndex < shuffledQuiz.length - 1) {
+            setQuizIndex(quizIndex + 1);
+            setQuizFeedback("");
+            setIsCorrect(false);
+            return;
+        }
+        setQuizFeedback("30문제를 모두 완료했습니다. 다시 도전해보세요.");
+    };
+
+    const restartQuiz = () => {
+        setShuffledQuiz(buildQuizSequence());
+        setQuizIndex(0);
+        setQuizFeedback("");
+        setIsCorrect(false);
+    };
+
+    const currentQ = shuffledQuiz[quizIndex];
+    const speakingSentences = useMemo(() => allQuizMaster.map((item) => ({ en: item.answer, ko: item.ko })), []);
+    const progressPercent = shuffledQuiz.length ? Math.round((quizIndex / shuffledQuiz.length) * 100) : 0;
+
+    return (
+        <div className="lesson-root min-h-screen bg-slate-50 text-slate-900 pb-12 overflow-x-hidden antialiased">
+            <header className="bg-white border-b sticky top-0 z-50 shadow-sm px-4 py-4">
+                <div className="content-shell flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <div className="bg-blue-600 text-white p-2 rounded-xl shadow-lg shadow-blue-100"><Icons.Zap /></div>
+                        <div className="text-left">
+                            <h1 className="text-2xl font-black tracking-tighter italic leading-none">Grammar CHECK CHECK</h1>
+                            <span className="text-blue-600 font-black text-xs mt-1 block tracking-tight italic">중학영어 1-A / Lesson 3. Mike Is a Doctor.</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main className="content-shell p-4 md:p-6 space-y-8">
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-2xl border border-slate-100 text-left">
+                    <h2 className="text-3xl font-black text-slate-800 italic mb-8 underline decoration-blue-100 underline-offset-8">기초 복습: 명사와 관사</h2>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                            <h3 className="text-xl font-black text-slate-800 mb-3">1. 명사 기초</h3>
+                            <p className="text-sm font-bold text-slate-600 leading-relaxed italic">
+                                명사(名詞)는 사람, 사물, 장소, 개념의 이름입니다.
+                                <br />예: boy, car, apple, city
+                            </p>
+                            <div className="mt-4 bg-white p-5 rounded-2xl border-l-4 border-blue-400 shadow-sm">
+                                <p className="text-sm font-bold text-slate-800">셀 수 있는 명사와 셀 수 없는 명사를 구분하면 관사 선택이 쉬워집니다.</p>
+                                <div className="mt-4 pt-4 border-t border-slate-100">
+                                    <p className="font-black text-blue-700 italic text-xl cursor-pointer sentence-box p-3 rounded-xl" onClick={() => speak("My cousin lives in Seoul.")}>My cousin lives in Seoul. (내 사촌은 서울에 산다.)</p>
+                                    <p className="font-black text-blue-700 italic text-xl mt-3 cursor-pointer sentence-box p-3 rounded-xl" onClick={() => speak("Water is very important for life.")}>Water is very important for life. (물은 삶에 매우 중요하다.)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-blue-50 p-6 rounded-3xl border border-blue-100">
+                            <h3 className="text-xl font-black text-blue-800 mb-3">2. 관사 기초: a/an/the</h3>
+                            <p className="text-sm font-bold text-slate-700 leading-relaxed italic mt-2">a/an은 처음 언급하는 단수 명사, the는 서로 아는 대상을 가리킬 때 씁니다.</p>
+                            <ul className="mt-4 space-y-2 text-sm font-bold">
+                                <li className="bg-white p-2 rounded-lg border border-blue-100 cursor-pointer" onClick={() => speak("He gives me a flower every day.")}>He gives me a flower every day. (그는 매일 나에게 꽃 한 송이를 준다.)</li>
+                                <li className="bg-white p-2 rounded-lg border border-blue-100 cursor-pointer" onClick={() => speak("Would you like some bread?")}>Would you like some bread? (빵 좀 드시겠어요?)</li>
+                                <li className="bg-white p-2 rounded-lg border border-blue-100 cursor-pointer" onClick={() => speak("My hobby is playing the piano.")}>My hobby is playing the piano. (내 취미는 피아노를 치는 것이다.)</li>
+                                <li className="bg-white p-2 rounded-lg border border-blue-100 cursor-pointer" onClick={() => speak("I go to school by bus.")}>I go to school by bus. (나는 버스로 등교한다.)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="mt-6 bg-amber-50 p-5 rounded-2xl border-l-4 border-amber-500">
+                        <p className="font-bold text-amber-800">Tony's Strategy - 한자 풀이: 명사(名詞)는 "이름을 붙여 말하는 말"이다. 이름이 붙으면 문장 성분(주어/목적어/보어)으로 쓰인다.</p>
+                    </div>
+                </section>
+
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-xl border border-slate-100 text-left">
+                    <h3 className="text-2xl font-black text-slate-800 italic mb-8">중등 심화 확장: 명사 분류와 수량 표현</h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="bg-green-50 p-6 rounded-3xl border border-green-100">
+                            <h4 className="text-xl font-black text-green-700 mb-4">명사의 5종류</h4>
+                            <ul className="space-y-2 font-bold text-slate-700">
+                                <li className="bg-white p-2 rounded-lg border border-green-100">보통명사: boy, city, flower</li>
+                                <li className="bg-white p-2 rounded-lg border border-green-100">집합명사: class, family, team</li>
+                                <li className="bg-white p-2 rounded-lg border border-green-100">물질명사: water, gas, flour</li>
+                                <li className="bg-white p-2 rounded-lg border border-green-100">고유명사: Seoul, Mexico, Tony</li>
+                                <li className="bg-white p-2 rounded-lg border border-green-100">추상명사: hope, advice, friendship</li>
+                            </ul>
+                            <div className="mt-4 bg-white p-4 rounded-2xl border-l-4 border-green-500 sentence-box cursor-pointer" onClick={() => speak("I need a piece of advice.") }>
+                                <p className="font-black text-green-800">I need a piece of advice. (나는 조언 한 마디가 필요하다.)</p>
+                                <p className="text-sm text-slate-600">advice는 불가산 명사이므로 piece 같은 단위 표현이 필요합니다.</p>
+                            </div>
+                        </div>
+                        <div className="bg-orange-50 p-6 rounded-3xl border border-orange-100">
+                            <h4 className="text-xl font-black text-orange-700 mb-4">수량 표현 핵심</h4>
+                            <ul className="space-y-2 font-bold text-slate-700">
+                                <li className="bg-white p-2 rounded-lg border border-orange-100">many / a few / few + 셀 수 있는 명사</li>
+                                <li className="bg-white p-2 rounded-lg border border-orange-100">much / a little / little + 셀 수 없는 명사</li>
+                                <li className="bg-white p-2 rounded-lg border border-orange-100">a lot of + 공통</li>
+                                <li className="bg-white p-2 rounded-lg border border-orange-100">a cup of tea, two slices of cheese, eight glasses of water</li>
+                            </ul>
+                            <div className="mt-4 bg-white p-4 rounded-2xl border-l-4 border-orange-500">
+                                <p className="font-black text-orange-800">My brother has many toys. (내 남동생은 장난감을 많이 가지고 있다.)</p>
+                                <p className="text-sm text-slate-600 mt-1">toys는 셀 수 있는 명사라 many를 씁니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="mt-6 bg-slate-100 p-5 rounded-2xl border-l-4 border-slate-400">
+                        <p className="font-bold text-slate-700">Tony's Strategy - 중등 내신 포인트: an honest man(발음 기준), the piano(악기), go to school/by bus(무관사)를 자주 물어봅니다.</p>
+                    </div>
+                </section>
+
+                <section className="bg-white rounded-[3rem] p-8 md:p-10 shadow-xl border border-slate-100 text-left">
+                    <h3 className="text-2xl font-black text-slate-800 italic mb-8">관사 예외와 핵심 규칙표</h3>
+                    <div className="overflow-x-auto rounded-3xl border border-slate-200">
+                        <table className="w-full text-sm text-center border-collapse">
+                            <thead className="bg-slate-50 font-sans text-sm tracking-normal text-slate-500 border-b">
+                                <tr>
+                                    <th className="p-4 border-r">구분</th>
+                                    <th className="p-4 border-r">핵심 규칙</th>
+                                    <th className="p-4 border-r">교재 예문</th>
+                                    <th className="p-4">해설</th>
+                                </tr>
+                            </thead>
+                            <tbody className="font-bold">
+                                <tr className="border-b">
+                                    <td className="p-4 border-r bg-slate-50">a / an</td>
+                                    <td className="p-4 border-r">발음 기준 선택</td>
+                                    <td className="p-4 border-r text-blue-600">My father is an honest man. (우리 아버지는 정직한 분이다.)</td>
+                                    <td className="p-4 text-left">honest의 h는 묵음이므로 an을 씁니다.</td>
+                                </tr>
+                                <tr className="border-b">
+                                    <td className="p-4 border-r bg-slate-50">the</td>
+                                    <td className="p-4 border-r">악기/유일한 대상</td>
+                                    <td className="p-4 border-r text-red-600">My hobby is playing the piano. (내 취미는 피아노를 치는 것이다.)</td>
+                                    <td className="p-4 text-left">악기명 앞에는 the를 씁니다.</td>
+                                </tr>
+                                <tr>
+                                    <td className="p-4 border-r bg-slate-50">무관사</td>
+                                    <td className="p-4 border-r">학교/교통수단 관용표현</td>
+                                    <td className="p-4 border-r text-blue-600">I go to school by bus. (나는 버스로 등교한다.)</td>
+                                    <td className="p-4 text-left">go to school, by bus는 무관사입니다.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-4 mt-6">
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("Would you like a cup of tea?") }>
+                            <p className="font-black">Would you like a cup of tea? (차 한 잔 드시겠어요?)</p>
+                        </div>
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("She drinks eight glasses of water every day.") }>
+                            <p className="font-black">She drinks eight glasses of water every day. (그녀는 매일 물 여덟 잔을 마신다.)</p>
+                        </div>
+                        <div className="sentence-box p-4 rounded-2xl cursor-pointer" onClick={() => speak("My brother puts two slices of cheese on his sandwich.") }>
+                            <p className="font-black">My brother puts two slices of cheese on his sandwich. (내 남동생은 샌드위치에 치즈 두 장을 넣는다.)</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="bg-blue-600 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-12 opacity-10 rotate-12"><Icons.Microscope /></div>
+                    <h3 className="text-2xl font-black mb-4 flex items-center gap-3 italic underline decoration-blue-400 underline-offset-8">
+                        <Icons.Microscope /> 명사·관사 검증 연구소 (30문항)
+                    </h3>
+                    {shuffledQuiz.length > 0 && currentQ && (
+                        <div className="bg-white/10 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/20">
+                            <div className="mb-5">
+                                <div className="h-3 bg-white/20 rounded-full overflow-hidden">
+                                    <div className="h-full bg-yellow-300 transition-all duration-300" style={{ width: `${progressPercent}%` }}></div>
+                                </div>
+                                <p className="text-xs text-blue-100 mt-2 font-bold">진행도 {progressPercent}%</p>
+                            </div>
+                            <div className="mb-4 flex items-center justify-between gap-3">
+                                <div className="px-4 py-1 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest text-blue-100 font-mono italic">
+                                    Quest {quizIndex + 1} / {shuffledQuiz.length}
+                                </div>
+                                <div className="px-4 py-1 bg-yellow-300 text-slate-900 rounded-full text-xs font-black">{currentQ.category}</div>
+                            </div>
+                            <div className="mb-8 text-left">
+                                <p className="text-sm font-bold text-blue-200 mb-2 italic">교재 중등 3과 문장을 기반으로 알맞은 형태를 고르세요.</p>
+                                <p className="text-lg font-black bg-blue-900/50 p-5 rounded-xl border border-white/10 text-yellow-300">{currentQ.ko}</p>
+                            </div>
+                            <p className="text-xl font-black mb-8 tracking-tight text-left">Q. {currentQ.q}</p>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {currentQ.options.map((opt, i) => (
+                                    <button
+                                        key={`${quizIndex}-${i}`}
+                                        onClick={() => handleAnswer(i)}
+                                        className={`quiz-btn py-4 rounded-2xl font-black shadow-lg text-base ${isCorrect && i === currentQ.ansIdx ? "bg-yellow-400 text-slate-900" : "bg-white text-blue-600 hover:bg-blue-50"}`}
+                                        disabled={isCorrect && i !== currentQ.ansIdx}
+                                    >
+                                        {opt}
+                                    </button>
+                                ))}
+                            </div>
+                            {quizFeedback && (
+                                <div className="mt-8 p-6 bg-white/20 rounded-2xl border border-white/30 text-left">
+                                    <p className="text-sm font-bold flex items-center gap-2 leading-relaxed"><Icons.CheckCircle2 /> {quizFeedback}</p>
+                                    <div className="mt-3 p-4 rounded-xl bg-blue-950/30 border border-white/20">
+                                        <p className="font-black">{currentQ.answer} ({currentQ.ko})</p>
+                                    </div>
+                                    <div className="flex gap-3 mt-6">
+                                        <button onClick={() => speak(currentQ.answer)} className="flex-1 bg-white/20 text-white py-3 rounded-xl font-black shadow-md flex items-center justify-center gap-2 hover:bg-white/30">
+                                            <Icons.Volume2 size={16} /> 정답 문장 다시 듣기
+                                        </button>
+                                        {isCorrect && (
+                                            <button
+                                                onClick={() => {
+                                                    if (quizIndex < shuffledQuiz.length - 1) {
+                                                        nextQuestion();
+                                                    } else {
+                                                        restartQuiz();
+                                                    }
+                                                }}
+                                                className="flex-1 bg-yellow-400 text-slate-900 py-3 rounded-xl font-black shadow-md hover:bg-yellow-300 transition-colors"
+                                            >
+                                                {quizIndex < shuffledQuiz.length - 1 ? "다음 문항" : "다시 도전"}
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </section>
+
+                <section className="bg-slate-100 rounded-[3rem] p-10 shadow-inner">
+                    <div className="flex items-center justify-between mb-8">
+                        <h3 className="text-2xl font-black text-slate-800 flex items-center gap-2 italic">
+                            <Icons.Volume2 className="text-blue-600" /> 문장 낭독 훈련 (30문장)
+                        </h3>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                        {speakingSentences.map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="bg-white p-5 rounded-2xl flex justify-between items-center border border-slate-200 hover:border-blue-400 transition-all hover:shadow-lg group cursor-pointer text-left"
+                                onClick={() => speak(item.en)}
+                            >
+                                <div className="flex-1 pr-4">
+                                    <p className="text-sm font-black text-slate-800 leading-tight group-hover:text-blue-600">{item.en}</p>
+                                    <p className="text-xs text-slate-400 mt-2 font-medium">({item.ko})</p>
+                                </div>
+                                <div className="text-slate-300 group-hover:text-blue-500">
+                                    <Icons.PlayCircle size={24} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            </main>
+
+            <footer className="content-shell px-4 mt-20 text-center border-t-2 border-slate-100 pt-10 pb-20">
+                <div className="max-w-4xl mx-auto">
+                    <h3 className="text-2xl font-black text-gray-800 mb-2 italic">Tony's Speaking English Grammar</h3>
+                    <p className="text-lg text-orange-600 font-bold mb-4">영어가 터지는 비결은 바로 <span className="underline">어순 감각</span>에 있습니다.</p>
+                    <div className="h-1.5 w-16 bg-orange-400 mx-auto mb-8 rounded-full"></div>
+                    <div className="text-gray-500 text-sm leading-relaxed italic font-bold">
+                        <span>Tony's Speaking English Grammar helps you master the natural sense of English word order.</span>
+                        <span className="not-italic font-bold text-xs mt-4 block opacity-40">© 2026 Tony's English. All rights reserved.</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    );
+};
+
+const container = document.getElementById("root");
+const root = ReactDOM.createRoot(container);
+root.render(<App />);
+</script>
 </body>
 </html>
+
