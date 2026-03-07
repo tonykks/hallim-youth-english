@@ -174,6 +174,23 @@
     gap:16px;
   }
 
+  .grammar-shortcuts{
+    max-width: 900px;
+    margin: 2rem auto 0;
+    text-align: left;
+  }
+
+  .grammar-shortcuts-title{
+    text-align: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .grammar-shortcut-list{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
   .quiz-btn{
     display:flex;
     align-items:center;
@@ -268,6 +285,16 @@
   <p class="page-desc">CHECK CHECK 중학영어 1-A</p>
 
   <div class="quiz-list" id="lesson-links"></div>
+
+  <section class="grammar-shortcuts" aria-label="어순 감각 익히기 문법">
+    <h3 class="page-title grammar-shortcuts-title">어순감각 익히기 문법</h3>
+    <div class="grammar-shortcut-list">
+      <a class="quiz-btn" href="contents/must_memorize.html">필수암기사항</a>
+      <a class="quiz-btn" href="contents/subject_verb_agreement.html">주어-동사 일치</a>
+      <a class="quiz-btn" href="contents/verb_usage.html">동사 활용</a>
+      <a class="quiz-btn" href="contents/wh_questions.html">Wh-question 만들기</a>
+    </div>
+  </section>
 </main>
 
 <div id="contact-modal" class="modal" aria-hidden="true">
@@ -290,7 +317,7 @@
     "He Can Speak English."
   ];
 
-  const BASE = "https://tonykks.github.io/hallim-youth-english/contents/";
+  const BASE = "contents/";
   const container = document.getElementById("lesson-links");
 
   // 기존 문법 리스트 생성 로직 유지
