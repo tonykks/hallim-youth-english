@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,7 @@
         .tab-active { background-color: #2563eb; color: white; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2); }
         .label-vertical { writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 0.2em; font-weight: 900; }
         .quiz-btn { transition: all 0.2s; }
-        .quiz-btn:active { transform: scale(0.95); }
+                .lesson-root .listen-short { display: none; }
         .table-container::-webkit-scrollbar { height: 6px; }
         .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         @media (max-width: 768px) {
@@ -79,6 +79,8 @@
             .lesson-root button { line-height: 1.52; font-size: 0.76rem; }
         }
         @media (max-width: 480px) {
+            .lesson-root .listen-long { display: none; }
+            .lesson-root .listen-short { display: inline; }
             .lesson-root .quiz-btn {
                 min-height: 2.1rem;
                 width: auto !important;
@@ -800,7 +802,7 @@
                                                 <p className="text-sm font-bold leading-relaxed">{beQuizFeedback}</p>
                                                 <div className="flex gap-3 mt-6">
                                                     <button onClick={() => speak(currentBeQ.answer)} className="flex-1 bg-white/20 text-white py-3 rounded-xl font-black shadow-md flex items-center justify-center gap-2 hover:bg-white/30">
-                                                        <Icons.Volume2 size={16} /> 정답 문장 다시 듣기
+                                                        <Icons.Volume2 size={16} /> <span className="listen-long">정답 문장 다시 듣기</span><span className="listen-short">다시 듣기</span>
                                                     </button>
                                                     {beIsCorrect && (
                                                         <button
@@ -868,3 +870,4 @@
     </script>
 </body>
 </html>
+
