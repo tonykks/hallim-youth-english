@@ -34,6 +34,100 @@
         .quiz-btn:active { transform: scale(0.95); }
         .table-container::-webkit-scrollbar { height: 6px; }
         .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        @media (max-width: 768px) {
+            :root {
+                --fs-lg: clamp(0.84rem, 0.8rem + 0.2vw, 0.9rem);
+                --fs-md: clamp(0.76rem, 0.74rem + 0.16vw, 0.82rem);
+                --fs-sm: clamp(0.7rem, 0.68rem + 0.14vw, 0.76rem);
+            }
+            .content-shell { width: min(100% - 0.6rem, 1180px); }
+            .lesson-root section { border-radius: 1.75rem !important; }
+            .lesson-root h1 { font-size: 0.96rem !important; line-height: 1.35 !important; }
+            .lesson-root h2 { font-size: 0.92rem !important; line-height: 1.35 !important; }
+            .lesson-root h3 { font-size: 0.88rem !important; line-height: 1.4 !important; }
+            .lesson-root h4 { font-size: 0.84rem !important; line-height: 1.42 !important; }
+            .lesson-root [class*="text-3xl"] { font-size: 0.96rem !important; line-height: 1.35 !important; }
+            .lesson-root [class*="text-2xl"] { font-size: 0.9rem !important; line-height: 1.38 !important; }
+            .lesson-root [class*="text-xl"] { font-size: 0.84rem !important; line-height: 1.4 !important; }
+            .lesson-root [class*="text-lg"] { font-size: 0.8rem !important; line-height: 1.45 !important; }
+            .lesson-root [class*="p-10"] { padding: 1.5rem !important; }
+            .lesson-root [class*="p-8"] { padding: 1.25rem !important; }
+            .lesson-root [class*="p-6"] { padding: 1rem !important; }
+            .lesson-root [class*="gap-12"] { gap: 1.6rem !important; }
+            .lesson-root [class*="gap-10"] { gap: 1.25rem !important; }
+            .lesson-root [class*="gap-8"] { gap: 1rem !important; }
+            .lesson-root [class*="gap-6"] { gap: 0.85rem !important; }
+            .lesson-root .table-container,
+            .lesson-root .overflow-x-auto { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .lesson-root .table-container table { min-width: 780px; table-layout: auto; }
+            .lesson-root .overflow-x-auto > table { min-width: 700px; table-layout: auto; }
+            .lesson-root th,
+            .lesson-root td {
+                padding: 0.56rem 0.44rem !important;
+                line-height: 1.38 !important;
+                white-space: normal;
+                word-break: keep-all;
+                overflow-wrap: break-word;
+                text-overflow: clip;
+            }
+            .lesson-root thead th { font-size: 0.68rem !important; }
+            .lesson-root tbody td { font-size: 0.74rem !important; }
+            .lesson-root .label-vertical { letter-spacing: 0.08em; font-size: 0.68rem !important; }
+            .lesson-root p,
+            .lesson-root li,
+            .lesson-root span,
+            .lesson-root button { line-height: 1.52; font-size: 0.76rem; }
+        }
+        @media (max-width: 480px) {
+            .lesson-root .quiz-btn {
+                min-height: 2.1rem;
+                width: auto !important;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.74rem !important;
+                line-height: 1.2 !important;
+                white-space: nowrap;
+                word-break: keep-all;
+                overflow-wrap: normal;
+                padding: 0.42rem 0.55rem !important;
+            }
+            .lesson-root .quiz-options,
+            .lesson-root .quiz-options-be {
+                display: flex !important;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                justify-content: flex-start;
+                gap: 0.45rem !important;
+            }
+            .lesson-root .quiz-options > div,
+            .lesson-root .quiz-options-be > div {
+                flex: 0 0 auto;
+                width: auto;
+            }
+            .lesson-root [class*="mb-10"] { margin-bottom: 0.95rem !important; }
+            .lesson-root [class*="mb-8"] { margin-bottom: 0.72rem !important; }
+            .lesson-root [class*="mb-6"] { margin-bottom: 0.56rem !important; }
+            .lesson-root [class*="mb-4"] { margin-bottom: 0.44rem !important; }
+            .lesson-root [class*="mb-2"] { margin-bottom: 0.3rem !important; }
+            .lesson-root [class*="mt-16"] { margin-top: 1.2rem !important; }
+            .lesson-root [class*="mt-12"] { margin-top: 1rem !important; }
+            .lesson-root [class*="mt-8"] { margin-top: 0.78rem !important; }
+            .lesson-root [class*="mt-6"] { margin-top: 0.62rem !important; }
+            .lesson-root [class*="mt-4"] { margin-top: 0.48rem !important; }
+        }
+        @media (max-width: 400px) {
+            .lesson-root .table-container table { min-width: 760px; }
+            .lesson-root .overflow-x-auto > table { min-width: 680px; }
+            .lesson-root h1 { font-size: 0.9rem !important; }
+            .lesson-root h2 { font-size: 0.86rem !important; }
+            .lesson-root h3 { font-size: 0.82rem !important; }
+            .lesson-root h4 { font-size: 0.8rem !important; }
+            .lesson-root [class*="text-3xl"] { font-size: 0.9rem !important; }
+            .lesson-root [class*="text-2xl"] { font-size: 0.85rem !important; }
+            .lesson-root [class*="p-10"] { padding: 1.2rem !important; }
+            .lesson-root [class*="p-8"] { padding: 1rem !important; }
+        }
     </style>
 </head>
 <body>
@@ -463,7 +557,7 @@
 
                                             <p className="text-xl font-black mb-8 font-serif tracking-tight text-left">Q. {capitalize(currentQ.q)}</p>
                                             
-                                            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                                            <div className="quiz-options grid grid-cols-2 md:grid-cols-5 gap-4">
                                                 {pronounSets[currentQ.set].map((opt, i) => (
                                                     <div key={`${quizIndex}-${i}`} className="flex flex-col gap-2">
                                                         <span className="text-[10px] text-blue-200 font-black text-center uppercase tracking-tighter opacity-80">
@@ -689,7 +783,7 @@
                                             <p className="text-lg font-black bg-blue-900/50 p-5 rounded-xl border border-white/10 text-yellow-300">{currentBeQ.ko}</p>
                                         </div>
                                         <p className="text-xl font-black mb-8 font-serif tracking-tight text-left">Q. {currentBeQ.q}</p>
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div className="quiz-options-be grid grid-cols-2 md:grid-cols-4 gap-4">
                                             {currentBeQ.options.map((opt, i) => (
                                                 <button
                                                     key={`${beQuizIndex}-${i}`}
