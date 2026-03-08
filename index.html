@@ -351,6 +351,11 @@
       filter: none !important;
     }
     .chatbot-help strong { color: #111827; }
+
+    /* 모바일에서는 그라데이션 배경 제거해 텍스트 선명도 확보 */
+    .card-chatbot {
+      background: var(--card-bg) !important;
+    }
   }
 
   @media (max-width: 768px) and (prefers-color-scheme: dark) {
@@ -363,6 +368,9 @@
       filter: none !important;
     }
     .chatbot-help strong { color: #f9fafb; }
+    .card-chatbot {
+      background: #1f2937 !important;
+    }
   }
 
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
