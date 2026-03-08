@@ -340,6 +340,29 @@
       min-height: 42px;
       padding: 10px 12px;
     }
+
+    /* 모바일 본문 가독성(대비) 강화 */
+    .description-text,
+    .card-desc,
+    .chatbot-help,
+    .text-gray-500 {
+      color: #374151 !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+    .chatbot-help strong { color: #111827; }
+  }
+
+  @media (max-width: 768px) and (prefers-color-scheme: dark) {
+    .description-text,
+    .card-desc,
+    .chatbot-help,
+    .text-gray-500 {
+      color: #e5e7eb !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+    .chatbot-help strong { color: #f9fafb; }
   }
 
   .modal{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:2000; backdrop-filter: blur(4px); }
